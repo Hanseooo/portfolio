@@ -76,8 +76,8 @@ export default function TechStackMarquee() {
     stop3.current?.stop();
 
     x1.set(x1.get() + v * 1.2);
-    x2.set(x2.get() - v * 1);
-    x3.set(x3.get() + v * 1.2);
+    x2.set(x2.get() - v * 0.5);
+    x3.set(x3.get() + v * 1);
   });
 
 
