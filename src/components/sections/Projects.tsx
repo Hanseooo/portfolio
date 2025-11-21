@@ -169,7 +169,7 @@ function EmblaCarousel({ images, alt }: { images: string[]; alt: string }) {
         <button
           onClick={() => {
             if (emblaApi) emblaApi.scrollPrev();
-            if (autoPlayInterval.current) clearInterval(autoPlayInterval.current); // stop autoplay
+            // if (autoPlayInterval.current) clearInterval(autoPlayInterval.current); // stop autoplay
           }}
           className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-primary hover:cursor-pointer text-xl"
         >
@@ -178,7 +178,7 @@ function EmblaCarousel({ images, alt }: { images: string[]; alt: string }) {
         <button
           onClick={() => {
             if (emblaApi) emblaApi.scrollNext();
-            if (autoPlayInterval.current) clearInterval(autoPlayInterval.current); // stop autoplay
+            // if (autoPlayInterval.current) clearInterval(autoPlayInterval.current); // stop autoplay
           }}
           className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full text-primary hover:cursor-pointer text-xl"
         >
@@ -234,7 +234,7 @@ function ProjectCardContent({ project }: { project: ProjectInfo }) {
         </div>
         <div className="md:w-1/2 p-6 flex flex-col gap-4">
           <div className="flex items-start justify-between gap-4">
-            <h3 className="text-xl font-semibold">{project.name}</h3>
+            <h3 className="text-xl font-semibold text-start">{project.name}</h3>
             <div className="flex items-center gap-2">
               {project.hostedUrl && (
                 <Tooltip>
@@ -267,7 +267,7 @@ function ProjectCardContent({ project }: { project: ProjectInfo }) {
               )}
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">{project.description}</p>
+          <p className="text-sm text-muted-foreground text-start">{project.description}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {project.tech.map((t) => (
               <Badge key={t} className="py-1 px-2">
