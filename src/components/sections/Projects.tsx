@@ -23,13 +23,12 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/* Mock Data */
-const mockProjects: ProjectInfo[] = [
+const featuredProjects: ProjectInfo[] = [
   {
     id: "p1",
     name: "The Podium",
     description:
-      "A web application for managing and tracking seminars. Tracks attendance, generates certificates for attendance sent to email, and an evaluation analytics for the admin. Built for WS101 during my 3rd year of college.",
+      "A web application for managing and tracking seminars. Tracks attendance, evaluate attended seminars, generates certificates then sent to email, and a seminar evaluation analytics for the admin. Built for WS101 during my 3rd year of college.",
     github: "https://github.com/Hanseooo/attendance-evaluation-certification",
     hostedUrl: null,
     images: ["/projects/Podium/1.png", "/projects/Podium/2.png", "/projects/Podium/3.png", "/projects/Podium/4.png", 
@@ -67,6 +66,31 @@ const mockProjects: ProjectInfo[] = [
     tech: ["HTML", "CSS", "Javascript", "Bootstrap"],
   },
 ];
+
+const otherProjects : ProjectInfo[] = [
+  {
+    id: "p1",
+    name: "Dummy Game (unfinished)",
+    description:
+      "A 2d hack and slash game. Player and monster sprites are drawn by me. Created this game out of curiosity and as a hobby.",
+    github: "https://github.com/Hanseooo/dummy-game-project",
+    hostedUrl: "https://drive.google.com/file/d/16TDplpZJYbnWAEjYTfe6w-3W4JL4WqYE/view?usp=sharing",
+    images: ["/projects/Other/dummy-game.gif", 
+    ],
+    tech: ["GML", "GameMaker", "Aseprite", ],
+  },
+  {
+    id: "p2",
+    name: "Arduino Simon Memory Game",
+    description:
+      "A simple memory game using Arduino Uno. Created to teach myself about its fundamentals and as a hobby.",
+    github: null,
+    hostedUrl: null,
+    images: ["/projects/Other/simon-memory-game.jpg", 
+    ],
+    tech: ["C++", "Arduino IDE", "UNO R3", ],
+  },
+]
 
 /* Image Fallback */
 function ImageFallback({ name }: { name?: string }) {
@@ -293,7 +317,7 @@ function ProjectCardContent({ project }: { project: ProjectInfo }) {
 }
 
 /* FeaturedProjects Section */
-export default function FeaturedProjects({ projects = mockProjects }: { projects?: ProjectInfo[] }) {
+export default function FeaturedProjects({ projects = featuredProjects }: { projects?: ProjectInfo[] }) {
   const featured = useMemo(() => projects.slice(0, projects.length), [projects]);
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
@@ -344,29 +368,53 @@ export default function FeaturedProjects({ projects = mockProjects }: { projects
   }, [featured]);
 
   return (
-    <section ref={sectionRef} id="featured-projects" className="pt-6 md:pt-4 pb-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <motion.div
-            className="text-center mb-8"
-            initial={{ opacity: 0, scale: 1.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.75, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">Featured Projects</h2>
+    <>
+      <section ref={sectionRef} id="featured-projects" className="pt-6 md:pt-4 pb-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+                className="text-center mb-8"
+                initial={{ opacity: 0, scale: 1.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.75, ease: "easeOut" }}
+                viewport={{ once: false, amount: 0.5 }}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">Featured Projects</h2>
 
-        </motion.div>
-        <div ref={cardsContainerRef} className="flex flex-col gap-8 items-center">
-          {featured.map((project) => (
-            <article
-              key={project.id}
-              className="project-card backdrop-blur-xs bg-background/25 border-2 border-primary/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
-            >
-              <ProjectCardContent project={project} />
-            </article>
-          ))}
+            </motion.div>
+            <div ref={cardsContainerRef} className="flex flex-col gap-8 items-center">
+              {featured.map((project) => (
+                <article
+                  key={project.id}
+                  className="project-card backdrop-blur-xs bg-background/25 border-2 border-primary/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
+                >
+                  <ProjectCardContent project={project} />
+                </article>
+              ))}
+            </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section ref={sectionRef} id="featured-projects" className="pt-6 md:pt-4 pb-24">
+            <motion.div
+              className="text-center mb-8"
+              initial={{ opacity: 0, scale: 1.5 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.75, ease: "easeOut" }}
+              viewport={{ once: false, amount: 0.5 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">Other Projects</h2>
+          </motion.div>
+          <div ref={cardsContainerRef} className="flex flex-col gap-8 items-center">
+              {otherProjects.map((project) => (
+                <article
+                  key={project.id}
+                  className="project-card backdrop-blur-xs bg-background/25 border-2 border-primary/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
+                >
+                  <ProjectCardContent project={project} />
+                </article>
+              ))}
+            </div>
+      </section>
+    </>
   );
 }
