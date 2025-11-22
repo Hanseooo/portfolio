@@ -137,13 +137,13 @@ export const BackgroundBeams = React.memo(
               gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)"
             >
               {/* Very soft white center */}
-              <stop offset="0.06" stopColor="white" stopOpacity="0.15" />
+              <stop offset="0.06" stopColor="white" stopOpacity="0.25" />
 
               {/* Very subtle forest green tint */}
-              <stop offset="0.22" stopColor="rgb(34,139,34)" stopOpacity="0.1" />
+              <stop offset="0.22" stopColor="rgb(34,139,34)" stopOpacity="0.3" />
 
               {/* Fully faded out */}
-              <stop offset="0.40" stopColor="rgb(34,139,34)" stopOpacity="0" />
+              <stop offset="0.40" stopColor="rgb(34,139,34)" stopOpacity="0.15" />
             </radialGradient>
 
 

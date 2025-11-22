@@ -11,7 +11,7 @@ import FeaturedProjects from "../sections/Projects";
 import { Particles } from "../ui/shadcn-io/particles";
 import { BackgroundBeams } from "../ui/shadcn-io/background-beams";
 import AboutMe from "../sections/AboutMe";
-
+import { Vortex } from "../ui/shadcn-io/vortex";
 // Register GSAP plugin
 gsap.registerPlugin(ScrollTrigger);
 const isMobile = /iPhone|iPad|iPod|Android|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -89,6 +89,7 @@ export default function HomePage() {
             start: "top 80%",   
             end: "bottom 20%", 
             scrub: isMobile ? 0.8 : 3,
+            invalidateOnRefresh: true,
             markers: false,      
             // onUpdate: (self) => console.log("Scroll progress:", self.progress),
           },
@@ -103,7 +104,7 @@ export default function HomePage() {
 useEffect(() => {
   if (!projectsRef.current || !aboutMeRef.current) return;
 
-  const triggerEl = projectsRef.current;
+  const triggerEl = projectsRef.current.querySelector("div");
   const el = aboutMeRef.current;
 
   const ctx = gsap.context(() => {
@@ -111,13 +112,14 @@ useEffect(() => {
       el,
       { y: 0 },   // start offset
       {
-        y: -900,   // end offset (different from Projects)
+        y: -950,   // end offset (different from Projects)
         ease: "power1.inOut",
         scrollTrigger: {
           trigger: triggerEl,   // use Projects section as trigger
           start: "top 80%",     // when Projects enters viewport
           end: "bottom 10%",    // when Projects leaves viewport
           scrub: isMobile ? 0.5 : 2,
+          invalidateOnRefresh: true,
           // markers: true,      // for debugging
         },
       }
@@ -161,23 +163,43 @@ useEffect(() => {
       </section>
 
       {/* PROJECTS */}
+      <Vortex
+        backgroundColor="transparent"
+        particleCount={25}
+        baseHue={120}
+        rangeY={2000}
+        baseSpeed={0.0}
+        rangeSpeed={0.2}
+        className="w-full will-change-transform"
+      >
       <section
         id="projects-section"
         className="relative  py-8 text-center"
       >
-        <BackgroundBeams className="absolute inset-0 will-change-transform" />
+        {/* <Meteors number={30} className="will-change-transform" /> */}
+
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 will-change-transform"
         ref={projectsRef}
         >
           <FeaturedProjects />
         </div>
+
       </section>
+      </Vortex>
 
 
       {/* ABOUT ME */}
-      <section ref={aboutMeRef} className="py-20 bg-background text-center will-change-transform">
-        <AboutMe />
+      <section
+        ref={aboutMeRef}
+        className="relative py-20 text-center will-change-transform"
+      >
+        <BackgroundBeams className="absolute inset-0 -z-10" />
+
+        <div className="relative">
+          <AboutMe />
+        </div>
       </section>
+
     </main>
   );
 }

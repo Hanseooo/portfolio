@@ -95,9 +95,9 @@ export default function TechStackMarquee() {
             const w = window.innerWidth;
 
             // total width including gap
-            const row1TotalWidth = row1.length * (280 + 48) * 10; // 6 duplicates
-            const row2TotalWidth = row2.length * (280 + 48) * 10;
-            const row3TotalWidth = row3.length * (280 + 48) * 10;
+            const row1TotalWidth = row1.length * (280 + 48) * 5; // 10 duplicates
+            const row2TotalWidth = row2.length * (280 + 48) * 5;
+            const row3TotalWidth = row3.length * (280 + 48) * 5;
 
             // position at the end
             x1.set(-row1TotalWidth + w);

@@ -106,7 +106,7 @@ export default function AboutMe() {
           </div>
 
           <p className="text-sm text-muted-foreground italic text-center max-w-[220px]">
-            “I build clean and functional web experiences.”
+            “Technology is constantly changing so I continuously learn to adapt.”
           </p>
 
           <div className="w-full flex flex-col space-y-2">

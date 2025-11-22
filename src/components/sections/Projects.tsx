@@ -17,6 +17,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { ExternalLink, Github } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
+import { Vortex } from "../ui/shadcn-io/vortex";
 
 // Register plugin at module level with SSR check
 if (typeof window !== "undefined") {
@@ -340,6 +341,7 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
           start: "top bottom", // Start when section top enters viewport bottom
           end: "bottom top", // End when section bottom exits viewport top
           scrub: 1, // Smooth scrubbing
+          invalidateOnRefresh: true,
           // markers: true, // Uncomment for debugging
         },
       });
@@ -369,7 +371,17 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
 
   return (
     <>
+        <Vortex
+          backgroundColor="transparent"
+          particleCount={25}
+          baseHue={120}
+          rangeY={2000}
+          baseSpeed={0.0}
+          rangeSpeed={0.2}
+          className="w-full will-change-transform"
+      >
       <section ref={sectionRef} id="featured-projects" className="pt-6 md:pt-4 pb-24">
+        
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <motion.div
                 className="text-center mb-8"
@@ -416,6 +428,7 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
             </div>
             
       </section>
+      </Vortex>
     </>
   );
 }
