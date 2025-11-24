@@ -21,14 +21,19 @@ export default function LoadingScreen({
   onSkip,
 }: LoadingScreenProps) {
   const [showSkip, setShowSkip] = useState(false);
+  const [isLongLoad, setIsLongLoad] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSkip(true), 3000);
-    return () => clearTimeout(timer);
+    const longLoadTimer = setTimeout(() => setIsLongLoad(true), 10000);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(longLoadTimer);
+    };
   }, []);
 
   return (
-    <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/90 backdrop-blur-md p-6">
+    <div className="fixed inset-0 z-9999 select-none flex flex-col items-center justify-center bg-background/90 backdrop-blur-md p-6">
 
       <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
 
@@ -42,7 +47,7 @@ export default function LoadingScreen({
 
       <Progress value={progress} className="w-64 h-2 rounded-full" />
         {
-          loadedCount >= 34 && (
+          loadedCount >= 34 || isLongLoad && (
             <p className="text-primary/75 text-center text-xs p-6">
               Project assets are being loaded for the best experience. Feel free to skip
             </p>
