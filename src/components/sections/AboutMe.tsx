@@ -8,12 +8,14 @@ import myImg from "@/assets/images/me2.jpg";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isInAppBrowser } from "@/utils/browserInfo";
+import { useAssetPreloader } from "@/hooks/useAssetPreloader";
 
 gsap.registerPlugin(ScrollTrigger);
 
 
 export default function AboutMe() {
   const leftRef = useRef<HTMLDivElement | null>(null);
+  const { isLoaded } = useAssetPreloader();
 //   const rightSectionsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function AboutMe() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoaded]);
 
   const content = [
     {

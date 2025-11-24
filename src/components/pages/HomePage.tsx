@@ -11,7 +11,9 @@ import FeaturedProjects from "../sections/Projects";
 import { Particles } from "../ui/shadcn-io/particles";
 import { BackgroundBeams } from "../ui/shadcn-io/background-beams";
 import AboutMe from "../sections/AboutMe";
-import { isInAppBrowser } from "@/utils/browserInfo";
+import LoadingScreen from "../loadingScreens/LoadingScreen";
+import { useAssetPreloader } from "@/hooks/useAssetPreloader";
+// import { isInAppBrowser } from "@/utils/browserInfo";
 
 // Register GSAP plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -26,6 +28,15 @@ export default function HomePage() {
   const projectsRef = useRef<HTMLDivElement>(null);
   const aboutMeRef = useRef<HTMLDivElement>(null);
   const marqueeWrapperRef = useRef<HTMLDivElement>(null);
+
+  const {
+    isLoaded,
+    progress,
+    loadedCount,
+    total,
+    setIsLoaded,
+  } = useAssetPreloader();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,21 +80,21 @@ export default function HomePage() {
       ctx.revert();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [isLoaded]);
 
   // PROJECTS PARALLAX SCROLL (entire section moves up/down)
   useEffect(() => {
     if (!projectsRef.current) {
       return;
     }
-    if (isInAppBrowser()) return
+    // if (isInAppBrowser()) return
 
     const el = projectsRef.current;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
         el,
-        { y: -150 }, 
+        { y: -100 }, 
         {
           y: -800,
           ease: "power2.out",
@@ -101,40 +112,49 @@ export default function HomePage() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoaded]);
 
 
-useEffect(() => {
-  if (!projectsRef.current || !aboutMeRef.current) return;
-  if (isInAppBrowser()) return
+  useEffect(() => {
+    if (!projectsRef.current || !aboutMeRef.current) return;
+    // if (isInAppBrowser()) return
 
 
-  const triggerEl = projectsRef.current.querySelector("div");
-  const el = aboutMeRef.current;
+    const triggerEl = projectsRef.current.querySelector("div");
+    const el = aboutMeRef.current;
 
-  const ctx = gsap.context(() => {
-    gsap.fromTo(
-      el,
-      { y: 0 },   // start offset
-      {
-        y: -950,   // end offset (different from Projects)
-        ease: "power1.inOut",
-        scrollTrigger: {
-          trigger: triggerEl,   // use Projects section as trigger
-          start: "top 80%",     // when Projects enters viewport
-          end: "bottom 10%",    // when Projects leaves viewport
-          scrub: isMobile ? 0.5 : 2,
-          invalidateOnRefresh: true,
-          // markers: true,      // for debugging
-        },
-      }
-    );
-  });
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el,
+        { y: 0 },   // start offset
+        {
+          y: -950,   // end offset (different from Projects)
+          ease: "power1.inOut",
+          scrollTrigger: {
+            trigger: triggerEl,   // use Projects section as trigger
+            start: "top 80%",     // when Projects enters viewport
+            end: "bottom 10%",    // when Projects leaves viewport
+            scrub: isMobile ? 0.5 : 2,
+            invalidateOnRefresh: true,
+            // markers: true,      // for debugging
+          },
+        }
+      );
+    });
 
-  return () => ctx.revert();
-}, []);
+    return () => ctx.revert();
+  }, [isLoaded]);
 
-
+  if (!isLoaded) {
+    return (
+    <LoadingScreen
+      progress={progress}
+      loadedCount={loadedCount}
+      total={total}
+      onSkip={() => setIsLoaded(true)}
+    />
+      );
+  }
 
 
   return (
@@ -154,10 +174,10 @@ useEffect(() => {
       <Particles
         className="absolute inset-0 will-change-transform"
         quantity={isMobile ? 80 : 120}
-        ease={80}
+        ease={50}
         staticity={100}
         color="#ffffff"
-        size={1}
+        size={1.2}
       />
         <div 
           ref={marqueeWrapperRef}

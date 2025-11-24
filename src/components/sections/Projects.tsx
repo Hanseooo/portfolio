@@ -18,6 +18,7 @@ import { ExternalLink, Github } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { isInAppBrowser } from "@/utils/browserInfo";
+import { useAssetPreloader } from "@/hooks/useAssetPreloader";
 
 // Register plugin at module level with SSR check
 if (typeof window !== "undefined") {
@@ -76,7 +77,7 @@ const otherProjects : ProjectInfo[] = [
       "A 2D hack and slash game. Player and monster sprites are drawn by me. Created this game out of curiosity and as a hobby.",
     github: "https://github.com/Hanseooo/dummy-game-project",
     hostedUrl: "https://drive.google.com/file/d/16TDplpZJYbnWAEjYTfe6w-3W4JL4WqYE/view?usp=sharing",
-    images: ["/projects/Other/dummy-game.gif", 
+    images: ["/projects/Other/dummy-game.gif", "/projects/Other/dummy-game2.gif",
     ],
     tech: ["GML", "GameMaker", "Aseprite", ],
   },
@@ -87,7 +88,7 @@ const otherProjects : ProjectInfo[] = [
       "A simple memory game using Arduino Uno. Created to teach myself about its fundamentals and as a hobby.",
     github: null,
     hostedUrl: null,
-    images: ["/projects/Other/simon-memory-game.jpg", 
+    images: ["/projects/Other/simon-memory-game.jpg", "/projects/Other/simon-memory-game2.gif",
     ],
     tech: ["C++", "Arduino IDE", "UNO R3", ],
   },
@@ -322,11 +323,14 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
   const featured = useMemo(() => projects.slice(0, projects.length), [projects]);
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
+  const { isLoaded } = useAssetPreloader();
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!sectionRef.current || !cardsContainerRef.current) return;
     if (isInAppBrowser()) return
+    
 
     const section = sectionRef.current;
     const cardsContainer = cardsContainerRef.current;
@@ -368,7 +372,7 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
     return () => {
       ctx.revert();
     };
-  }, [featured]);
+  }, [featured, isLoaded]);
 
   return (
     <>
