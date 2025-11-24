@@ -11,7 +11,7 @@ import FeaturedProjects from "../sections/Projects";
 import { Particles } from "../ui/shadcn-io/particles";
 import { BackgroundBeams } from "../ui/shadcn-io/background-beams";
 import AboutMe from "../sections/AboutMe";
-// import { isInAppBrowser } from "@/utils/browserInfo";
+import { isInAppBrowser } from "@/utils/browserInfo";
 
 // Register GSAP plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -75,6 +75,7 @@ export default function HomePage() {
     if (!projectsRef.current) {
       return;
     }
+    if (isInAppBrowser()) return
 
     const el = projectsRef.current;
 
@@ -104,6 +105,8 @@ export default function HomePage() {
 
 useEffect(() => {
   if (!projectsRef.current || !aboutMeRef.current) return;
+  if (isInAppBrowser()) return
+
 
   const triggerEl = projectsRef.current.querySelector("div");
   const el = aboutMeRef.current;
