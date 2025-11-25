@@ -125,7 +125,9 @@ export default function AboutMe() {
             }>
                 Certificates
             </Button>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button variant="outline" size="sm" className="w-full" onClick={ () => {
+              navigate("educational-tour")
+            }}>
                 Educational Tour
             </Button>
           </div>

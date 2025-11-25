@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import EducationalTourPage from "./components/pages/EducationalTourPage";
 
 function Layout() {
   const location = useLocation();
@@ -21,11 +22,7 @@ function Layout() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/certificates" element={<CertificatesPage />} />
-
-        {/*
-          Future page: educational tour
-          <Route path="/educational-tour" element={<EducationalTourPage />} />
-        */}
+        <Route path="/educational-tour" element={<EducationalTourPage />} />
       </Routes>
     </>
   );
