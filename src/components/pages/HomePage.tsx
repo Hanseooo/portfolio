@@ -1,6 +1,5 @@
 // HomePage.tsx - CORRECT GSAP PIN IMPLEMENTATION
 import { useEffect, useRef } from "react";
-import { animate } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSection from "@/components/sections/HeroSection";
