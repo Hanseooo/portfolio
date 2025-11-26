@@ -39,6 +39,9 @@ export default function EducationalTourPage() {
           </p>
         </div>
       </section>
+        <h4 className="text-3xl font-bold mt-20 mb-8 text-center">
+        Educational Tour <span className="text-primary">Gallery</span> 
+      </h4>
     </main>
   );
 }
