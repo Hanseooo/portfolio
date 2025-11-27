@@ -57,7 +57,7 @@ const companies: Company[] = [
   {
     name: "Mata Technologies Inc.",
     description:
-      "a Philippines-based digital company specializing in virtual mapping and 360-degree virtual tours for tourism and real estate. They provide immersive, interactive virtual experiences for locations across the country, including scenic and heritage sites, and partner with organizations like the Cebu Provincial Government and the Ramon Aboitiz Foundation Inc.",
+      "a Philippine-based digital company specializing in virtual mapping and 360-degree virtual tours for tourism and real estate. They provide immersive, interactive virtual experiences for locations across the country, including scenic and heritage sites, and partner with organizations like the Cebu Provincial Government and the Ramon Aboitiz Foundation Inc.",
     image: mata,
     link: "https://mata.tours/",
     JournalEntry: {

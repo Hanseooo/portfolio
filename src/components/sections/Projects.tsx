@@ -33,7 +33,7 @@ const featuredProjects: ProjectInfo[] = [
     description:
       "A web application for managing and tracking seminars. Tracks attendance, evaluate attended seminars, generates certificates and sent to email, and a seminar evaluation analytics for the admin. Built for WS101 during my 3rd year of college.",
     github: "https://github.com/Hanseooo/attendance-evaluation-certification",
-    hostedUrl: null,
+    hostedUrl: "https://hcdc-podium.vercel.app/",
     images: ["/projects/Podium/1.png", "/projects/Podium/2.png", "/projects/Podium/3.png", "/projects/Podium/4.png", 
       "/projects/Podium/5.png", "/projects/Podium/6.png", "/projects/Podium/7.png", "/projects/Podium/8.png", 
       "/projects/Podium/9.png", "/projects/Podium/10.png", "/projects/Podium/11.png", "/projects/Podium/12.png", 
