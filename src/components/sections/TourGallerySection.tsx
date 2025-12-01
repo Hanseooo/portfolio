@@ -171,8 +171,8 @@ export default function TourGallerySection() {
       }
 
       // Mobile performance optimizations
-      const scrubSpeed = isMobile ? 1.2 : 1.8; // Faster scrub on mobile
-      const cardScrubSpeed = isMobile ? 1.5 : 2.5; // Faster card animations on mobile
+      const scrubSpeed = isMobile ? 0.5 : 1.8; // Faster scrub on mobile
+      const cardScrubSpeed = isMobile ? 0.75 : 2.5; // Faster card animations on mobile
 
       ctx = gsap.context(() => {
         // Fade in animation
