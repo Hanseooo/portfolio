@@ -27,9 +27,9 @@ function TourGalleryCard({
       )}
       aria-label={title ?? `Tour photo ${index + 1}`}
     >
-      <Card className="h-full border-b-2 border-foreground/20 bg-background/20 backdrop-blur-md md:backdrop-blur-lg shadow-2xl flex flex-col">
+      <Card className="h-full border-b-2 border-foreground/20 bg-background/20 backdrop-blur-sm md:backdrop-blur-lg shadow-xl md:shadow-2xl flex flex-col">
         <div className="p-3 shrink-0">
-          <div className="relative h-80 md:h-[360px] bg-linear-to-br from-background/5 to-background/20 overflow-hidden rounded-xl">
+          <div className="relative h-80 md:h-[360px] bg-linear-to-br from-background/5 to-background/20 overflow-hidden rounded-xl transform-gpu">
             <img
               src={src}
               alt={title ?? `Tour photo ${index + 1}`}
@@ -116,9 +116,11 @@ export default function TourGallerySection() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detect mobile device
+    // Detect mobile device with proper check
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const isMobileDevice = window.innerWidth < 768 || 
+                            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
     };
     
     checkMobile();
@@ -171,8 +173,8 @@ export default function TourGallerySection() {
       }
 
       // Mobile performance optimizations
-      const scrubSpeed = isMobile ? 0.5 : 1.8; // Faster scrub on mobile
-      const cardScrubSpeed = isMobile ? 0.75 : 2.5; // Faster card animations on mobile
+      const scrubSpeed = isMobile ? 1.2 : 1.8; // Faster scrub on mobile
+      const cardScrubSpeed = isMobile ? 1.5 : 2.5; // Faster card animations on mobile
 
       ctx = gsap.context(() => {
         // Fade in animation
@@ -246,41 +248,39 @@ export default function TourGallerySection() {
           }
         );
 
-        // Intro fade
-        gsap.to(introEl, {
-          y: isMobile ? -80 : -120, // Less movement on mobile
-          opacity: 0.4,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerEl,
-            start: "top top",
-            end: `+=${maxScroll * 2}`,
-            scrub: 2,
-          },
-        });
-
-        // Card animations (simplified on mobile)
-        gsap.utils.toArray<HTMLElement>(".tour-card").forEach((cardEl, i) => {
-          // Reduced vertical parallax on mobile
-          const verticalOffset = isMobile 
-            ? (i % 2 === 0 ? 1 : -1) * 6 
-            : (i % 2 === 0 ? 1 : -1) * (12 + (i % 3) * 8);
-          
-          const scaleTo = isMobile ? 1.01 : 1.02 + (i % 3) * 0.005;
-
-          gsap.to(cardEl, {
-            y: verticalOffset,
+        // Intro fade (disabled on mobile)
+        if (!isMobile) {
+          gsap.to(introEl, {
+            y: -120,
+            opacity: 0.4,
             ease: "none",
             scrollTrigger: {
               trigger: containerEl,
               start: "top top",
               end: `+=${maxScroll * 2}`,
-              scrub: cardScrubSpeed,
+              scrub: 2,
             },
           });
+        }
 
-          // Simplified shadow animation on mobile
+        // Card animations (simplified on mobile)
+        gsap.utils.toArray<HTMLElement>(".tour-card").forEach((cardEl, i) => {
+          // Minimal parallax on mobile
           if (!isMobile) {
+            const verticalOffset = (i % 2 === 0 ? 1 : -1) * (12 + (i % 3) * 8);
+            const scaleTo = 1.02 + (i % 3) * 0.005;
+
+            gsap.to(cardEl, {
+              y: verticalOffset,
+              ease: "none",
+              scrollTrigger: {
+                trigger: containerEl,
+                start: "top top",
+                end: `+=${maxScroll * 2}`,
+                scrub: cardScrubSpeed,
+              },
+            });
+
             gsap.fromTo(
               cardEl,
               { scale: 1, boxShadow: "0px 10px 40px rgba(0,0,0,0.1)" },
@@ -374,12 +374,12 @@ export default function TourGallerySection() {
             {/* Intro */}
             <div
               ref={introRef}
-              className="shrink-0 w-[360px] md:w-[420px]"
+              className="shrink-0 w-[320px] md:w-[420px]"
             >
-              <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+              <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">
                 Educational Tour <span className="text-primary">Gallery</span>
               </h2>
-              <p className="mt-4 text-neutral-300 text-base md:text-lg">
+              <p className="mt-3 md:mt-4 text-neutral-300 text-sm md:text-lg leading-relaxed">
                 Highlights from our Cebu – Bohol Educational Tour. Scroll down to traverse the gallery.
               </p>
             </div>
