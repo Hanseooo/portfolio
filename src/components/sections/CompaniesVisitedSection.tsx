@@ -85,7 +85,7 @@ export default function CompaniesVisitedSection() {
     })
 
   return (
-    <article className="max-w-6xl mx-auto px-4 py-12 space-y-20">
+    <article className="max-w-6xl mx-auto px-4 py-12 space-y-20" id="tour-company-journal">
       <h4 className="text-3xl font-bold">Journal Entries</h4>
 
       {companies.map((company, index) => (

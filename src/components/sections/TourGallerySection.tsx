@@ -328,7 +328,7 @@ export default function TourGallerySection() {
   }, [images, isMobile]);
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full" id="tour-gallery">
       <div 
         ref={containerRef}
         className="relative w-full h-screen overflow-hidden bg-background"

@@ -12,9 +12,13 @@ import ChatbotWidget from "./components/widgets/ChatbotWidget";
 function Layout() {
   const location = useLocation();
 
-  const showNavbar =
-    location.pathname === "/certificates" ||
-    location.pathname === "/educational-tour";
+  // const showNavbar =
+  //   location.pathname === "/certificates" ||
+  //   location.pathname === "/educational-tour";
+
+  const pathsToContain = ["/certificates", "/educational-tour"];
+
+const showNavbar = pathsToContain.some(path => location.pathname.includes(path));
 
   return (
     <>

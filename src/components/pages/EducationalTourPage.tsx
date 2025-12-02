@@ -46,7 +46,7 @@ export default function EducationalTourPage() {
         <h4 className="text-3xl font-bold mt-20 mb-8 text-center">
           Certificate <span className="text-primary">Received</span> 
         </h4>
-        <section className="max-w-xl mx-auto">
+        <section className="max-w-xl mx-auto" id="tour-certificate">
           <div className="rounded-xl border bg-card shadow-md p-6 space-y-4 text-center">
             <div className="w-full aspect-4/3 rounded-lg bg-muted/20 flex items-center justify-center text-muted-foreground">
               No Image for now haha
