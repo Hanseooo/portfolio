@@ -93,7 +93,7 @@ function ChatInput({ onSend, isLoading }: { onSend: (t: string) => Promise<void>
             onChange={(e) => setText(e.target.value)}
             rows={1}
             className="
-                resize-none max-h-32 w-full
+                resize-none max-h-32 w-58
                 bg-white/10 text-white placeholder-white/60 
                 rounded-xl border border-white/10
                 p-3 shadow-inner
