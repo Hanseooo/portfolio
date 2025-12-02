@@ -55,7 +55,7 @@ function MessageList({ messages, loading }: { messages: ChatMessage[]; loading: 
   }, [messages, loading]);
 
   return (
-    <div className="flex-1 min-h-64 chatbot-widget overflow-auto p-4 space-y-2">
+    <div className="flex-1 chatbot-widget min-h-56 overflow-auto p-4 space-y-2">
       {messages.map((m, i) => (
         <MessageBubble key={i} msg={m} />
       ))}
@@ -85,43 +85,27 @@ function ChatInput({ onSend, isLoading }: { onSend: (t: string) => Promise<void>
   }
 
   return (
-    <div className="p-4 flex items-center border-t border-white/15 bg-white/5 backdrop-blur-md">
-        <div className="flex h-12 items-center gap-3">
-            <Textarea
-            ref={textareaRef}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={1}
-            className="
-                resize-none max-h-32 w-58
-                bg-white/10 text-white placeholder-white/60 
-                rounded-xl border border-white/10
-                p-3 shadow-inner
-                focus-visible:ring-2 focus-visible:ring-emerald-400/40
-            "
-            placeholder="Ask about the site or navigation..."
-            onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                submit();
-                }
-            }}
-            />
-
-            <Button
-            onClick={submit}
-            disabled={isLoading}
-            className="
-                shrink-0 h-11 px-6 rounded-xl
-                bg-emerald-600 hover:bg-emerald-500 
-                text-white font-medium
-            "
-            >
-            {isLoading ? "Sending..." : "Send"}
-            </Button>
-        </div>
+    <div className="p-3 flex items-center justify-center border-t border-white/10 bg-linear-to-t from-white/5 to-white/2">
+      <div className="flex gap-2 items-center">
+        <Textarea
+          ref={textareaRef}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={1}
+          className="resize-none max-h-32 bg-white/5 text-white placeholder-white/60"
+          placeholder="Ask about the site or navigation"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
+        />
+        <Button onClick={submit} disabled={isLoading} className="shrink-0">
+          {isLoading ? "Sending..." : "Send"}
+        </Button>
+      </div>
     </div>
-
   );
 }
 
