@@ -21,7 +21,7 @@ export function handleNavigation(nav: Navigation, navigate: NavigateFunction) {
     setTimeout(() => {
       const el = document.querySelector(nav.section!);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    }, 100);
     return;
   }
 
@@ -31,7 +31,7 @@ export function handleNavigation(nav: Navigation, navigate: NavigateFunction) {
     setTimeout(() => {
       const el = document.querySelector(nav.section!);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 750);
+    }, 1500);
     return;
   }
 
