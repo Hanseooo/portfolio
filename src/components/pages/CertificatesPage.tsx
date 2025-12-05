@@ -29,6 +29,7 @@ import programmingComp2024 from "@/assets/images/Certificates/programming-comp-2
 import googleIoExtendedCert from "@/assets/images/Certificates/google-io-extended-cert.png"
 import devfest2025Cert from "@/assets/images/Certificates/devfest2025-cert.png"
 import pythonEssentials1Cert from "@/assets/images/Certificates/python-essentials1.png"
+import IMCompletionCert from "@/assets/images/Certificates/IM-completion.png"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +55,13 @@ const certificates: Certificate[] = [
     imageUrl: nationalProgrammingChallenge2024,
     date: "December 5, 2024",
     credentialUrl: "https://hcdc.codechum.com/certificates/4235",
+  },
+    {
+    title: "Information Management Completion",
+    issuer: "Codechum",
+    imageUrl: IMCompletionCert,
+    date: "December 5, 2025",
+    credentialUrl: "https://hcdc.codechum.com/certificates/17877",
   },
   {
     title: "2024 CET TechnoFair Programming Competition - 1st runner-up",
