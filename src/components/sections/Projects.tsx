@@ -119,7 +119,7 @@ function EmblaCarousel({ images, alt }: { images: string[]; alt: string }) {
       autoPlayInterval.current = setInterval(() => {
         if (!emblaApi) return;
         emblaApi.scrollNext();
-      }, 8000);
+      }, 7500);
     };
 
     play();
@@ -387,14 +387,14 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
                 transition={{ duration: 0.75, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.5 }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">Featured Projects</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">Featured <span className="text-primary">Projects</span></h2>
 
             </motion.div>
             <div ref={cardsContainerRef} className="flex flex-col gap-8 items-center">
               {featured.map((project) => (
                 <article
                   key={project.id}
-                  className="project-card backdrop-blur-xs bg-linear-to-tr from-background/25 via-primary/5 to-card/50 border-2 border-primary/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
+                  className="project-card backdrop-blur-xs bg-linear-to-tr from-background/25 via-primary/5 to-card/50 border border-b-2 border-foreground/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
                 >
                   <ProjectCardContent project={project} />
                 </article>
@@ -417,7 +417,7 @@ export default function FeaturedProjects({ projects = featuredProjects }: { proj
               {otherProjects.map((project) => (
                 <article
                   key={project.id}
-                  className="project-card backdrop-blur-xs bg-background/25 border-2 border-primary/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
+                  className="project-card backdrop-blur-xs bg-background/25 border border-b-2 border-foreground/10 rounded-2xl shadow-md overflow-hidden w-full max-w-3xl will-change-transform"
                 >
                   <ProjectCardContent project={project} />
                 </article>

@@ -2,13 +2,46 @@ import { cn } from "@/lib/utils";
 import CompaniesVisitedSection from "../sections/CompaniesVisitedSection";
 import { GridPattern } from "../ui/shadcn-io/grid-pattern";
 import TourGallerySection from "../sections/TourGallerySection";
+import tourCert from "@/assets/images/Certificates/educ-tour-cert.png";
 
-export default function EducationalTourPage() {
-  const tarsierCertificate = {
+type Certificate = {
+  title: string;
+  issuer: string;
+  date: string;
+  imageUrl: string;
+};
+
+const TOUR_CERTIFICATES : Certificate[] = [
+  {
+    title: "Educational Tour Completion",
+    issuer: "World of Adventures Travels and Tours",
+    date: "November 15, 2025",
+    imageUrl: tourCert
+  },
+  {
     title: "T.A.R.S.I.E.R 117 Completion Certificate",
     issuer: "T.A.R.S.I.E.R 117",
     date: "November 15, 2025",
-  };
+    imageUrl: ""
+  },
+]
+
+function CertificateCard({ cert }: { cert: Certificate }) {
+  return (
+          <div className="rounded-xl border bg-card shadow-md p-6 space-y-4 text-center mb-4">
+            <img src= {cert.imageUrl} className="w-full aspect-4/3 rounded-lg bg-muted/20 flex items-center justify-center text-muted-foreground select-none" />
+            <h3 className="text-2xl font-semibold">{cert.title}</h3>
+            <p className="text-sm text-muted-foreground">
+              Issuer: {cert.issuer}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Date: {cert.date}
+            </p>
+          </div>
+  )
+}
+
+export default function EducationalTourPage() {
 
   return (
     <>
@@ -44,21 +77,17 @@ export default function EducationalTourPage() {
           <CompaniesVisitedSection />
 
         <h4 className="text-3xl font-bold mt-20 mb-8 text-center">
-          Certificate <span className="text-primary">Received</span> 
+          Certificates <span className="text-primary">Received</span> 
         </h4>
         <section className="max-w-xl mx-auto" id="tour-certificate">
-          <div className="rounded-xl border bg-card shadow-md p-6 space-y-4 text-center">
-            <div className="w-full aspect-4/3 rounded-lg bg-muted/20 flex items-center justify-center text-muted-foreground">
-              No Image for now haha
-            </div>
-            <h3 className="text-2xl font-semibold">{tarsierCertificate.title}</h3>
-            <p className="text-sm text-muted-foreground">
-              Issuer: {tarsierCertificate.issuer}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Date: {tarsierCertificate.date}
-            </p>
-          </div>
+          {
+            TOUR_CERTIFICATES.map((cert, index) => (
+              <CertificateCard 
+                key={index}
+                cert={cert}
+              />
+            ))
+          }
         </section>
           {/* <h4 className="text-3xl font-bold mt-20 mb-8 text-center">
           Educational Tour <span className="text-primary">Gallery</span> 

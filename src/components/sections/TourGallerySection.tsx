@@ -219,7 +219,7 @@ export default function TourGallerySection() {
         });
 
           gsap.to(bgEl, {
-            x: -maxScroll * 0.25,
+            x: -maxScroll * 0.1,
             ease: "none",
             scrollTrigger: {
               trigger: containerEl,

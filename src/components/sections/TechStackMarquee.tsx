@@ -145,7 +145,7 @@ export default function TechStackMarquee() {
             id="tech-stack-section"
             
           >
-            <h2 className="text-3xl md:text-5xl font-bold">Tech Stack</h2>
+            <h2 className="text-3xl md:text-5xl font-bold">Tech <span className="text-primary">Stack</span></h2>
           </motion.div>
 
       <motion.div className="w-full flex flex-col gap-8 items-center" style={{ y: containerY }} >
@@ -156,7 +156,7 @@ export default function TechStackMarquee() {
               {[...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1, ...row1,].map((tech, i) => (
                 <Card
                   key={`r1-${i}`}
-                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/20 shadow-xl rounded-2xl p-6"
+                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/75 shadow-xl rounded-2xl p-6"
                   onClick={() => setIsDrawerOpen(true)} // open drawer on click
                 >
                   <img src={tech.img} alt={tech.name} className="w-48 lg:w-56 h-auto object-contain opacity-95" />
@@ -171,7 +171,7 @@ export default function TechStackMarquee() {
               {[...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse(), ...row2.slice().reverse()].map((tech, i) => (
                 <Card
                   key={`r2-${i}`}
-                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/20 shadow-xl rounded-2xl p-6"
+                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/75 shadow-xl rounded-2xl p-6"
                   onClick={() => setIsDrawerOpen(true)}
                 >
                   <img src={tech.img} alt={tech.name} className="w-48 lg:w-56 h-auto object-contain opacity-95" />
@@ -186,7 +186,7 @@ export default function TechStackMarquee() {
               {[...row3, ...row3, ...row3, ...row3, ...row3, ...row3, ...row3, ...row3, ...row3, ...row3, ].map((tech, i) => (
                 <Card
                   key={`r3-${i}`}
-                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/20 shadow-xl rounded-2xl p-6"
+                  className="s flex items-center justify-center w-80 h-80 aspect-square bg-card/25 backdrop-blur-xs border-2 border-primary/75 shadow-xl rounded-2xl p-6"
                   onClick={() => setIsDrawerOpen(true)}
                 >
                   <img src={tech.img} alt={tech.name} className="w-48 lg:w-56 h-auto object-contain opacity-95" />

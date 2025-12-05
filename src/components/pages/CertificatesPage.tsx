@@ -28,6 +28,7 @@ import nationalProgrammingChallenge2024 from "@/assets/images/Certificates/natio
 import programmingComp2024 from "@/assets/images/Certificates/programming-comp-2024.jpg"
 import googleIoExtendedCert from "@/assets/images/Certificates/google-io-extended-cert.png"
 import devfest2025Cert from "@/assets/images/Certificates/devfest2025-cert.png"
+import pythonEssentials1Cert from "@/assets/images/Certificates/python-essentials1.png"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,6 +41,13 @@ interface Certificate {
 }
 
 const certificates: Certificate[] = [
+    {
+    title: "Python Essentials 1 Completion",
+    issuer: "Cisco Networking Academy",
+    imageUrl: pythonEssentials1Cert,
+    date: "December 5, 2025",
+    credentialUrl: "https://www.credly.com/badges/bdec1c5f-e5af-423d-b0e1-e5f934f97054/public_url",
+  },
   {
     title: "National Programming Challenge 2024 Participation",
     issuer: "Codechum",
@@ -52,13 +60,6 @@ const certificates: Certificate[] = [
     issuer: "HCDC College of Engineering and Technology",
     imageUrl: programmingComp2024,
     date: "March 20, 2024",
-    credentialUrl: null,
-  },
-  {
-    title: "T.A.R.S.I.E.R 117 Certificate of Appearance (Educational Tour)",
-    issuer: "Provincial Disaster Risk Reduction and Management Office",
-    imageUrl: "",
-    date: "November 15, 2025",
     credentialUrl: null,
   },
     {
@@ -227,6 +228,18 @@ export default function CertificatesPage() {
               </Card>
             </article>
           ))}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex mb-48 justify-center">
+                <a href="https://www.credly.com/users/hans-amoguis"  target = "_blank">
+                  <h4 className="text-xl sm:text-4xl font-bold italic hover:underline wrap-break-word">Visit me on <span className="text-primary text-2xl sm:text-6xl">Credly!</span></h4>
+                </a>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              View my badges (new tab)
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 

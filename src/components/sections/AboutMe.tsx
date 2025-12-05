@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import myImg from "@/assets/images/me2.jpg";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isInAppBrowser } from "@/utils/browserInfo";
-import { useAssetPreloader } from "@/hooks/useAssetPreloader";
-import { ASSETS_TO_LOAD } from "@/utils/assetsToLoad";
+// import { isInAppBrowser } from "@/utils/browserInfo";
+// import { useAssetPreloader } from "@/hooks/useAssetPreloader";
+// import { ASSETS_TO_LOAD } from "@/utils/assetsToLoad";
 import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,61 +17,61 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function AboutMe() {
   const leftRef = useRef<HTMLDivElement | null>(null);
-  const { isLoaded } = useAssetPreloader(ASSETS_TO_LOAD);
+  // const { isLoaded } = useAssetPreloader(ASSETS_TO_LOAD);
   const navigate = useNavigate()
 
 //   const rightSectionsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) return;
-  if (isInAppBrowser()) return;
+  // useEffect(() => {
+  //   const isMobile = window.innerWidth < 768;
+  //   if (isMobile) return;
+  // if (isInAppBrowser()) return;
 
 
-    const ctx = gsap.context(() => {
-      // LEFT COLUMN — up/down parallax depending on scroll direction
-      if (leftRef.current) {
-        gsap.fromTo(
-          leftRef.current,
-          { y: -80 },
-          {
-            y: 120,
-            ease: "none",
-            scrollTrigger: {
-              trigger: leftRef.current,
-              start: "top 75%",
-              end: "bottom 25%",
-              scrub: true, 
-            },
-          }
-        );
-      }
+  //   const ctx = gsap.context(() => {
+  //     // LEFT COLUMN — up/down parallax depending on scroll direction
+  //     if (leftRef.current) {
+  //       gsap.fromTo(
+  //         leftRef.current,
+  //         { y: -80 },
+  //         {
+  //           y: 120,
+  //           ease: "none",
+  //           scrollTrigger: {
+  //             trigger: leftRef.current,
+  //             start: "top 75%",
+  //             end: "bottom 25%",
+  //             scrub: true, 
+  //           },
+  //         }
+  //       );
+  //     }
 
-      // RIGHT SECTIONS — each has its own up/down parallax
-    //   rightSectionsRef.current.forEach((el) => {
-    //     if (!el) return;
+  //     // RIGHT SECTIONS — each has its own up/down parallax
+  //   //   rightSectionsRef.current.forEach((el) => {
+  //   //     if (!el) return;
 
-    //     gsap.fromTo(
-    //       el,
-    //       { y: 0, opacity: 0 },
-    //       {
-    //         y: -80,
-    //         opacity: 1,
-    //         ease: "power1.out",
-    //         scrollTrigger: {
-    //           trigger: el,
-    //           start: "top bottom",
-    //           end: "bottom 95%",
-    //           scrub: 1,
-    //           markers: false,
-    //         },
-    //       }
-    //     );
-    //   });
-    });
+  //   //     gsap.fromTo(
+  //   //       el,
+  //   //       { y: 0, opacity: 0 },
+  //   //       {
+  //   //         y: -80,
+  //   //         opacity: 1,
+  //   //         ease: "power1.out",
+  //   //         scrollTrigger: {
+  //   //           trigger: el,
+  //   //           start: "top bottom",
+  //   //           end: "bottom 95%",
+  //   //           scrub: 1,
+  //   //           markers: false,
+  //   //         },
+  //   //       }
+  //   //     );
+  //   //   });
+  //   });
 
-    return () => ctx.revert();
-  }, [isLoaded]);
+  //   return () => ctx.revert();
+  // }, [isLoaded]);
 
   const content = [
     {
@@ -103,7 +103,7 @@ export default function AboutMe() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
           viewport={{ once: false, amount: 0.5 }}
-          className="flex flex-col items-center justify-center pt-24 space-y-6 will-change-transform"
+          className="flex flex-col items-center justify-center space-y-6 will-change-transform"
         >
           <div className="w-40 h-40 rounded-full overflow-hidden shadow-lg ring-2 ring-border/40">
             <img src={myImg} alt="Hans Amoguis" className="object-cover w-full h-full" />
