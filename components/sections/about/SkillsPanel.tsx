@@ -83,7 +83,7 @@ function SkillGroup({ title, items }: { title: string; items: string[] }) {
       </h3>
       <ul className="space-y-1 text:md sm:text-lg opacity-85">
         {items.map((item) => (
-          <li key={item}>— {item}</li>
+          <li key={item} className="ml-4">- {item}</li>
         ))}
       </ul>
     </div>
