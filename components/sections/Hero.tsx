@@ -109,7 +109,7 @@ export default function Hero() {
       {/* BUTTONS */}
       <div ref={buttonsRef} className="mt-10 flex items-center gap-6">
         <a
-          href="https://github.com/YOUR_USERNAME"
+          href="https://github.com/Hanseooo"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 border border-foreground/30 px-5 py-3 text-sm transition hover:border-primary hover:text-primary"

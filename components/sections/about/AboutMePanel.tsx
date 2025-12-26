@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
 import { gsap } from "@/lib/gsap";
+
+import hansImg from "@/app/assets/myImages/hans.jpg";
+import hansImg2 from "@/app/assets/myImages/hans2.jpg"
+import { useTheme } from "next-themes";
 
 export default function AboutMePanel() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -11,7 +15,17 @@ export default function AboutMePanel() {
   const textRef = useRef<HTMLDivElement>(null);
   const secondParaRef = useRef<HTMLParagraphElement>(null);
 
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+
+    if (!mounted) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -51,31 +65,32 @@ export default function AboutMePanel() {
     }, panelRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [mounted]);
+
+    const currentImage = mounted && resolvedTheme === "dark" ? hansImg : hansImg2;
+
 
   return (
     <div
       ref={panelRef}
-      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — PHOTO */}
       <div
         ref={photoRef}
-        className="relative w-full max-w-xs md:max-w-[280px] flex-shrink-0 mx-auto"
+        className="relative w-full border-2 max-w-50 md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group"
       >
         <Image
-          src="/me.jpg"
+          src={currentImage}
           alt="Hanseo portrait"
-          width={280}
-          height={360}
-          className="object-cover rounded-2xl w-full"
+          className="object-cover w-full block transition-transform duration-500 group-hover:scale-115"
           priority
         />
+
         <div className="absolute bottom-0 w-full bg-background/80 px-4 py-2 text-center backdrop-blur">
           <span className="text-sm font-semibold tracking-wide">Hanseo</span>
         </div>
       </div>
-
       {/* RIGHT — TEXT */}
       <div
         ref={textRef}
@@ -85,37 +100,39 @@ export default function AboutMePanel() {
           About Me
         </span>
 
-        <p className="text-lg md:text-xl leading-relaxed opacity-85">
-          I’m a full-stack developer who builds thoughtful, animation-driven web
-          experiences with a strong focus on structure, performance, and visual
-          clarity.
+        <p className=" text:md sm:text-lg md:text-xl leading-relaxed opacity-85">
+          I’m a full-stack developer that designs maintainable systems and gives
+          importance to system architecture and user experience. I also code as
+          a hobby, testing my theories when i learn something new and building a
+          web application out of it.
         </p>
 
         <p
           ref={secondParaRef}
-          className="mt-4 md:mt-6 text-lg md:text-xl leading-relaxed opacity-85"
+          className="mt-4 md:mt-6  text:md sm:text-lg md:text-xl leading-relaxed opacity-85"
         >
-          I enjoy blending engineering discipline with bold design systems and
-          motion to create interfaces that feel intentional, expressive, and
-          memorable.
+          I specialize in using TypeScript, React, and Django Rest Framework
+          when building web applications. I focus heavily on the fundamentals
+          and continuously learn and adapt to new technology to enhance
+          productivity and efficiency.
         </p>
 
         {/* ACTIONS */}
         <div className="mt-6 flex justify-center md:justify-start gap-4 flex-wrap">
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/hanseooo"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-primary hover:text-primary"
+            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
           >
             <Linkedin size={16} /> LinkedIn
           </a>
 
           <a
-            href="https://github.com"
+            href="https://github.com/Hanseooo"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-primary hover:text-primary"
+            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
           >
             <Github size={16} /> GitHub
           </a>

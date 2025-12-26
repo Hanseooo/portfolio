@@ -41,15 +41,14 @@ export default function PhilosophyPanel() {
 
       <div className="mt-6 md:mt-12 space-y-4 md:space-y-6 text-lg opacity-80 max-w-3xl mx-auto md:mx-0">
         <p className="philosophy-line">
-          I believe great products are engineered with clarity, structure, and
-          intent — not just assembled.
+          I believe great systems are engineered with clarity, structure, and
+          intent, not just assembled.
         </p>
         <p className="philosophy-line">
-          Motion, design, and code should work together to communicate purpose,
-          not distract from it.
+          Good UI is nice to have but it should be built with proper and maintainable architecture
         </p>
         <p className="philosophy-line">
-          Every decision should scale — visually, technically, and conceptually.
+          Every decision should be scalable and provide good user experience.
         </p>
       </div>
     </div>
