@@ -86,6 +86,8 @@
   }
 }
 
+/* oklch(0.6723 0.1606 244.9955) blue */
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -93,7 +95,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(44.771% 0.29571 264.948);
+  --primary: oklch(0.6723 0.1606 244.9955);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
