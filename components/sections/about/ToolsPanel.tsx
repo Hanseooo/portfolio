@@ -2,14 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
-import {
-  Code2,
-  Layers,
-  Database,
-  Server,
-  Cloud,
-  GitBranch,
-} from "lucide-react";
 import { ToolGroup } from "./Tools/ToolGroup";
 
 export default function ToolsPanel() {
@@ -54,33 +46,35 @@ export default function ToolsPanel() {
         <ToolGroup
           title="Frontend"
           tools={[
-            { label: "TypeScript", icon: Layers },
-            { label: "Next.js", icon: Code2 },
-            { label: "React", icon: Layers },
-            { label: "Tailwind CSS", icon: Layers },
-            { label: "Zustand", icon: Layers },
-            { label: "Bootstrap", icon: Layers },
+            { label: "TypeScript", id: "typescript" },
+            { label: "Next.js", id: "nextjs" },
+            { label: "React", id: "react" },
+            { label: "Tailwind CSS", id: "tailwind" },
+            { label: "React Query", id: "reactquery" },
+            { label: "Bootstrap", id: "bootstrap" },
+            { label: "JavaScript", id: "javascript" },
+            { label: "Shadcn Ui", id: "shadcnui" },
           ]}
         />
 
         <ToolGroup
           title="Backend"
           tools={[
-            { label: "Python", icon: Server },
-            { label: "Django", icon: Server },
-            { label: "PostgreSQL", icon: Database },
-            { label: "MySQL", icon: Server },
-            { label: "Scikit-learn", icon: Server },
+            { label: "Python", id: "python" },
+            { label: "Django", id: "django" },
+            { label: "PostgreSQL", id: "postgres" },
+            { label: "MySQL", id: "mysql" },
           ]}
         />
 
         <ToolGroup
           title="Services"
           tools={[
-            { label: "Github", icon: Cloud },
-            { label: "Firebase", icon: Cloud },
-            { label: "Supabase", icon: GitBranch },
-            { label: "Neon", icon: Cloud },
+            { label: "Github", id: "github" },
+            { label: "Git", id: "git" },
+            { label: "AI Studio", id: "ai-studio" },
+            { label: "Firebase", id: "firebase" },
+            { label: "Supabase", id: "supabase" },
           ]}
         />
       </div>

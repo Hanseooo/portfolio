@@ -1,3 +1,4 @@
+import { SvgId } from "@/lib/svgMap";
 import { ToolItem } from "./ToolItem";
 
 export function ToolGroup({
@@ -7,18 +8,18 @@ export function ToolGroup({
   title: string;
   tools: {
     label: string;
-    icon: React.ElementType;
+    id: SvgId;
   }[];
 }) {
   return (
     <div className="tool-group">
-      <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide opacity-70">
+      <h3 className="mb-2 sm:mb-4 text-sm font-semibold uppercase tracking-wide opacity-70">
         {title}
       </h3>
 
-      <div className="flex flex-wrap gap-4">
-        {tools.map(({ label, icon: Icon }) => (
-          <ToolItem key={label} label={label} Icon={Icon} />
+      <div className="flex flex-wrap gap-3 sm:gap-4">
+        {tools.map(({ label, id }) => (
+          <ToolItem key={label} label={label} id={id} />
         ))}
       </div>
     </div>

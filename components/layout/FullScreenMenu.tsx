@@ -77,7 +77,7 @@ export default function FullscreenMenu({
   return (
     <div
       ref={menuRef}
-      className="fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background text-foreground opacity-0"
+      className="fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/90 backdrop-blur-xl text-foreground opacity-0"
     >
       <ul className="mb-24 flex h-[90vh] flex-col justify-around space-y-4 py-24 text-center sm:py-0">
         {links.map((link) => (

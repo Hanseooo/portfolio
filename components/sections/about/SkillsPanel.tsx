@@ -27,7 +27,7 @@ export default function SkillsPanel() {
   return (
     <div
       ref={panelRef}
-      className="about-panel flex flex-col bg-background dark:border-r md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col bg-background dark:bg-transparent dark:border-r md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — TITLE */}
       <div className="flex flex-col justify-center text-center md:text-left w-full md:w-1/2">
@@ -48,7 +48,7 @@ export default function SkillsPanel() {
           items={[
             "Responsive web interface development",
             "RESTful API integration and client–server architecture",
-            "State Management",
+            "AI Integration",
             "Design-to-code accuracy",
           ]}
         />
