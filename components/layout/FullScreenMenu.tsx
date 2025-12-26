@@ -84,7 +84,7 @@ export default function FullscreenMenu({
           <li key={link.id}>
             <button
               onClick={() => handleClick(link.id)}
-              className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] font-bold transition hover:text-primary"
+              className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] font-black transition hover:text-primary"
             >
               {link.label}
             </button>

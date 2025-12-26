@@ -7,11 +7,11 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ReactNode } from "react";
 
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import TransitionProvider from "@/components/transitions/TransitionProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({ weight: "400" });
 
 export default function RootLayout({
   children,
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={poppins.className} suppressHydrationWarning>
       <body className="bg-background text-foreground antialiased">
         <LenisProvider>
           <TransitionProvider>
