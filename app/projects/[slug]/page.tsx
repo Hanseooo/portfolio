@@ -7,7 +7,7 @@ import PageTransition from "@/components/layout/PageTransition";
 import ProjectGallery from "@/components/projects/ProjectGallery";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { use, useLayoutEffect } from "react";
 import BackToProjects from "@/components/utils/BackToProjects";
@@ -22,14 +22,19 @@ export default function ProjectPage({
   if (!project) notFound();
 
   useLayoutEffect(() => {
+    const lenis = (window as any).__lenis;
 
-    window.scrollTo(0, 0);
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
 
   return (
     <PageTransition>
-      <article className="bg-background text-foreground">
+      <article id="project-view" className="bg-background text-foreground">
         {/* HERO */}
         <section className="relative h-[80vh] w-full overflow-hidden">
           <Image

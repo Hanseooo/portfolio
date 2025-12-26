@@ -23,6 +23,8 @@ export function LenisProvider({ children } : LenisProviderProps ) {
       duration: 1.2,
     });
 
+     (window as any).__lenis = lenis;
+
     function raf(time: number) {
       lenis.raf(time);
       ScrollTrigger.update();

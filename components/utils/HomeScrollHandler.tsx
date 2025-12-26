@@ -15,7 +15,7 @@ export default function HomeScrollHandler() {
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth" });
-        }, 100);
+        }, 500);
       } else if (attempts < 10) {
         requestAnimationFrame(() => scrollWithRetry(attempts + 1));
       }
