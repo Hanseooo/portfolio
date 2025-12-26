@@ -36,7 +36,7 @@ export default function ToolsPanel() {
   return (
     <div
       ref={panelRef}
-      className="about-panel bg-background flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      className="about-panel bg-background dark:border-r flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — TITLE */}
       <div className="flex flex-col justify-center text-center md:text-left w-full md:w-1/2">
@@ -54,29 +54,33 @@ export default function ToolsPanel() {
         <ToolGroup
           title="Frontend"
           tools={[
+            { label: "TypeScript", icon: Layers },
             { label: "Next.js", icon: Code2 },
             { label: "React", icon: Layers },
             { label: "Tailwind CSS", icon: Layers },
-            { label: "Framer Motion", icon: Layers },
-            { label: "GSAP", icon: Layers },
+            { label: "Zustand", icon: Layers },
+            { label: "Bootstrap", icon: Layers },
           ]}
         />
 
         <ToolGroup
           title="Backend"
           tools={[
-            { label: "Django REST", icon: Server },
+            { label: "Python", icon: Server },
+            { label: "Django", icon: Server },
             { label: "PostgreSQL", icon: Database },
-            { label: "Auth Systems", icon: Server },
+            { label: "MySQL", icon: Server },
+            { label: "Scikit-learn", icon: Server },
           ]}
         />
 
         <ToolGroup
           title="Services"
           tools={[
-            { label: "Vercel", icon: Cloud },
-            { label: "GitHub", icon: GitBranch },
-            { label: "CI / CD", icon: Cloud },
+            { label: "Github", icon: Cloud },
+            { label: "Firebase", icon: Cloud },
+            { label: "Supabase", icon: GitBranch },
+            { label: "Neon", icon: Cloud },
           ]}
         />
       </div>

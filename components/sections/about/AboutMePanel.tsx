@@ -67,17 +67,18 @@ export default function AboutMePanel() {
     return () => ctx.revert();
   }, [mounted]);
 
-  const currentImage = resolvedTheme === "dark" ? hansImg : hansImg2;
+    const currentImage = mounted && resolvedTheme === "dark" ? hansImg : hansImg2;
+
 
   return (
     <div
       ref={panelRef}
-      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — PHOTO */}
       <div
         ref={photoRef}
-        className="relative w-full border-2 max-w-xs md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group"
+        className="relative w-full border-2 max-w-50 md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group"
       >
         <Image
           src={currentImage}
@@ -99,7 +100,7 @@ export default function AboutMePanel() {
           About Me
         </span>
 
-        <p className="text-lg md:text-xl leading-relaxed opacity-85">
+        <p className=" text:md sm:text-lg md:text-xl leading-relaxed opacity-85">
           I’m a full-stack developer that designs maintainable systems and gives
           importance to system architecture and user experience. I also code as
           a hobby, testing my theories when i learn something new and building a
@@ -108,7 +109,7 @@ export default function AboutMePanel() {
 
         <p
           ref={secondParaRef}
-          className="mt-4 md:mt-6 text-lg md:text-xl leading-relaxed opacity-85"
+          className="mt-4 md:mt-6  text:md sm:text-lg md:text-xl leading-relaxed opacity-85"
         >
           I specialize in using TypeScript, React, and Django Rest Framework
           when building web applications. I focus heavily on the fundamentals

@@ -27,7 +27,7 @@ export default function SkillsPanel() {
   return (
     <div
       ref={panelRef}
-      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col bg-background dark:border-r md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — TITLE */}
       <div className="flex flex-col justify-center text-center md:text-left w-full md:w-1/2">
@@ -81,7 +81,7 @@ function SkillGroup({ title, items }: { title: string; items: string[] }) {
       <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide opacity-70">
         {title}
       </h3>
-      <ul className="space-y-1 text-lg opacity-85">
+      <ul className="space-y-1 text:md sm:text-lg opacity-85">
         {items.map((item) => (
           <li key={item}>— {item}</li>
         ))}
