@@ -48,7 +48,7 @@ export default function ToolsPanel() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.4 }}
         className="w-full md:w-1/2 space-y-10"
       >
         <ToolGroup
