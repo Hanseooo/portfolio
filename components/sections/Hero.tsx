@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef } from "react";
 import { Github, ArrowDown } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BBH_Bartle } from "next/font/google";
+import { motion } from "framer-motion";
+
 
 const bbhBartle = BBH_Bartle({
   subsets: ["latin"],
@@ -23,42 +25,10 @@ export default function Hero() {
     if (!rootRef.current) return;
 
     const ctx = gsap.context(() => {
-      /* ---------------- INTRO ---------------- */
-      const tl = gsap.timeline();
-
-      tl.from([firstNameRef.current, lastNameRef.current], {
-        y: 140,
-        opacity: 0,
-        duration: 1.1,
-        ease: "power4.out",
-        stagger: 0.08,
-      })
-        .from(
-          roleRef.current,
-          {
-            y: 40,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          },
-          "-=0.5"
-        )
-        .from(
-          buttonsRef.current,
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          },
-          "-=0.3"
-        );
-
-      /* ---------------- PARALLAX ---------------- */
 
       // First name — slow
       gsap.to(firstNameRef.current, {
-        yPercent: -30,
+        yPercent: -90,
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
@@ -69,7 +39,7 @@ export default function Hero() {
 
       // Last name — faster
       gsap.to(lastNameRef.current, {
-        yPercent: -90,
+        yPercent: -120,
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
@@ -99,12 +69,16 @@ export default function Hero() {
       </h1>
 
       {/* ROLE */}
-      <p
+      <motion.p
         ref={roleRef}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+        viewport={{ once: false, amount: 1 }}
         className="mt-4 text-sm uppercase tracking-[0.3em] opacity-80"
       >
         Full-Stack Web Developer
-      </p>
+      </motion.p>
 
       {/* BUTTONS */}
       <div ref={buttonsRef} className="mt-10 flex items-center gap-6">

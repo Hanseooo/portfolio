@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useMagnetic } from "@/components/motion/useMagnetic";
 
+
 type Props = {
   slug: string;
   title: string;
@@ -33,7 +34,9 @@ export default function ProjectCard({
     <motion.article
       onClick={() => router.push(`/projects/${slug}`)}
       className="project-card  group relative cursor-pointer hover:text-primary"
-      initial={{ scale: 1 }}
+      initial={{y: 40, opacity: 0, scale: 1 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.25 }}
       whileHover={{ scale: 0.98 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >

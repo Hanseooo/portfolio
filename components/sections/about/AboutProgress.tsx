@@ -33,7 +33,7 @@ export default function AboutProgress({
   }, [containerRef]);
 
   return (
-    <div className="pointer-events-none fixed bottom-6 left-6 z-50 w-40">
+    <div className="pointer-events-none fixed bottom-6 left-6 z-60 w-full">
       <div className="h-0.5 w-full bg-foreground/10">
         <div ref={barRef} className="h-full w-full scale-x-0 bg-primary" />
       </div>

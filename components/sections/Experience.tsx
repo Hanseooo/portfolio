@@ -1,37 +1,33 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
 import { experience } from "@/lib/experience";
+import { motion } from "framer-motion";
+
 
 export default function Experience() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".exp-item", {
-        opacity: 0,
-        y: 40,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 80%",
-        },
-      });
-    }, ref);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
-    <section ref={ref} id="experience" className="mx-auto max-w-5xl px-6 py-32">
-      <h2 className="mb-20 text-primary text-5xl font-bold">Experience</h2>
+    <section id="experience" className="mx-auto max-w-5xl px-6 py-32">
+      <motion.h2
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.5 }}
+        className="mb-20 text-primary text-5xl font-bold"
+      >
+        Experience
+      </motion.h2>
 
       <div className="space-y-16">
         {experience.map((item, i) => (
-          <div key={i} className="exp-item border-l border-foreground/20 pl-6">
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            viewport={{ once: true, amount: 1 }}
+            key={i}
+            className="exp-item border-l border-foreground/20 pl-6"
+          >
             <div className="mb-2 flex items-center justify-between">
               <h3 className="text-xl font-semibold">{item.role}</h3>
               <span className="text-sm opacity-60">{item.period}</span>
@@ -44,7 +40,7 @@ export default function Experience() {
                 <li key={idx}>{point}</li>
               ))}
             </ul>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

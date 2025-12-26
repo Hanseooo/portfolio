@@ -32,7 +32,7 @@ export default function BackToProjects() {
           <ArrowLeft className="h-8 w-8 transition-transform group-hover:-translate-x-2" />
         </div>
         <span className="text-xl font-bold uppercase tracking-widest">
-          Back to Projects
+          Exit Project View
         </span>
       </button>
     </div>

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { motion } from "framer-motion";
+
 
 export default function SkillsPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -27,7 +29,7 @@ export default function SkillsPanel() {
   return (
     <div
       ref={panelRef}
-      className="about-panel flex flex-col bg-background dark:border-r md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col bg-background dark:bg-transparent dark:border-r md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — TITLE */}
       <div className="flex flex-col justify-center text-center md:text-left w-full md:w-1/2">
@@ -42,13 +44,19 @@ export default function SkillsPanel() {
       </div>
 
       {/* RIGHT — Skills List */}
-      <div className="w-full md:w-1/2 space-y-8">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.4 }}
+        className="w-full md:w-1/2 space-y-8"
+      >
         <SkillGroup
           title="Web Development Fundamentals"
           items={[
             "Responsive web interface development",
             "RESTful API integration and client–server architecture",
-            "State Management",
+            "AI Integration",
             "Design-to-code accuracy",
           ]}
         />
@@ -70,7 +78,7 @@ export default function SkillsPanel() {
             "Basic CI/CD and cloud deployment concepts",
           ]}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }

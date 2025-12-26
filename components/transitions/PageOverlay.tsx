@@ -2,6 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { BBH_Bartle } from "next/font/google";
+
+const bbhBartle = BBH_Bartle({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function PageOverlay({ active }: { active: boolean }) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -61,7 +67,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
     >
       <h1
         ref={textRef}
-        className="font-bbhbartle text-[clamp(4rem,10vw,8rem)] font-black italic text-primary tracking-tight"
+        className={` ${bbhBartle.className} text-[clamp(3rem,10vw,8rem)] font-black italic text-primary tracking-tight`}
       >
         HANSEO
       </h1>
