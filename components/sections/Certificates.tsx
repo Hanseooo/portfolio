@@ -2,11 +2,21 @@
 
 import { certificates } from "@/lib/certificates";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
+
 
 export default function Certificates() {
   return (
     <section id="certificates" className="mx-auto max-w-5xl px-6 py-32">
-      <h2 className="mb-20 text-primary text-5xl font-bold">Certificates</h2>
+      <motion.h2
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 1 }}
+        className="mb-20 text-primary text-5xl font-bold"
+      >
+        Certificates
+      </motion.h2>
 
       <div className="grid gap-8 sm:grid-cols-2">
         {certificates.map((cert, i) => (

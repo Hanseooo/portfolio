@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { motion } from "framer-motion";
+
 
 export default function PhilosophyPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -39,18 +41,25 @@ export default function PhilosophyPanel() {
         not screens.
       </h2>
 
-      <div className="mt-6 md:mt-12 space-y-4 md:space-y-6 text-lg opacity-80 max-w-3xl mx-auto md:mx-0">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.25 }}
+        className="mt-6 md:mt-12 space-y-4 md:space-y-6 text-lg opacity-80 max-w-3xl mx-auto md:mx-0"
+      >
         <p className="philosophy-line">
           I believe great systems are engineered with clarity, structure, and
           intent, not just assembled.
         </p>
         <p className="philosophy-line">
-          Good UI is nice to have but it should be built with proper and maintainable architecture
+          Good UI is nice to have but it should be built with proper and
+          maintainable architecture
         </p>
         <p className="philosophy-line">
           Every decision should be scalable and provide good user experience.
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

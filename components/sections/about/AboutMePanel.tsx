@@ -3,17 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
-import { gsap } from "@/lib/gsap";
-
+import { motion } from "framer-motion";
 import hansImg from "@/app/assets/myImages/hans.jpg";
 import hansImg2 from "@/app/assets/myImages/hans2.jpg"
 import { useTheme } from "next-themes";
 
 export default function AboutMePanel() {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const photoRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const secondParaRef = useRef<HTMLParagraphElement>(null);
 
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -22,64 +17,21 @@ export default function AboutMePanel() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
 
-    if (!mounted) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: panelRef.current,
-          start: "top 80%",
-        },
-      });
-
-      tl.from(photoRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-      });
-
-      tl.from(
-        textRef.current,
-        {
-          y: 40,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        },
-        "-=0.6"
-      );
-
-      tl.from(
-        secondParaRef.current,
-        {
-          y: 24,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-        },
-        "-=0.3"
-      );
-    }, panelRef);
-
-    return () => ctx.revert();
-  }, [mounted]);
 
     const currentImage = mounted && resolvedTheme === "dark" ? hansImg : hansImg2;
 
 
   return (
-    <div
-      ref={panelRef}
+    <motion.div
+      initial={{ y: 40, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.5 }}
       className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — PHOTO */}
-      <div
-        ref={photoRef}
-        className="relative w-full border-2 max-w-50 md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group"
-      >
+      <div className="relative w-full border-2 max-w-50 md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group">
         <Image
           src={currentImage}
           alt="Hanseo portrait"
@@ -92,11 +44,10 @@ export default function AboutMePanel() {
         </div>
       </div>
       {/* RIGHT — TEXT */}
-      <div
-        ref={textRef}
-        className="flex flex-col justify-center text-center md:text-left max-w-xl mx-auto"
-      >
-        <span className="mb-4 text-xs uppercase tracking-[0.3em] opacity-60">
+      <div className="flex flex-col justify-center text-center md:text-left max-w-xl mx-auto">
+        <span
+          className="mb-4 text-xs uppercase tracking-[0.3em] opacity-60"
+        >
           About Me
         </span>
 
@@ -107,15 +58,18 @@ export default function AboutMePanel() {
           web application out of it.
         </p>
 
-        <p
-          ref={secondParaRef}
+        <motion.p
+          initial={{ y: 40, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          viewport={{ once: true, amount: 1 }}
           className="mt-4 md:mt-6  text:md sm:text-lg md:text-xl leading-relaxed opacity-85"
         >
           I specialize in using TypeScript, React, and Django Rest Framework
           when building web applications. I focus heavily on the fundamentals
           and continuously learn and adapt to new technology to enhance
           productivity and efficiency.
-        </p>
+        </motion.p>
 
         {/* ACTIONS */}
         <div className="mt-6 flex justify-center md:justify-start gap-4 flex-wrap">
@@ -138,6 +92,6 @@ export default function AboutMePanel() {
           </a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

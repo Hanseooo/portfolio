@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { motion } from "framer-motion";
+
 
 export default function SkillsPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,13 @@ export default function SkillsPanel() {
       </div>
 
       {/* RIGHT — Skills List */}
-      <div className="w-full md:w-1/2 space-y-8">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.4 }}
+        className="w-full md:w-1/2 space-y-8"
+      >
         <SkillGroup
           title="Web Development Fundamentals"
           items={[
@@ -70,7 +78,7 @@ export default function SkillsPanel() {
             "Basic CI/CD and cloud deployment concepts",
           ]}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }

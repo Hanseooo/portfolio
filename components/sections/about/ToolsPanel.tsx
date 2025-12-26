@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { ToolGroup } from "./Tools/ToolGroup";
+import { motion } from "framer-motion";
+
 
 export default function ToolsPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,13 @@ export default function ToolsPanel() {
       </div>
 
       {/* RIGHT — Tool Groups */}
-      <div className="w-full md:w-1/2 space-y-10">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.5 }}
+        className="w-full md:w-1/2 space-y-10"
+      >
         <ToolGroup
           title="Frontend"
           tools={[
@@ -77,7 +85,7 @@ export default function ToolsPanel() {
             { label: "Supabase", id: "supabase" },
           ]}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }
