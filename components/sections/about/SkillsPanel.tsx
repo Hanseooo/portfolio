@@ -27,7 +27,7 @@ export default function SkillsPanel() {
   return (
     <div
       ref={panelRef}
-      className="about-panel bg-background flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — TITLE */}
       <div className="flex flex-col justify-center text-center md:text-left w-full md:w-1/2">
@@ -44,31 +44,30 @@ export default function SkillsPanel() {
       {/* RIGHT — Skills List */}
       <div className="w-full md:w-1/2 space-y-8">
         <SkillGroup
-          title="Frontend"
+          title="Web Development Fundamentals"
           items={[
-            "React / Next.js",
-            "TypeScript",
-            "Tailwind CSS",
-            "Framer Motion",
-            "GSAP",
+            "Responsive web interface development",
+            "RESTful API integration and client–server architecture",
+            "State Management",
+            "Design-to-code accuracy",
           ]}
         />
         <SkillGroup
-          title="Backend"
+          title="Engineering and Problem Solving"
           items={[
-            "Django REST Framework",
-            "PostgreSQL",
-            "Authentication",
-            "REST APIs",
+            "Writing clean, maintainable code",
+            "Breaking down complex problems",
+            "Logical thinking",
+            "Code organization and structure",
           ]}
         />
         <SkillGroup
-          title="Practices"
+          title="Development Workflow"
           items={[
-            "Component Architecture",
-            "CI/CD",
-            "Performance Optimization",
-            "UX-driven Engineering",
+            "Version control workflows (Git)",
+            "Git/GitHub workflows and pull requests",
+            "Component-based development",
+            "Basic CI/CD and cloud deployment concepts",
           ]}
         />
       </div>

@@ -25,7 +25,6 @@ export default function Home() {
       />
       <Hero />
       <About />
-      <div id="projects" className="h-0.5 bg-background" />
       <Projects />
       <Experience />
       <Certificates />

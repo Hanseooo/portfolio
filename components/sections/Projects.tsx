@@ -34,6 +34,8 @@ export default function Projects() {
       <h2 className="mb-20 text-center sm:text-start text-primary font-bold text-[clamp(2.5rem,8vw,6rem)] leading-none">
         Featured Projects
       </h2>
+            <div id="projects" className="h-0.5 bg-background" />
+      
 
       <div className="mx-auto max-w-6xl grid gap-32">
         {projects.map((project) => (

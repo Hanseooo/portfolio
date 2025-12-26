@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
-import { use } from "react";
+import { use, useLayoutEffect } from "react";
 import BackToProjects from "@/components/utils/BackToProjects";
 
 export default function ProjectPage({
@@ -20,6 +20,12 @@ export default function ProjectPage({
   const resolvedParams = use(params);
   const project = projects.find((p) => p.slug === resolvedParams.slug);
   if (!project) notFound();
+
+  useLayoutEffect(() => {
+
+    window.scrollTo(0, 0);
+  }, []);
+
 
   return (
     <PageTransition>
