@@ -28,26 +28,32 @@ export default function FullscreenMenu({
   useEffect(() => {
     if (!menuRef.current) return;
 
+    // Initialize timeline
     tl.current = gsap.timeline({ paused: true });
 
     tl.current
-      .set(menuRef.current, { autoAlpha: 1 })
+      .set(menuRef.current, { autoAlpha: 1 }) // Ensures visibility before sliding
       .fromTo(
         menuRef.current,
         { y: "-100%" },
-        { y: "0%", duration: 0.8, ease: "power4.out" }
+        { y: "0%", duration: 0.8, ease: "power4.inOut" } // Smoother ease for large panels
       )
       .from(
         ".menu-link",
         {
-          y: 60,
-          opacity: 1,
-          stagger: 0.12,
-          duration: 0.6,
-          ease: "power3.out",
+          y: 50, // Start 50px lower
+          opacity: 1, // Start transparent
+          duration: 0.5,
+          stagger: 0.1, // Delay between each link
+          ease: "power2.out",
         },
-        "-=0.4"
+        "-=0.5" // Start slightly before the menu finish sliding
       );
+
+    // Cleanup to prevent memory leaks/glitches on hot reload
+    return () => {
+      if (tl.current) tl.current.kill();
+    };
   }, []);
 
   useEffect(() => {

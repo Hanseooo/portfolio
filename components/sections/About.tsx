@@ -42,6 +42,7 @@ export default function About() {
 
   return (
     <section
+      id="about"
       ref={sectionRef}
       className="relative h-screen w-full bg-background"
     >
@@ -58,7 +59,7 @@ export default function About() {
         className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
       />
 
-      <AboutProgress containerRef={sectionRef} />
+      {sectionRef.current && <AboutProgress containerRef={sectionRef} />}
 
       <div ref={trackRef} className="flex h-full w-max will-change-transform">
         <AboutMePanel />
