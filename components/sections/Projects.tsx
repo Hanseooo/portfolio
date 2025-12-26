@@ -31,10 +31,10 @@ export default function Projects() {
       ref={sectionRef}
       className="relative min-h-screen bg-background px-6 py-32"
     >
-      <h2 className="mb-20 text-center sm:text-start text-primary font-bold text-[clamp(2.5rem,8vw,6rem)] leading-none">
+      <h2 id="projects" className="mb-20 text-center sm:text-start text-primary font-bold text-[clamp(2.5rem,8vw,6rem)] leading-none">
         Featured Projects
       </h2>
-            <div id="projects" className="h-0.5 bg-background" />
+            {/* <div id="projects" className="h-0.5 bg-background" /> */}
       
 
       <div className="mx-auto max-w-6xl grid gap-32">
