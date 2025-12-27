@@ -1,6 +1,7 @@
 "use client"
 
 import PageTransition from "@/components/layout/PageTransition";
+import GestureScrollProvider from "@/components/providers/GestureScrollProvider";
 import About from "@/components/sections/About";
 import Certificates from "@/components/sections/Certificates";
 import Experience from "@/components/sections/Experience";
@@ -39,7 +40,9 @@ export default function Home() {
         className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
       />
       <Hero />
-      <About />
+      <GestureScrollProvider>
+        <About />
+      </GestureScrollProvider>
       <Projects />
       <Experience />
       <Certificates />
