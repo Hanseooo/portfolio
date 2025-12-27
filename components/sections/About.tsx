@@ -45,7 +45,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative h-screen w-full bg-background"
+      className="relative h-screen w-full bg-background select-none"
     >
       <GridPattern
         width={80}
