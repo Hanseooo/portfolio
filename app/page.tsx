@@ -1,3 +1,6 @@
+"use client"
+
+import PageTransition from "@/components/layout/PageTransition";
 import About from "@/components/sections/About";
 import Certificates from "@/components/sections/Certificates";
 import Experience from "@/components/sections/Experience";
@@ -5,10 +8,22 @@ import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import { GridPattern } from "@/components/ui/shadcn-io/grid-pattern";
 import HomeScrollHandler from "@/components/utils/HomeScrollHandler";
+import { useLayoutEffect } from "react";
 
 export default function Home() {
 
+      useLayoutEffect(() => {
+        const lenis = (window as any).__lenis;
+    
+        if (lenis) {
+          lenis.scrollTo(0, { immediate: true });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      }, []);
+
   return (
+    <PageTransition>
     <div className="relative overflow-x-hidden">
       <HomeScrollHandler />
       <GridPattern
@@ -29,5 +44,6 @@ export default function Home() {
       <Experience />
       <Certificates />
     </div>
+    </PageTransition>
   );
 }

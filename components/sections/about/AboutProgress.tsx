@@ -2,40 +2,43 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 export default function AboutProgress({
-  containerRef,
+  sectionRef,
 }: {
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  sectionRef: React.RefObject<HTMLElement | null>;
 }) {
   const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!sectionRef.current || !barRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.to(barRef.current, {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: () =>
-            containerRef.current ? containerRef.current.scrollWidth : 0,
-          scrub: true,
-          invalidateOnRefresh: true, 
-        },
-        transformOrigin: "left center",
-      });
-    }, containerRef); 
+    const st = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: "top top",
+      end: () => {
+        const panels = sectionRef.current!.querySelectorAll(".about-panel");
+        return `+=${window.innerWidth * (panels.length - 1)}`;
+      },
+      scrub: true,
+      onUpdate(self) {
+        gsap.set(barRef.current!, {
+          scaleX: self.progress,
+          transformOrigin: "left center",
+        });
+      },
+    });
 
-    return () => ctx.revert();
-  }, [containerRef]);
+    return () => {
+      st.kill();
+    };
+  }, [sectionRef]);
 
   return (
-    <div className="pointer-events-none fixed bottom-6 left-6 z-60 w-full">
-      <div className="h-0.5 w-full bg-foreground/10">
-        <div ref={barRef} className="h-full w-full scale-x-0 bg-primary" />
+    <div className="pointer-events-none fixed bottom-6 left-6 right-6 z-60">
+      <div className="h-0.5 w-full bg-foreground/10 overflow-hidden">
+        <div ref={barRef} className="h-full w-full bg-primary scale-x-0" />
       </div>
     </div>
   );

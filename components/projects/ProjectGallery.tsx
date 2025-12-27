@@ -1,49 +1,58 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { easeOut, motion } from "framer-motion";
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.985,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.45,
+      ease: easeOut,
+    },
+  },
+};
 
 export default function ProjectGallery({
   images,
 }: {
   images: StaticImageData[];
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".gallery-item", {
-        y: 80,
-        opacity: 0,
-        duration: 1,
-        ease: "power4.out",
-        stagger: 0.25,
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 80%",
-        },
-      });
-    }, ref);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={ref} className="space-y-8 sm:space-y-16">
+    <section className="mx-auto max-w-5xl px-6 py-24 space-y-16">
       {images.map((img, i) => (
-        <div
+        <motion.div
           key={i}
-          className="gallery-item relative rounded-md grid grid-cols-1 md:grid-cols-2 gap-8 aspect-video h-fit overflow-hidden border"
+          variants={itemVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          className="
+            relative overflow-hidden rounded-md
+            border border-foreground/10
+            transition-colors duration-300
+            hover:border-primary
+            will-change-transform
+          "
         >
-          <Image
-            src={img}
-            alt={`Project screenshot ${i + 1}`}
-            fill
-            className="object-cover"
-          />
-        </div>
+          {/* Aspect ratio lock = no flashing */}
+          <div className="relative w-full aspect-video">
+            <Image
+              src={img}
+              alt={`Project image ${i + 1}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 900px"
+              className="object-cover"
+              priority={i === 0}
+            />
+          </div>
+        </motion.div>
       ))}
-    </div>
+    </section>
   );
 }

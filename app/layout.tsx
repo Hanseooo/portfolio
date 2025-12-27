@@ -7,7 +7,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ReactNode } from "react";
 
-import { Inter, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import TransitionProvider from "@/components/transitions/TransitionProvider";
 

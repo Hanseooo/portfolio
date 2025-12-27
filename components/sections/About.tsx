@@ -21,6 +21,7 @@ export default function About() {
         xPercent: -100 * (panels.length - 1),
         ease: "none",
         scrollTrigger: {
+          id: "about-horizontal",
           trigger: sectionRef.current,
           pin: true,
           scrub: 1,
@@ -59,7 +60,7 @@ export default function About() {
         className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
       />
 
-      {sectionRef.current && <AboutProgress containerRef={sectionRef} />}
+      <AboutProgress sectionRef={sectionRef} />
 
       <div ref={trackRef} className="flex h-full w-max will-change-transform">
         <AboutMePanel />
