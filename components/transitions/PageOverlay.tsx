@@ -33,7 +33,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
           {
             y: 0,
             opacity: 1,
-            duration: 0.6,
+            duration: 0.45,
             ease: "power3.out",
           },
           "-=0.4"
@@ -45,7 +45,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
         .to(textRef.current, {
           y: -40,
           opacity: 0,
-          duration: 0.4,
+          duration: 0.45,
           ease: "power3.in",
         })
         .to(

@@ -16,7 +16,7 @@ interface Certificate {
 
 export const certificates: Certificate[] = [
   {
-    title: "Introduction to Modern AI Completion",
+    title: "Introduction to Modern AI",
     slug: "introduction-to-modern-ai",
     issuer: "Cisco Networking Academy",
     image: introToModernAICert,
@@ -25,7 +25,7 @@ export const certificates: Certificate[] = [
       "https://www.credly.com/badges/505dca5f-4aa7-48c6-9b06-c37495b9b9d0/public_url",
   },
   {
-    title: "National Programming Challenge 2024 Participation",
+    title: "National Programming Challenge 2024",
     slug: "national-programming-challenge-2024",
     issuer: "Codechum",
     image: nationalProgrammingChallenge2024,
@@ -33,7 +33,7 @@ export const certificates: Certificate[] = [
     credentialUrl: "https://hcdc.codechum.com/certificates/4235",
   },
   {
-    title: "Python Essentials 1 Completion",
+    title: "Python Essentials 1",
     slug: "python-essentials-1",
     issuer: "Cisco Networking Academy",
     image: pythonEssentials1Cert,

@@ -23,12 +23,13 @@ export default function Certificates() {
 
       <div className="grid gap-10 md:grid-cols-[360px_1fr]">
         {/* LEFT COLUMN — LIST */}
-        <motion.div 
-        initial={{y: 40, opacity: 0}}
-        whileInView={{y: 0, opacity: 1}}
-        viewport={{once: true, amount: 0.25}}
-        transition={{duration: 0.3, ease: "easeOut"}}
-        className="space-y-4">
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="space-y-4"
+        >
           {certificates.map((cert) => (
             <Link
               key={cert.slug}
@@ -60,18 +61,18 @@ export default function Certificates() {
           <AnimatePresence mode="wait">
             <motion.div
               key={active.slug}
-              initial={{ opacity: 0.5, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
+              initial={{ opacity: 0, }}
+              animate={{ opacity: 1, }}
+              exit={{ opacity: 0,  }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="
                 relative
                 aspect-4/3
                 w-full
                 overflow-hidden
-                rounded-lg
-                border border-foreground/20
-                bg-muted
+                bg-background/75 dark:bg-background/50
+                shadow-primary-sharp
+                border-primary border
               "
             >
               <Image

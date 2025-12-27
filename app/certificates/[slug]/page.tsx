@@ -58,6 +58,7 @@ export default function CertificatePage({
             text-primary
             transition
             hover:bg-primary hover:text-background
+            shadow-primary-sharp
           "
           >
             View Credential

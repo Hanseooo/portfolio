@@ -77,14 +77,14 @@ export default function FullscreenMenu({
   return (
     <div
       ref={menuRef}
-      className="fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/90 backdrop-blur-xl text-foreground opacity-0"
+      className="fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/85 backdrop-blur-xl text-foreground opacity-0"
     >
       <ul className="mb-24 flex h-[90vh] flex-col justify-around space-y-4 py-24 text-center sm:py-0">
         {links.map((link) => (
           <li key={link.id}>
             <button
               onClick={() => handleClick(link.id)}
-              className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] font-black transition hover:text-primary"
+              className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] uppercase tracking-wide text-center transition hover:text-primary"
             >
               {link.label}
             </button>

@@ -16,7 +16,7 @@ export default function Projects() {
   const [active, setActive] = useState(projects[0]);
 
   return (
-    <section className="relative min-h-screen bg-background px-6 py-32">
+    <section className="relative min-h-screen  px-6 py-32">
       {/* Heading — subtle continuation from About */}
       <motion.h2
         initial={{ x: -60, opacity: 0.25 }}
@@ -59,6 +59,7 @@ export default function Projects() {
                 hover:border-primary
                 focus-visible:border-primary
                 shadow-primary-sharp
+                bg-background/50
               "
             >
               <Image
@@ -79,18 +80,18 @@ export default function Projects() {
           <AnimatePresence mode="wait">
             <motion.div
               key={active.slug}
-              initial={{ opacity: 1, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 1, x: 10 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="
                 relative
                 aspect-video
                 w-full
                 overflow-hidden
                 shadow-2xl shadow-muted-foreground/75
-                dark:shadow-muted-foreground/25
-                border-8 border-neutral-300 dark:border-secondary
+                dark:shadow-muted-foreground/20 shadow-primary-sharp
+                border-primary border
               "
             >
               <Image

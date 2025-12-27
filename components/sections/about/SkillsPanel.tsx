@@ -72,7 +72,7 @@ export default function SkillsPanel() {
         <SkillGroup
           title="Development Workflow"
           items={[
-            "Version control workflows (Git)",
+            "Feature branching and encapsulation",
             "Git/GitHub workflows and pull requests",
             "Component-based development",
             "Basic CI/CD and cloud deployment concepts",
