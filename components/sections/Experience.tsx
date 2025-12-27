@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export default function Experience() {
 
   return (
-    <section id="experience" className="mx-auto max-w-5xl px-6 py-32">
+    <section id="experience" className="mx-auto max-w-6xl px-6 py-32">
       <motion.h2
         initial={{ y: 40, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}

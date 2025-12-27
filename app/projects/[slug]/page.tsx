@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { use, useLayoutEffect } from "react";
-import BackToProjects from "@/components/utils/BackToProjects";
+import BackButton from "@/components/utils/BackButton";
 
 export default function ProjectPage({
   params,
@@ -31,7 +31,6 @@ export default function ProjectPage({
     }
   }, []);
 
-
   return (
     <PageTransition>
       <article id="project-view" className="bg-background text-foreground">
@@ -45,7 +44,7 @@ export default function ProjectPage({
             className="object-cover"
           />
 
-          <div className="absolute inset-0 bg-linear-to-t from-black via-black/70 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-transparent" />
 
           {/* HERO TEXT */}
           <motion.div
@@ -133,7 +132,7 @@ export default function ProjectPage({
           <ProjectGallery images={project.gallery} />
         </section>
       </article>
-      <BackToProjects />
+      <BackButton sectionId="projects" text="Back to Projects" />
     </PageTransition>
   );
 }

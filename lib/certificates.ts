@@ -7,15 +7,17 @@ import { StaticImageData } from "next/image";
 
 interface Certificate {
   title: string;
+  slug: string
   issuer: string;
   image: StaticImageData;
   date: string;
   credentialUrl: string | null;
 }
 
-export const certificates : Certificate[] = [
+export const certificates: Certificate[] = [
   {
     title: "Introduction to Modern AI Completion",
+    slug: "introduction-to-modern-ai",
     issuer: "Cisco Networking Academy",
     image: introToModernAICert,
     date: "December 8, 2025",
@@ -24,6 +26,7 @@ export const certificates : Certificate[] = [
   },
   {
     title: "National Programming Challenge 2024 Participation",
+    slug: "national-programming-challenge-2024",
     issuer: "Codechum",
     image: nationalProgrammingChallenge2024,
     date: "December 5, 2024",
@@ -31,6 +34,7 @@ export const certificates : Certificate[] = [
   },
   {
     title: "Python Essentials 1 Completion",
+    slug: "python-essentials-1",
     issuer: "Cisco Networking Academy",
     image: pythonEssentials1Cert,
     date: "December 5, 2025",

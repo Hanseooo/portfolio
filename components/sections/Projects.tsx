@@ -19,7 +19,6 @@ export default function Projects() {
       >
         Featured Projects
       </motion.h2>
-      {/* <div id="projects" className="h-0.5 bg-background" /> */}
 
       <div className="mx-auto max-w-6xl grid gap-32">
         {projects.map((project) => (

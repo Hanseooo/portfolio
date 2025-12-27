@@ -1,10 +1,14 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useRef } from "react";
 import { ArrowLeft } from "lucide-react";
 
-export default function BackToProjects() {
+interface BackButtonProps {
+  text?: string,
+  sectionId?: string
+}
+
+export default function BackButton({text = "Back to Home", sectionId = "home"} : BackButtonProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -12,13 +16,13 @@ export default function BackToProjects() {
     // If already on home, just scroll
     if (pathname === "/") {
       document
-        .getElementById("projects")
+        .getElementById(sectionId)
         ?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
     // Otherwise: remember target and go home
-    sessionStorage.setItem("scrollTarget", "projects");
+    sessionStorage.setItem("scrollTarget", sectionId);
     router.push("/");
   };
 
@@ -32,7 +36,7 @@ export default function BackToProjects() {
           <ArrowLeft className="h-8 w-8 transition-transform group-hover:-translate-x-2" />
         </div>
         <span className="text-xl font-bold uppercase tracking-widest">
-          Exit Project View
+          {text}
         </span>
       </button>
     </div>
