@@ -53,7 +53,7 @@ export default function ProjectPage({
             transition={{ duration: 0.8, ease: "easeOut" }}
             className={`absolute left-6 max-w-4xl ${project.heroTextPosition}`}
           >
-            <h1 className="text-primary text-[clamp(3rem,6vw,4.5rem)] font-bold leading-tight">
+            <h1 className="text-primary text-[clamp(3rem,6vw,4.5rem)] font-black leading-tight">
               {project.title}
             </h1>
 

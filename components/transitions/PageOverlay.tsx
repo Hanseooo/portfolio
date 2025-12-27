@@ -18,14 +18,14 @@ export default function PageOverlay({ active }: { active: boolean }) {
 
     if (active) {
       // ENTER
-      gsap.set(overlayRef.current, { y: "80%" });
+      gsap.set(overlayRef.current, { y: "100%" });
       gsap.set(textRef.current, { y: 40, opacity: 0 });
 
       gsap
         .timeline()
         .to(overlayRef.current, {
           y: "0%",
-          duration: 0.6,
+          duration: 0.9,
           ease: "power4.out",
         })
         .to(
@@ -33,7 +33,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
           {
             y: 0,
             opacity: 1,
-            duration: 0.5,
+            duration: 0.6,
             ease: "power3.out",
           },
           "-=0.4"
@@ -63,7 +63,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
   return (
     <div
       ref={overlayRef}
-      className="pointer-events-none will-change-transform border-b-2 border-primary fixed inset-0 z-100 flex items-center justify-center bg-background"
+      className="pointer-events-none will-change-transform border-y-2 shadow border-primary fixed inset-0 z-100 flex items-center justify-center bg-background"
     >
       <h1
         ref={textRef}

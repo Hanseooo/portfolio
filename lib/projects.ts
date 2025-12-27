@@ -8,11 +8,25 @@ import ThePodiumHero  from "@/app/assets/projects/ThePodium/1.png";
 import ThePodium2 from "@/app/assets/projects/ThePodium/2.png";
 import ThePodium3 from "@/app/assets/projects/ThePodium/3.png";
 import ThePodium4 from "@/app/assets/projects/ThePodium/4.png";
+import { StaticImageData } from "next/image";
 
 
+export type Project = {
+    slug: string;
+    title: string;
+    subtitle: string;
+    heroImage: StaticImageData;
+    heroSubtitleColor: string;
+    heroTextPosition: string;
+    overview: string;
+    role: string;
+    stack: string[];
+    gallery: StaticImageData[];
+    github?: string;
+    live?: string;
+}
 
-
-export const projects = [
+export const projects : Project[] = [
   {
     slug: "simply-note",
     title: "SimplyNote",

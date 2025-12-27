@@ -41,6 +41,8 @@ export default function Certificates() {
                 transition
                 hover:border-primary
                 focus-visible:border-primary
+                shadow-primary-sharp
+                bg-background/50
               "
             >
               <h3 className="font-semibold group-hover:text-primary">
