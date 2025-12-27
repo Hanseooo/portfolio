@@ -52,7 +52,7 @@ export default function ProjectBrief({ project }: { project: Project }) {
                     key={tech}
                     className="
                         rounded-full
-                        border border-foreground/20
+                        border border-foreground/25
                         px-3 py-1
                         text-xs font-medium
                         tracking-wide
