@@ -51,7 +51,7 @@ export default function AboutMePanel() {
           About Me
         </span>
 
-        <p className=" text:sm sm:text-lg md:text-xl leading-relaxed opacity-85">
+        <p className=" text-sm sm:text-lg md:text-xl leading-relaxed opacity-85">
           I’m a full-stack developer that designs maintainable systems and gives
           importance to system architecture and user experience. I also code as
           a hobby, testing my theories when i learn something new and building a
@@ -63,7 +63,7 @@ export default function AboutMePanel() {
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.25 }}
-          className="mt-4 md:mt-6  text:sm sm:text-lg md:text-xl mb-2 sm:mb-0 leading-relaxed opacity-85"
+          className="mt-4 md:mt-6  text-sm sm:text-lg md:text-xl mb-2 sm:mb-0 leading-relaxed opacity-85"
         >
           I specialize in using TypeScript, React, and Django Rest Framework
           when building web applications. I focus heavily on the fundamentals
@@ -72,7 +72,7 @@ export default function AboutMePanel() {
         </motion.p>
 
         {/* ACTIONS */}
-        <div className="mt-6 flex justify-center md:justify-start gap-4 flex-wrap">
+        <div className="mt-6 mb-2 flex justify-center md:justify-start gap-4 flex-wrap">
           <a
             href="https://www.linkedin.com/in/hanseooo"
             target="_blank"
