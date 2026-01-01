@@ -75,10 +75,14 @@ export default function About() {
           [10, 3],
           [3, 4],
         ]}
-        className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
+        className={`${
+          runtimeEnv.isWebView ? "relative" : "absolute inset-0"
+        } -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30`}
       />
 
-      {!runtimeEnv.isMobile && <AboutProgress sectionRef={sectionRef} />}
+      {!runtimeEnv.isMobile && !runtimeEnv.isWebView && (
+        <AboutProgress sectionRef={sectionRef} />
+      )}
 
       <div
         ref={trackRef}
