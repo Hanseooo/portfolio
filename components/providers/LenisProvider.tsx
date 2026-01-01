@@ -5,6 +5,7 @@ import { useEffect, ReactNode, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
+import { getRuntimeEnv } from "../utils/browserInfo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,16 +13,20 @@ interface LenisProviderProps {
     children : ReactNode
 }
 
+const isMobile = getRuntimeEnv().isMobile
+
 export function LenisProvider({ children } : LenisProviderProps ) {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    if (window.innerWidth < 1024) return;
+    if (isMobile) return;
     const lenis = new Lenis({
       smoothWheel: true,
       duration: 1.2,
     });
+
+    lenisRef.current = lenis;
 
      (window as any).__lenis = lenis;
 
