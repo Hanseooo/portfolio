@@ -26,8 +26,8 @@ export default function AboutMePanel() {
     <motion.div
       initial={{ y: 40, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.5 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.25 }}
       className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
     >
       {/* LEFT — PHOTO */}
@@ -51,7 +51,7 @@ export default function AboutMePanel() {
           About Me
         </span>
 
-        <p className=" text:md sm:text-lg md:text-xl leading-relaxed opacity-85">
+        <p className=" text:sm sm:text-lg md:text-xl leading-relaxed opacity-85">
           I’m a full-stack developer that designs maintainable systems and gives
           importance to system architecture and user experience. I also code as
           a hobby, testing my theories when i learn something new and building a
@@ -61,9 +61,9 @@ export default function AboutMePanel() {
         <motion.p
           initial={{ y: 40, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          viewport={{ once: true, amount: 1 }}
-          className="mt-4 md:mt-6  text:md sm:text-lg md:text-xl leading-relaxed opacity-85"
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.25 }}
+          className="mt-4 md:mt-6  text:sm sm:text-lg md:text-xl mb-2 sm:mb-0 leading-relaxed opacity-85"
         >
           I specialize in using TypeScript, React, and Django Rest Framework
           when building web applications. I focus heavily on the fundamentals

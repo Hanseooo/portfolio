@@ -39,7 +39,7 @@ export default function Hero() {
 
       // Last name — faster
       gsap.to(lastNameRef.current, {
-        yPercent: -120,
+        yPercent: -150,
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
@@ -73,8 +73,8 @@ export default function Hero() {
         ref={roleRef}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
-        viewport={{ once: false, amount: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut", delay: 0.25 }}
+        viewport={{ once: false, amount: 0.75 }}
         className="mt-4 text-sm uppercase tracking-[0.3em] opacity-80"
       >
         Full-Stack Web Developer

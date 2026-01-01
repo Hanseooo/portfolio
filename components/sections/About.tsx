@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { GridPattern } from "../ui/shadcn-io/grid-pattern";
 import AboutMePanel from "./about/AboutMePanel";
@@ -8,12 +8,27 @@ import SkillsPanel from "./about/SkillsPanel";
 import PhilosophyPanel from "./about/PhilosophyPanel";
 import AboutProgress from "./about/AboutProgress";
 import ToolsPanel from "./about/ToolsPanel";
+import { getRuntimeEnv, isAndroidOrIos, isInAppBrowser } from "../utils/browserInfo";
+
 
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
+  const [runtimeEnv, setRuntimeEnv] = useState({
+    isMobile: false,
+    isWebView: false,
+  })
+
   useEffect(() => {
+    setRuntimeEnv(getRuntimeEnv())
+  }, []);
+
+
+  useEffect(() => {
+
+    if (runtimeEnv.isWebView) return;
+
     const ctx = gsap.context(() => {
       const panels = gsap.utils.toArray<HTMLElement>(".about-panel");
 
@@ -39,13 +54,13 @@ export default function About() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [runtimeEnv.isWebView]);
 
   return (
     <section
       id="about"
       ref={sectionRef}
-      className="relative h-screen w-full bg-background select-none"
+      className="relative h-screen w-full bg-background"
     >
       <GridPattern
         width={80}
@@ -60,7 +75,7 @@ export default function About() {
         className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
       />
 
-      <AboutProgress sectionRef={sectionRef} />
+      {!runtimeEnv.isMobile && <AboutProgress sectionRef={sectionRef} />}
 
       <div ref={trackRef} className="flex h-full w-max will-change-transform">
         <AboutMePanel />
