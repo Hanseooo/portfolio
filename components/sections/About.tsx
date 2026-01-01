@@ -39,7 +39,10 @@ export default function About() {
           id: "about-horizontal",
           trigger: sectionRef.current,
           pin: true,
+          // pinType: "transform",  
           scrub: 1,
+          invalidateOnRefresh: true,
+          anticipatePin: 1.5,
           snap: {
             snapTo: 1 / (panels.length - 1),
             duration: 0.4,
@@ -77,7 +80,14 @@ export default function About() {
 
       {!runtimeEnv.isMobile && <AboutProgress sectionRef={sectionRef} />}
 
-      <div ref={trackRef} className="flex h-full w-max will-change-transform">
+      <div
+        ref={trackRef}
+        className={`flex  ${
+          runtimeEnv.isWebView
+            ? "flex-col min-h-screen"
+            : "h-screen  w-max will-change-transform"
+        }`}
+      >
         <AboutMePanel />
         <SkillsPanel />
         <ToolsPanel />

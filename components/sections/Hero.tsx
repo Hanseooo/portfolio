@@ -5,6 +5,7 @@ import { Github, ArrowDown } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BBH_Bartle } from "next/font/google";
 import { motion } from "framer-motion";
+import { getRuntimeEnv } from "../utils/browserInfo";
 
 
 const bbhBartle = BBH_Bartle({
@@ -12,6 +13,8 @@ const bbhBartle = BBH_Bartle({
   weight: "400",
   display: "swap",
 });
+
+const isWebView = getRuntimeEnv().isWebView
 
 export default function Hero() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -23,6 +26,7 @@ export default function Hero() {
 
   useLayoutEffect(() => {
     if (!rootRef.current) return;
+    if(isWebView) return;
 
     const ctx = gsap.context(() => {
 
