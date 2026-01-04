@@ -81,7 +81,7 @@ export default function About() {
           trigger: sectionRef.current,
           pin: true,
           pinType: isDesktop ? "transform" : "fixed",  
-          scrub: isDesktop ? 1 : false,
+          scrub: 1,
           invalidateOnRefresh: true,
           anticipatePin: isDesktop ? 1.5 : 0,
           snap: {
