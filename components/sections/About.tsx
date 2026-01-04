@@ -43,6 +43,10 @@ export default function About() {
 
   const [showHint, setShowHint] = useState(false);
 
+  const envReady = runtimeEnv.isMobile !== undefined;
+  
+
+
   useEffect(() => {
     if (!isDesktop) return;
     if (sessionStorage.getItem("drag-hint-show")) return;
@@ -63,7 +67,8 @@ export default function About() {
 
   useEffect(() => {
 
-    if (runtimeEnv.isWebView) return;
+    if (!envReady || runtimeEnv.isWebView) return;
+
 
     const ctx = gsap.context(() => {
       const panels = gsap.utils.toArray<HTMLElement>(".about-panel");
@@ -76,9 +81,9 @@ export default function About() {
           trigger: sectionRef.current,
           pin: true,
           pinType: isDesktop ? "transform" : "fixed",  
-          scrub: 1,
+          scrub: isDesktop ? 1 : false,
           invalidateOnRefresh: true,
-          anticipatePin: 1.5,
+          anticipatePin: isDesktop ? 1.5 : 0,
           snap: {
             snapTo: 1 / (panels.length - 1),
             duration: 0.4,
@@ -93,7 +98,7 @@ export default function About() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [runtimeEnv.isWebView]);
+  }, [runtimeEnv.isWebView, envReady, isDesktop]);
 
 
   useEffect(() => {
