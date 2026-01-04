@@ -40,9 +40,9 @@ export default function Home() {
         className="absolute inset-0 -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30"
       />
       <Hero />
-      <GestureScrollProvider>
+      {/* <GestureScrollProvider> */}
         <About />
-      </GestureScrollProvider>
+      {/* </GestureScrollProvider> */}
       <Projects />
       <Experience />
       <Certificates />

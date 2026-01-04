@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { useHorizontalScrollToVertical } from "../utils/useHorizontalScrollToVertical";
 
 export default function GestureScrollProvider({

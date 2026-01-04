@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import hansImg from "@/app/assets/myImages/hans.jpg";
 import hansImg2 from "@/app/assets/myImages/hans2.jpg"
 import { useTheme } from "next-themes";
+import { GITHUB_URL, LINKEDIN_URL } from "@/components/utils/externalLinks";
 
 export default function AboutMePanel() {
 
@@ -71,10 +72,11 @@ export default function AboutMePanel() {
           productivity and efficiency.
         </motion.p>
 
+
         {/* ACTIONS */}
         <div className="mt-6 mb-2 flex justify-center md:justify-start gap-4 flex-wrap">
           <a
-            href="https://www.linkedin.com/in/hanseooo"
+            href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
@@ -83,7 +85,7 @@ export default function AboutMePanel() {
           </a>
 
           <a
-            href="https://github.com/Hanseooo"
+            href= {GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
