@@ -3,6 +3,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import { BBH_Bartle } from "next/font/google";
 import { motion } from "framer-motion"
+import { EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL } from "../utils/externalLinks";
 
 const bbhBartle = BBH_Bartle({
   subsets: ["latin"],
@@ -42,7 +43,7 @@ export default function Footer() {
         transition={{duration: 0.5, delay: 0.25}}
         className="flex flex-wrap items-center gap-10 text-sm uppercase tracking-widest">
           <a
-            href="mailto:amoguishans@gmail.com"
+            href={`mailto:${EMAIL_ADDRESS}`}
             className="inline-flex items-center gap-2 border-b border-transparent transition hover:border-primary hover:text-primary"
           >
             <Mail size={14} />
@@ -50,7 +51,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://www.linkedin.com/in/hanseooo"
+            href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border-b border-transparent transition hover:border-primary hover:text-primary"
@@ -60,7 +61,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://github.com/Hanseooo"
+            href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border-b border-transparent transition hover:border-primary hover:text-primary"

@@ -6,6 +6,8 @@ import { gsap } from "@/lib/gsap";
 import { BBH_Bartle } from "next/font/google";
 import { motion } from "framer-motion";
 import { getRuntimeEnv } from "../utils/browserInfo";
+import { EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL, PHONE_NUMBER } from "../utils/externalLinks";
+import ContactDialogTrigger from "../dialogs/ContactDialogTrigger";
 
 
 const bbhBartle = BBH_Bartle({
@@ -87,7 +89,7 @@ export default function Hero() {
       {/* BUTTONS */}
       <div ref={buttonsRef} className="mt-10 flex items-center gap-6">
         <a
-          href="https://github.com/Hanseooo"
+          href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 border border-foreground/30 px-5 py-3 text-sm transition hover:border-primary hover:text-primary"
@@ -96,13 +98,7 @@ export default function Hero() {
           GitHub
         </a>
 
-        <a
-          href="#projects"
-          type="button"
-          className="border border-primary px-5 py-3 text-sm text-primary transition hover:bg-primary hover:text-background"
-        >
-          Projects
-        </a>
+        <ContactDialogTrigger email={EMAIL_ADDRESS} linkedinUrl={LINKEDIN_URL} phone={PHONE_NUMBER} />
       </div>
 
       {/* SCROLL INDICATOR */}

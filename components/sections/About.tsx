@@ -8,7 +8,21 @@ import SkillsPanel from "./about/SkillsPanel";
 import PhilosophyPanel from "./about/PhilosophyPanel";
 import AboutProgress from "./about/AboutProgress";
 import ToolsPanel from "./about/ToolsPanel";
-import { getRuntimeEnv, isAndroidOrIos, isInAppBrowser } from "../utils/browserInfo";
+import { getRuntimeEnv } from "../utils/browserInfo";
+import { useHorizontalDrag } from "../utils/useHorizontalDrag";
+import { Kbd } from "../ui/kbd";
+
+
+function DragHint() {
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-md bg-background/80 px-3 py-2 text-xs backdrop-blur shadow">
+      <span className="opacity-80">Press</span>
+      <Kbd>D</Kbd>
+      <span className="opacity-80">to drag</span>
+    </div>
+  );
+}
+
 
 
 export default function About() {
@@ -19,6 +33,26 @@ export default function About() {
     isMobile: false,
     isWebView: false,
   })
+  
+  const [dragEnabled, setDragEnabled] = useState(false);
+  const isDesktop = !runtimeEnv.isMobile && !runtimeEnv.isWebView;
+
+  const dragBind = useHorizontalDrag(
+    runtimeEnv.isMobile || (isDesktop && dragEnabled)
+  );
+
+  const [showHint, setShowHint] = useState(false);
+
+  useEffect(() => {
+    if (!isDesktop) return;
+    if (sessionStorage.getItem("drag-hint-shown")) return;
+
+    setShowHint(true);
+    sessionStorage.setItem("drag-hint-shown", "1");
+
+  }, [isDesktop]);
+
+
 
   useEffect(() => {
     setRuntimeEnv(getRuntimeEnv())
@@ -39,7 +73,7 @@ export default function About() {
           id: "about-horizontal",
           trigger: sectionRef.current,
           pin: true,
-          // pinType: "transform",  
+          pinType: "transform",  
           scrub: 1,
           invalidateOnRefresh: true,
           anticipatePin: 1.5,
@@ -58,6 +92,23 @@ export default function About() {
 
     return () => ctx.revert();
   }, [runtimeEnv.isWebView]);
+
+
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "d") {
+        setDragEnabled((v) => !v);
+        setShowHint(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isDesktop]);
+
+
 
   return (
     <section
@@ -86,10 +137,15 @@ export default function About() {
 
       <div
         ref={trackRef}
-        className={`flex  ${
+        {...dragBind}
+        className={`flex ${
           runtimeEnv.isWebView
             ? "flex-col min-h-screen"
-            : "h-screen  w-max will-change-transform"
+            : "h-screen w-max will-change-transform"
+        } ${
+          isDesktop && dragEnabled
+            ? "cursor-grab active:cursor-grabbing select-none"
+            : "cursor-default"
         }`}
       >
         <AboutMePanel />
@@ -97,6 +153,8 @@ export default function About() {
         <ToolsPanel />
         <PhilosophyPanel />
       </div>
+      {isDesktop && showHint && <DragHint />}
+
     </section>
   );
 }
