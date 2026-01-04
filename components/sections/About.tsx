@@ -75,7 +75,7 @@ export default function About() {
           id: "about-horizontal",
           trigger: sectionRef.current,
           pin: true,
-          pinType: "transform",  
+          pinType: isDesktop ? "transform" : "fixed",  
           scrub: 1,
           invalidateOnRefresh: true,
           anticipatePin: 1.5,
