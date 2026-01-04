@@ -15,7 +15,7 @@ import { Kbd } from "../ui/kbd";
 
 function DragHint() {
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-md bg-background/80 px-3 py-2 text-xs backdrop-blur shadow">
+    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-md bg-background/80 px-3 py-2 text-xs backdrop-blur">
       <span className="opacity-80">Press</span>
       <Kbd>D</Kbd>
       <span className="opacity-80">to drag</span>
@@ -45,11 +45,13 @@ export default function About() {
 
   useEffect(() => {
     if (!isDesktop) return;
-    if (sessionStorage.getItem("drag-hint-shown")) return;
+    if (sessionStorage.getItem("drag-hint-show")) return;
 
     setShowHint(true);
     sessionStorage.setItem("drag-hint-shown", "1");
 
+    const t = setTimeout(() => setShowHint(false), 8000);
+    return () => clearTimeout(t);
   }, [isDesktop]);
 
 
