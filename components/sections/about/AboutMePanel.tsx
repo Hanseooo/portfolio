@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
-import hansImg from "@/app/assets/myImages/hans.jpg";
-import hansImg2 from "@/app/assets/myImages/hans2.jpg"
+import hansImg from "@/app/assets/myImages/hans.webp";
+import hansImg2 from "@/app/assets/myImages/hans2.webp"
 import { useTheme } from "next-themes";
 import { GITHUB_URL, LINKEDIN_URL } from "@/components/utils/externalLinks";
 

@@ -18,7 +18,7 @@ export default function ProjectHero({ project }: { project: Project }) {
       />
 
       {/* overlay */}
-      <div className="absolute inset-0 bg-linear-to-tr from-black via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-tr from-black via-black/85 to-transparent" />
 
       {/* content */}
       <motion.div
