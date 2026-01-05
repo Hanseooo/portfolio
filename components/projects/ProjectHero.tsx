@@ -8,7 +8,7 @@ import type { Project } from "@/lib/projects";
 
 export default function ProjectHero({ project }: { project: Project }) {
   return (
-    <section className="relative min-h-[60vh] w-full overflow-hidden">
+    <section className="relative min-h-[65vh] w-full overflow-hidden">
       <Image
         src={project.heroImage}
         alt={project.title}
@@ -18,7 +18,7 @@ export default function ProjectHero({ project }: { project: Project }) {
       />
 
       {/* overlay */}
-      <div className="absolute inset-0 bg-linear-to-tr from-black via-black/85 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-tr from-black via-black/85 to-black/20" />
 
       {/* content */}
       <motion.div
@@ -27,7 +27,7 @@ export default function ProjectHero({ project }: { project: Project }) {
         transition={{ duration: 0.7, ease: "easeOut" }}
         className={`absolute bottom-10 left-6 max-w-4xl ${project.heroTextPosition}`}
       >
-        <h1 className="text-primary font-black leading-tight text-[clamp(2.5rem,6vw,4.5rem)]">
+        <h1 className="text-primary font-black text-shadow-lg leading-tight text-[clamp(2.5rem,6vw,4.5rem)]">
           {project.title}
         </h1>
 
