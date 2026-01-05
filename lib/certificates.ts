@@ -1,6 +1,6 @@
-import introToModernAICert from "@/app/assets/certificates/intro-to-modern-ai.png"
-import nationalProgrammingChallenge2024 from "@/app/assets/certificates/national-programming-challenge-2024.png";
-import pythonEssentials1Cert from "@/app/assets/certificates/pythonEssentials1.png";
+import introToModernAICert from "@/app/assets/certificates/intro-to-modern-ai.webp"
+import nationalProgrammingChallenge2024 from "@/app/assets/certificates/national-programming-challenge-2024.webp";
+import pythonEssentials1Cert from "@/app/assets/certificates/pythonEssentials1.webp";
 import { StaticImageData } from "next/image";
 
 

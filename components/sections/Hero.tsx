@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { Github, ArrowDown } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BBH_Bartle } from "next/font/google";
@@ -16,7 +16,6 @@ const bbhBartle = BBH_Bartle({
   display: "swap",
 });
 
-const isWebView = getRuntimeEnv().isWebView
 
 export default function Hero() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -25,6 +24,8 @@ export default function Hero() {
   const lastNameRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const isWebView = useMemo(() => getRuntimeEnv().isWebView, []);
+
 
   useLayoutEffect(() => {
     if (!rootRef.current) return;
@@ -56,7 +57,7 @@ export default function Hero() {
     }, rootRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isWebView]);
 
   return (
     <section
@@ -102,10 +103,10 @@ export default function Hero() {
       </div>
 
       {/* SCROLL INDICATOR */}
-      <div className="absolute bottom-10 flex flex-col items-center gap-2 text-xs opacity-60">
+      {!isWebView && <div className="absolute bottom-10 flex flex-col items-center gap-2 text-xs opacity-60">
         <span>Scroll</span>
         <ArrowDown size={16} />
-      </div>
+      </div>}
     </section>
   );
 }
