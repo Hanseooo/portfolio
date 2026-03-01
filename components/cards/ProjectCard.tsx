@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useMagnetic } from "@/components/motion/useMagnetic";
@@ -12,7 +12,7 @@ type Props = {
   slug: string;
   title: string;
   subtitle: string;
-  heroImage: string | StaticImageData ;
+  heroImage: string | StaticImageData;
   github?: string | null;
   live?: string | null;
 };
@@ -26,15 +26,13 @@ export default function ProjectCard({
   live,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   useMagnetic(ref);
 
   return (
     <motion.article
-      onClick={() => router.push(`/projects/${slug}`)}
-      className="project-card  group relative cursor-pointer hover:text-primary"
-      initial={{y: 40, opacity: 0, scale: 1 }}
+      className="project-card group relative hover:text-primary"
+      initial={{ y: 40, opacity: 0, scale: 1 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, amount: 0.25 }}
       whileHover={{ scale: 0.98 }}
@@ -54,10 +52,16 @@ export default function ProjectCard({
             src={heroImage}
             alt={title}
             fill
+            sizes="(min-width: 1280px) 70vw, (min-width: 640px) 90vw, 100vw"
             className="object-cover"
-            priority
           />
         </motion.div>
+
+        <Link
+          href={`/projects/${slug}`}
+          aria-label={`Open ${title} project details`}
+          className="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        />
 
         {/* OVERLAY */}
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
@@ -70,13 +74,13 @@ export default function ProjectCard({
                 href={github}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+                aria-label={`Open ${title} GitHub repository`}
                 // Change initial opacity to 1 on mobile, 0 on desktop
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 // For desktop hover
                 whileHover={{ scale: 1.1 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
               >
                 <Github size={20} />
               </motion.a>
@@ -87,11 +91,11 @@ export default function ProjectCard({
                 href={live}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+                aria-label={`Open ${title} live preview`}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.1 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
               >
                 <ExternalLink size={20} />
               </motion.a>

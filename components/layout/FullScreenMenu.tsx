@@ -15,11 +15,14 @@ const links = [
 export default function FullscreenMenu({
   open,
   close,
+  id,
 }: {
   open: boolean;
   close: () => void;
+  id: string;
 }) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const firstLinkRef = useRef<HTMLButtonElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
 
   const pathname = usePathname();
@@ -57,8 +60,28 @@ export default function FullscreenMenu({
   }, []);
 
   useEffect(() => {
-    open ? tl.current?.play() : tl.current?.reverse();
+    if (open) {
+      tl.current?.play();
+      return;
+    }
+
+    tl.current?.reverse();
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    firstLinkRef.current?.focus();
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        close();
+      }
+    };
+
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [open, close]);
 
   const handleClick = (id: string) => {
     close();
@@ -76,13 +99,19 @@ export default function FullscreenMenu({
 
   return (
     <div
+      id={id}
       ref={menuRef}
-      className="fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/85 backdrop-blur-xl text-foreground opacity-0"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden={!open}
+      className={`fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/85 text-foreground opacity-0 backdrop-blur-xl ${open ? "pointer-events-auto" : "pointer-events-none"}`}
     >
       <ul className="mb-24 flex h-[90vh] flex-col justify-around space-y-4 py-24 text-center sm:py-0">
-        {links.map((link) => (
+        {links.map((link, index) => (
           <li key={link.id}>
             <button
+              ref={index === 0 ? firstLinkRef : undefined}
+              type="button"
               onClick={() => handleClick(link.id)}
               className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] uppercase tracking-wide text-center transition hover:text-primary"
             >

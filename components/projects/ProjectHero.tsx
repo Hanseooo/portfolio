@@ -14,6 +14,7 @@ export default function ProjectHero({ project }: { project: Project }) {
         alt={project.title}
         fill
         priority
+        sizes="100vw"
         className="object-cover"
       />
 

@@ -1,12 +1,14 @@
 "use client"
 
+import { notFound } from "next/navigation";
 import { certificates } from "@/lib/certificates";
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { use, useLayoutEffect } from "react";
+import { use } from "react";
 import BackButton from "@/components/utils/BackButton";
 import PageTransition from "@/components/layout/PageTransition";
+import { useResetScrollTop } from "@/components/utils/useResetScrollTop";
 
 export default function CertificatePage({
   params,
@@ -15,18 +17,9 @@ export default function CertificatePage({
 }) {
   const resolvedParams = use(params);
   const cert = certificates.find((c) => c.slug === resolvedParams.slug);
+  useResetScrollTop();
 
-  if (!cert) return null;
-
-    useLayoutEffect(() => {
-      const lenis = (window as any).__lenis;
-  
-      if (lenis) {
-        lenis.scrollTo(0, { immediate: true });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, []);
+  if (!cert) notFound();
 
   return (
     <PageTransition>
@@ -42,6 +35,7 @@ export default function CertificatePage({
             src={cert.image}
             alt={cert.title}
             fill
+            sizes="(min-width: 1024px) 56rem, 100vw"
             className="object-contain p-6"
           />
         </div>

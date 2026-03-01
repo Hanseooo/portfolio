@@ -29,27 +29,23 @@ export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const [runtimeEnv, setRuntimeEnv] = useState({
-    isMobile: false,
-    isWebView: false,
-  })
+  const [runtimeEnv, setRuntimeEnv] = useState<{
+    isMobile: boolean;
+    isWebView: boolean;
+  } | null>(null);
+  const isMobile = runtimeEnv?.isMobile ?? false;
+  const isWebView = runtimeEnv?.isWebView ?? false;
   
   const [dragEnabled, setDragEnabled] = useState(false);
-  const isDesktop = !runtimeEnv.isMobile && !runtimeEnv.isWebView;
+  const isDesktop = runtimeEnv ? !isMobile && !isWebView : false;
 
-  const dragBind = useHorizontalDrag(
-    runtimeEnv.isMobile || (isDesktop && dragEnabled)
-  );
+  const dragBind = useHorizontalDrag(isDesktop && dragEnabled);
 
   const [showHint, setShowHint] = useState(false);
 
-  const envReady = runtimeEnv.isMobile !== undefined;
-  
-
-
   useEffect(() => {
     if (!isDesktop) return;
-    if (sessionStorage.getItem("drag-hint-show")) return;
+    if (sessionStorage.getItem("drag-hint-shown")) return;
 
     setShowHint(true);
     sessionStorage.setItem("drag-hint-shown", "1");
@@ -61,14 +57,12 @@ export default function About() {
 
 
   useEffect(() => {
-    setRuntimeEnv(getRuntimeEnv())
+    setRuntimeEnv(getRuntimeEnv());
   }, []);
 
 
   useEffect(() => {
-
-    if (!envReady || runtimeEnv.isWebView) return;
-
+    if (!runtimeEnv || isWebView) return;
 
     const ctx = gsap.context(() => {
       const panels = gsap.utils.toArray<HTMLElement>(".about-panel");
@@ -98,7 +92,7 @@ export default function About() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [runtimeEnv.isWebView, envReady, isDesktop]);
+  }, [runtimeEnv, isWebView, isDesktop]);
 
 
   useEffect(() => {
@@ -121,7 +115,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className={`relative w-full bg-background ${runtimeEnv.isWebView ? "min-h-screen" : "h-screen"}`}
+      className={`relative w-full bg-background ${isWebView ? "min-h-screen" : "h-screen"}`}
     >
       <GridPattern
         width={80}
@@ -134,11 +128,11 @@ export default function About() {
           [3, 4],
         ]}
         className={`${
-          runtimeEnv.isWebView ? "relative" : "absolute inset-0"
+          isWebView ? "relative" : "absolute inset-0"
         } -z-10 w-full h-full text-gray-400/30 dark:text-gray-700/30`}
       />
 
-      {!runtimeEnv.isMobile && !runtimeEnv.isWebView && (
+      {!isMobile && !isWebView && (
         <AboutProgress sectionRef={sectionRef} />
       )}
 
@@ -146,7 +140,7 @@ export default function About() {
         ref={trackRef}
         {...dragBind}
         className={`flex ${
-          runtimeEnv.isWebView
+          isWebView
             ? "flex-col min-h-screen"
             : "h-screen w-max will-change-transform"
         } ${

@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import { useId, type SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
-interface GridPatternProps {
+interface GridPatternProps extends SVGProps<SVGSVGElement> {
   width?: number;
   height?: number;
   x?: number;
@@ -11,7 +11,6 @@ interface GridPatternProps {
   squares?: Array<[number, number]>;
   strokeDasharray?: string;
   className?: string;
-  [key: string]: any;
 }
 
 export function GridPattern({
@@ -24,7 +23,7 @@ export function GridPattern({
   className,
   ...props
 }: GridPatternProps) {
-  const id = "grid-pattern"; // stable ID
+  const patternId = useId().replace(/:/g, "-");
 
   return (
     <svg
@@ -37,7 +36,7 @@ export function GridPattern({
     >
       <defs>
         <pattern
-          id={id}
+          id={patternId}
           width={width}
           height={height}
           patternUnits="userSpaceOnUse"
@@ -53,7 +52,7 @@ export function GridPattern({
         </pattern>
       </defs>
 
-      <rect width="100%" height="100%" fill={`url(#${id})`} />
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
 
       {squares && (
         <g transform={`translate(${x}, ${y})`}>

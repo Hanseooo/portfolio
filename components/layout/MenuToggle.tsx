@@ -1,19 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { RefObject } from "react";
 
 export default function MenuToggle({
   open,
   toggle,
+  buttonRef,
+  controlsId,
 }: {
   open: boolean;
   toggle: () => void;
+  buttonRef: RefObject<HTMLButtonElement | null>;
+  controlsId: string;
 }) {
   return (
     <button
+      ref={buttonRef}
+      type="button"
       onClick={toggle}
       className="relative z-60 h-6 w-8 focus:outline-none"
-      aria-label="Menu"
+      aria-label={open ? "Close menu" : "Open menu"}
+      aria-expanded={open}
+      aria-controls={controlsId}
     >
       <motion.span
         className="absolute top-1 left-0 h-0.5 w-full bg-current"

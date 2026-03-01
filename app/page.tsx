@@ -1,7 +1,6 @@
 "use client"
 
 import PageTransition from "@/components/layout/PageTransition";
-import GestureScrollProvider from "@/components/providers/GestureScrollProvider";
 import About from "@/components/sections/About";
 import Certificates from "@/components/sections/Certificates";
 import Experience from "@/components/sections/Experience";
@@ -9,19 +8,10 @@ import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import { GridPattern } from "@/components/ui/shadcn-io/grid-pattern";
 import HomeScrollHandler from "@/components/utils/HomeScrollHandler";
-import { useLayoutEffect } from "react";
+import { useResetScrollTop } from "@/components/utils/useResetScrollTop";
 
 export default function Home() {
-
-      useLayoutEffect(() => {
-        const lenis = (window as any).__lenis;
-    
-        if (lenis) {
-          lenis.scrollTo(0, { immediate: true });
-        } else {
-          window.scrollTo(0, 0);
-        }
-      }, []);
+  useResetScrollTop();
 
   return (
     <PageTransition>

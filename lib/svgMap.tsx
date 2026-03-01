@@ -3,7 +3,7 @@
 export const SVG_MAP = {
   "ai-studio": (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-      <g clipPath="url(#a)">
+      <g clipPath="url(#ai-studio-clip)">
         <path
           fill="#85A8FF"
           d="M62.616 59c-.146 1.6.371 3.221 1.471 4.405 1.104 1.183 2.663 1.808 4.075 2.366 1.542.605 2.883 1.096 4.325 1.95 1.375.813 2.592 1.821 3.608 3.067a12.84 12.84 0 0 1-.883 17.225 12.525 12.525 0 0 1-17.058.583 19.8 19.8 0 0 1-3.321-3.908c-1.408-9.225 1.325-18.887 7.783-25.687"
@@ -22,7 +22,7 @@ export const SVG_MAP = {
         />
       </g>
       <defs>
-        <clipPath id="a">
+        <clipPath id="ai-studio-clip">
           <path fill="#fff" d="M0 0h100v100H0z" />
         </clipPath>
       </defs>
@@ -254,13 +254,13 @@ export const SVG_MAP = {
         d="M50 99.999c27.614 0 50-22.386 50-50s-22.386-50-50-50-50 22.386-50 50 22.386 50 50 50"
       />
       <path
-        fill="url(#a)"
+        fill="url(#nextjs-gradient-a)"
         d="M83.06 87.51 38.412 30H30v39.983h6.73V38.545L77.777 91.58a50 50 0 0 0 5.283-4.07"
       />
-      <path fill="url(#b)" d="M70.556 29.999h-6.667v40h6.667z" />
+      <path fill="url(#nextjs-gradient-b)" d="M70.556 29.999h-6.667v40h6.667z" />
       <defs>
         <linearGradient
-          id="a"
+          id="nextjs-gradient-a"
           x1={60.556}
           x2={80.278}
           y1={64.721}
@@ -271,7 +271,7 @@ export const SVG_MAP = {
           <stop offset={1} stopColor="#fff" stopOpacity={0} />
         </linearGradient>
         <linearGradient
-          id="b"
+          id="nextjs-gradient-b"
           x1={67.222}
           x2={67.111}
           y1={29.999}
@@ -326,12 +326,12 @@ export const SVG_MAP = {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={6.25}
-        clipPath="url(#a)"
+        clipPath="url(#shadcnui-clip)"
       >
         <path d="M81.25 49.999 50 81.249m25-65.625L15.625 74.999" />
       </g>
       <defs>
-        <clipPath id="a">
+        <clipPath id="shadcnui-clip">
           <path fill="#fff" d="M0-.001h100v100H0z" />
         </clipPath>
       </defs>
