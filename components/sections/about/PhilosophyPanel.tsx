@@ -3,12 +3,18 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { motion } from "framer-motion";
+import { aboutContent } from "@/lib/about";
+import { AboutPanelHeading, AboutPanelShell } from "./AboutPanelShell";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 
 export default function PhilosophyPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (reducedMotion) return;
+
     const ctx = gsap.context(() => {
       gsap.from(".philosophy-line", {
         y: 24,
@@ -24,42 +30,39 @@ export default function PhilosophyPanel() {
     }, panelRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [reducedMotion]);
 
   return (
-    <div
-      ref={panelRef}
-      className="about-panel bg-background flex flex-col justify-center h-screen w-screen px-6 md:px-12 gap-8 text-center md:text-left"
-    >
-      <span className="text-xs uppercase tracking-[0.3em] opacity-60">
-        Philosophy
-      </span>
-
-      <h2 className="philosophy-line text-primary text-4xl md:text-[clamp(3rem,6vw,5rem)] font-bold leading-tight">
-        Build systems,
-        <br />
-        not screens.
-      </h2>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.25 }}
-        className="mt-6 md:mt-12 space-y-4 md:space-y-6 text-lg opacity-80 max-w-3xl mx-auto md:mx-0"
-      >
-        <p className="philosophy-line">
-          I believe great systems are engineered with clarity, structure, and
-          intent, not just assembled.
-        </p>
-        <p className="philosophy-line">
-          Good UI is nice to have but it should be built with proper and
-          maintainable architecture
-        </p>
-        <p className="philosophy-line">
-          Every decision should be scalable and provide good user experience.
-        </p>
-      </motion.div>
+    <div ref={panelRef}>
+      <AboutPanelShell
+        className="bg-background"
+        leftClassName="flex items-center"
+        rightClassName="mx-auto max-w-3xl"
+        left={
+          <AboutPanelHeading
+            eyebrow={aboutContent.philosophy.eyebrow}
+            title={aboutContent.philosophy.title}
+            titleClassName="philosophy-line text-4xl md:text-[clamp(3rem,6vw,5rem)]"
+          />
+        }
+        right={
+          <motion.div
+            initial={reducedMotion ? undefined : { opacity: 0 }}
+            whileInView={reducedMotion ? undefined : { opacity: 1 }}
+            transition={
+              reducedMotion ? undefined : { duration: 0.5, ease: "easeOut" }
+            }
+            viewport={reducedMotion ? undefined : { once: true, amount: 0.25 }}
+            className="space-y-4 text-center text-lg opacity-80 md:space-y-6 md:text-left"
+          >
+            {aboutContent.philosophy.lines.map((line) => (
+              <p key={line} className="philosophy-line">
+                {line}
+              </p>
+            ))}
+          </motion.div>
+        }
+      />
     </div>
   );
 }

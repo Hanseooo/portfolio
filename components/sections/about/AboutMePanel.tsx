@@ -1,99 +1,116 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Github, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import hansImg from "@/app/assets/myImages/hans.webp";
-import hansImg2 from "@/app/assets/myImages/hans2.webp"
+import hansImg2 from "@/app/assets/myImages/hans2.webp";
 import { useTheme } from "next-themes";
 import { GITHUB_URL, LINKEDIN_URL } from "@/components/utils/externalLinks";
+import { motionTokens } from "@/lib/motion";
+import { useClientReady } from "@/components/utils/useClientReady";
+import { aboutContent } from "@/lib/about";
+import { AboutPanelHeading, AboutPanelShell } from "./AboutPanelShell";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 export default function AboutMePanel() {
-
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-
-
-    const currentImage = mounted && resolvedTheme === "dark" ? hansImg : hansImg2;
-
+  const isClient = useClientReady();
+  const reducedMotion = usePrefersReducedMotion();
+  const currentImage = isClient && resolvedTheme === "dark" ? hansImg : hansImg2;
 
   return (
     <motion.div
-      initial={{ y: 40, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.25 }}
-      className="about-panel flex flex-col md:flex-row h-screen w-screen items-center justify-center px-6 md:px-12 gap-12"
+      initial={reducedMotion ? undefined : { y: 40, opacity: 0 }}
+      whileInView={reducedMotion ? undefined : { y: 0, opacity: 1 }}
+      transition={
+        reducedMotion
+          ? undefined
+          : {
+              duration: motionTokens.duration.base,
+              ease: motionTokens.framerEase.enter,
+            }
+      }
+      viewport={reducedMotion ? undefined : { once: true, amount: 0.25 }}
     >
-      {/* LEFT — PHOTO */}
-      <div className="relative w-full border-2 max-w-50 md:max-w-70 shrink-0 mx-auto rounded-2xl overflow-hidden group">
-        <Image
-          src={currentImage}
-          alt="Hanseo portrait"
-          className="object-cover w-full block transition-transform duration-500 group-hover:scale-115"
-          priority
-        />
+      <AboutPanelShell
+        leftClassName="flex justify-center"
+        rightClassName="mx-auto flex max-w-2xl flex-col justify-center"
+        left={
+          <div className="group relative mx-auto w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border-2 md:max-w-md">
+            <Image
+              src={currentImage}
+              alt="Hanseo portrait"
+              className="block w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              priority
+            />
 
-        <div className="absolute bottom-0 w-full bg-background/80 px-4 py-2 text-center backdrop-blur">
-          <span className="text-sm font-semibold tracking-wide">Hanseo</span>
-        </div>
-      </div>
-      {/* RIGHT — TEXT */}
-      <div className="flex flex-col justify-center text-center md:text-left max-w-xl mx-auto">
-        <span
-          className="mb-4 text-xs uppercase tracking-[0.3em] opacity-60"
-        >
-          About Me
-        </span>
+            <div className="absolute bottom-0 w-full bg-background/80 px-4 py-2 text-center backdrop-blur">
+              <span className="text-sm font-semibold tracking-wide">Hanseo</span>
+            </div>
+          </div>
+        }
+        right={
+          <>
+            <AboutPanelHeading
+              eyebrow={aboutContent.profile.eyebrow}
+              title={aboutContent.profile.title}
+              titleClassName="max-w-xl text-2xl sm:text-3xl md:text-4xl"
+            />
 
-        <p className=" text-sm sm:text-lg md:text-xl leading-relaxed opacity-85">
-          I’m a full-stack developer that designs maintainable systems and gives
-          importance to system architecture and user experience. I also code as
-          a hobby, testing my theories when i learn something new and building a
-          web application out of it.
-        </p>
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed opacity-85 sm:text-lg md:mt-6 md:text-xl">
+              {aboutContent.profile.intro}
+            </p>
 
-        <motion.p
-          initial={{ y: 40, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          viewport={{ once: true, amount: 0.25 }}
-          className="mt-4 md:mt-6  text-sm sm:text-lg md:text-xl mb-2 sm:mb-0 leading-relaxed opacity-85"
-        >
-          I specialize in using TypeScript, React, and Django Rest Framework
-          when building web applications. I focus heavily on the fundamentals
-          and continuously learn and adapt to new technology to enhance
-          productivity and efficiency.
-        </motion.p>
+            <ul className="mt-4 grid gap-2 text-left text-sm opacity-80 sm:text-base">
+              {aboutContent.profile.highlights.map((highlight) => (
+                <li key={highlight} className="flex items-start gap-2">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
 
+            <motion.p
+              initial={reducedMotion ? undefined : { y: 40, opacity: 0 }}
+              whileInView={reducedMotion ? undefined : { y: 0, opacity: 1 }}
+              transition={
+                reducedMotion
+                  ? undefined
+                  : {
+                      duration: motionTokens.duration.base,
+                      ease: motionTokens.framerEase.enter,
+                      delay: motionTokens.stagger.text,
+                    }
+              }
+              viewport={reducedMotion ? undefined : { once: true, amount: 0.25 }}
+              className="mb-2 mt-4 max-w-2xl text-sm leading-relaxed opacity-85 sm:mb-0 sm:text-lg md:mt-5 md:text-xl"
+            >
+              {aboutContent.profile.detail}
+            </motion.p>
 
-        {/* ACTIONS */}
-        <div className="mt-6 mb-2 flex justify-center md:justify-start gap-4 flex-wrap">
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
-          >
-            <Linkedin size={16} /> LinkedIn
-          </a>
+            <div className="mb-2 mt-7 flex flex-wrap justify-center gap-4 md:justify-start">
+              <a
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-11 items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Linkedin size={16} /> LinkedIn
+              </a>
 
-          <a
-            href= {GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white"
-          >
-            <Github size={16} /> GitHub
-          </a>
-        </div>
-      </div>
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-11 items-center gap-2 border border-foreground/20 px-4 py-2 text-sm transition hover:border-foreground/75 hover:bg-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Github size={16} /> GitHub
+              </a>
+            </div>
+          </>
+        }
+      />
     </motion.div>
   );
 }

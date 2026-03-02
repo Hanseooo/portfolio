@@ -12,8 +12,8 @@ export function ToolGroup({
   }[];
 }) {
   return (
-    <div className="tool-group">
-      <h3 className="mb-2 sm:mb-4 text-sm font-semibold uppercase tracking-wide opacity-70">
+    <div className="tool-group border-l border-foreground/20 pl-4 sm:pl-5">
+      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide opacity-70">
         {title}
       </h3>
 

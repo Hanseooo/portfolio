@@ -10,10 +10,10 @@ export function ToolItem({ label, id }: { label: string; id: SvgId }) {
   return (
     <div
       ref={ref}
-      className="flex bg-muted-foreground/5 dark:bg-accent items-center gap-2 rounded-full border border-foreground/20 px-4 py-1 sm:py-2 text-sm transition hover:border-primary hover:text-primary"
+      className="flex min-h-11 items-center gap-2 rounded-full border border-foreground/20 bg-muted-foreground/5 px-4 py-1 text-sm leading-none transition hover:border-primary hover:text-primary dark:bg-accent sm:py-2"
     >
       <TechStackSvg id={id} />
-      <p >{label}</p>
+      <p>{label}</p>
     </div>
   );
 }
