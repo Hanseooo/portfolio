@@ -5,44 +5,45 @@ import { projects } from "@/lib/projects";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { BBH_Bartle } from "next/font/google";
-
-const bbhBartle = BBH_Bartle({
-  subsets: ["latin"],
-  weight: "400",
-});
+import { motionTokens } from "@/lib/motion";
 
 export default function Projects() {
   const [active, setActive] = useState(projects[0]);
 
   return (
-    <section className="relative min-h-screen  px-6 py-32">
-      {/* Heading — subtle continuation from About */}
-      <motion.h2
-        initial={{ x: -60, opacity: 0.25 }}
+    <section id="projects" className="relative min-h-screen  px-6 py-32">
+      {/* Heading */}
+      <motion.div
+        initial={{ x: -42, opacity: 0.22 }}
         whileInView={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
+        transition={{
+          duration: motionTokens.duration.base,
+          ease: motionTokens.framerEase.enter,
+        }}
         viewport={{ once: true, amount: 0.5 }}
-        id="projects"
-        className={`
-          mb-20
-          text-primary text-center 
-          font-black
-          text-[clamp(2rem,8vw,5rem)]
-          leading-none
-          ${bbhBartle.className}
-        `}
+        className="mx-auto mb-16 max-w-3xl text-center"
       >
-        <span className="block text-[clamp(1.5rem,5vw,3rem)]">Featured</span>
-        Projects
-      </motion.h2>
+        <h2 className="font-black leading-none text-primary">
+          <span className="mb-3 block text-xs uppercase tracking-[0.26em] text-primary/80">
+            Selected Work
+          </span>
+          <span className="text-[clamp(2.2rem,8vw,5rem)]">Projects</span>
+        </h2>
+        <p className="mt-5 text-sm leading-relaxed opacity-75 sm:text-base">
+          Real projects focused on architecture clarity, interaction quality, and production-minded implementation.
+        </p>
+      </motion.div>
 
       <motion.div
-        initial={{ x: -60, opacity: 0.25 }}
+        initial={{ x: -42, opacity: 0.25 }}
         whileInView={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
+        transition={{
+          duration: motionTokens.duration.base,
+          ease: motionTokens.framerEase.enter,
+          delay: motionTokens.stagger.text,
+        }}
         viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-7xl grid gap-12 lg:grid-cols-[420px_1fr]"
+        className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[420px_1fr]"
       >
         {/* LEFT — PROJECT LIST */}
         <div className="space-y-4">
@@ -51,13 +52,15 @@ export default function Projects() {
               key={project.slug}
               href={`/projects/${project.slug}`}
               onMouseEnter={() => setActive(project)}
+              onFocus={() => setActive(project)}
               className="
                 group block
                 border border-foreground/20
                 px-6 py-5
-                transition
+                transition-colors
                 hover:border-primary
                 focus-visible:border-primary
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
                 shadow-primary-sharp
                 bg-background/50
               "
@@ -70,7 +73,9 @@ export default function Projects() {
               <h3 className="text-xl font-semibold group-hover:text-primary">
                 {project.title}
               </h3>
-              <p className="mt-1 text-sm opacity-70">{project.subtitle}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed opacity-72">
+                {project.subtitle}
+              </p>
             </Link>
           ))}
         </div>
@@ -83,7 +88,10 @@ export default function Projects() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{
+                duration: motionTokens.duration.base,
+                ease: motionTokens.framerEase.enter,
+              }}
               className="
                 relative
                 aspect-video
@@ -98,17 +106,21 @@ export default function Projects() {
                 src={active.heroImage}
                 alt={active.title}
                 fill
+                sizes="(min-width: 1280px) 55vw, 100vw"
                 className="object-cover"
-                priority
               />
 
-              {/* Overlay + metadata */}
-              <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <h4 className="text-2xl font-semibold text-white">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/38 to-black/12" />
+              <div className="absolute inset-x-6 bottom-6 border border-white/24 bg-black/48 p-5 backdrop-blur-md">
+                <p className="text-[0.65rem] uppercase tracking-[0.22em] text-primary/90">
+                  Featured Preview
+                </p>
+                <h4 className="mt-2 text-2xl font-black text-white">
                   {active.title}
                 </h4>
-                <p className="mt-1 text-sm text-white/80">{active.subtitle}</p>
+                <p className="mt-3 line-clamp-2 border-l-2 border-primary/70 pl-3 text-sm leading-relaxed text-white/84">
+                  {active.subtitle}
+                </p>
               </div>
             </motion.div>
           </AnimatePresence>

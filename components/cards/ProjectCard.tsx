@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { useMagnetic } from "@/components/motion/useMagnetic";
+import { motionTokens } from "@/lib/motion";
 
 
 type Props = {
@@ -36,7 +37,10 @@ export default function ProjectCard({
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, amount: 0.25 }}
       whileHover={{ scale: 0.98 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{
+        duration: motionTokens.duration.base,
+        ease: motionTokens.framerEase.enter,
+      }}
     >
       {/* IMAGE */}
       <div
@@ -46,7 +50,10 @@ export default function ProjectCard({
         <motion.div
           className="h-full w-full"
           whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{
+            duration: motionTokens.duration.feature,
+            ease: motionTokens.framerEase.enter,
+          }}
         >
           <Image
             src={heroImage}

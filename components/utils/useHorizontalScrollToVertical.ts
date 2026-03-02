@@ -5,13 +5,13 @@ import { useGesture } from "@use-gesture/react";
 export function useHorizontalScrollToVertical() {
   return useGesture(
     {
-      onDrag: ({ delta: [dx], last }) => {
+      onDrag: ({ delta: [dx] }) => {
         // Tune this value (feel)
         const SCROLL_MULTIPLIER = 1.2;
 
         const scrollAmount = -dx * SCROLL_MULTIPLIER;
 
-        const lenis = (window as any).__lenis;
+        const lenis = window.__lenis;
 
         if (lenis) {
           lenis.scrollTo(lenis.scroll + scrollAmount, {

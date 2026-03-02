@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 z-60 w-full px-6 py-6">
+      <header className="fixed top-0 z-[60] w-full px-6 py-6">
         <nav className={"flex items-center justify-between text-primary"}>
           <Link
             href="/"

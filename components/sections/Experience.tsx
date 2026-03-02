@@ -2,29 +2,70 @@
 
 import { experience } from "@/lib/experience";
 import { motion } from "framer-motion";
+import { motionTokens } from "@/lib/motion";
+
+const itemVariants = {
+  hidden: { y: 28, opacity: 0 },
+  visible: { y: 0, opacity: 1 },
+};
+
+const pointsVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: motionTokens.stagger.text,
+      delayChildren: motionTokens.stagger.text,
+    },
+  },
+};
+
+const pointVariants = {
+  hidden: { y: 12, opacity: 0 },
+  visible: { y: 0, opacity: 1 },
+};
 
 
 export default function Experience() {
 
   return (
     <section id="experience" className="mx-auto max-w-6xl px-6 py-32">
-      <motion.h2
-        initial={{ y: 40, opacity: 0 }}
+      <motion.div
+        initial={{ y: 32, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{
+          duration: motionTokens.duration.base,
+          ease: motionTokens.framerEase.enter,
+        }}
         viewport={{ once: true, amount: 0.5 }}
-        className="mb-20 text-primary text-5xl font-bold"
+        className="mx-auto mb-20 max-w-3xl text-center"
       >
-        Experience
-      </motion.h2>
+        <h2 className="font-black text-primary">
+          <span className="mb-3 block text-xs uppercase tracking-[0.26em] text-primary/80">
+            Timeline
+          </span>
+          <span className="text-[clamp(2rem,7vw,4rem)]">Experience</span>
+        </h2>
+        <p className="mt-5 text-sm leading-relaxed opacity-75 sm:text-base">
+          Academic and project-led roles that shaped collaboration, delivery speed, and systems thinking.
+        </p>
+      </motion.div>
 
-      <div className="space-y-16">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{
+          staggerChildren: motionTokens.stagger.list,
+        }}
+        className="space-y-16"
+      >
         {experience.map((item, i) => (
           <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            viewport={{ once: true, amount: 1 }}
+            variants={itemVariants}
+            transition={{
+              duration: motionTokens.duration.base,
+              ease: motionTokens.framerEase.enter,
+            }}
             key={i}
             className="exp-item border-l border-foreground/20 pl-6"
           >
@@ -35,14 +76,26 @@ export default function Experience() {
 
             <p className="mb-4 opacity-80">{item.company}</p>
 
-            <ul className="list-disc space-y-2 pl-5 opacity-80">
+            <motion.ul
+              variants={pointsVariants}
+              className="list-disc space-y-2 pl-5 opacity-80"
+            >
               {item.points.map((point, idx) => (
-                <li key={idx}>{point}</li>
+                <motion.li
+                  key={idx}
+                  variants={pointVariants}
+                  transition={{
+                    duration: motionTokens.duration.base,
+                    ease: motionTokens.framerEase.enter,
+                  }}
+                >
+                  {point}
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

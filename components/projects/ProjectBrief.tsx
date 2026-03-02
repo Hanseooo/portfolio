@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Project } from "@/lib/projects";
+import { motionTokens } from "@/lib/motion";
 
 export default function ProjectBrief({ project }: { project: Project }) {
   return (
@@ -12,7 +13,10 @@ export default function ProjectBrief({ project }: { project: Project }) {
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{
+            duration: motionTokens.duration.base,
+            ease: motionTokens.framerEase.enter,
+          }}
           viewport={{ once: true }}
         >
           <h2 className="mb-4 text-2xl font-semibold tracking-tight">
@@ -27,7 +31,11 @@ export default function ProjectBrief({ project }: { project: Project }) {
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          transition={{
+            duration: motionTokens.duration.base,
+            ease: motionTokens.framerEase.enter,
+            delay: motionTokens.stagger.text,
+          }}
           viewport={{ once: true }}
           className="space-y-8"
         >

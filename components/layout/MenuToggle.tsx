@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { RefObject } from "react";
+import { motionTokens } from "@/lib/motion";
 
 export default function MenuToggle({
   open,
@@ -19,7 +20,7 @@ export default function MenuToggle({
       ref={buttonRef}
       type="button"
       onClick={toggle}
-      className="relative z-60 h-6 w-8 focus:outline-none"
+      className="relative z-[60] h-6 w-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
       aria-controls={controlsId}
@@ -30,7 +31,10 @@ export default function MenuToggle({
           rotate: open ? 45 : 0,
           y: open ? 8 : 0,
         }}
-        transition={{ duration: 0.2 }}
+        transition={{
+          duration: motionTokens.duration.fast,
+          ease: motionTokens.framerEase.emphasis,
+        }}
       />
       <motion.span
         className="absolute bottom-1 left-0 h-0.5 w-full bg-current"
@@ -38,7 +42,10 @@ export default function MenuToggle({
           rotate: open ? -45 : 0,
           y: open ? -8 : 0,
         }}
-        transition={{ duration: 0.2 }}
+        transition={{
+          duration: motionTokens.duration.fast,
+          ease: motionTokens.framerEase.emphasis,
+        }}
       />
     </button>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { motionTokens, prefersReducedMotion } from "@/lib/motion";
 
 export default function HomeScrollHandler() {
   useEffect(() => {
@@ -14,8 +15,10 @@ export default function HomeScrollHandler() {
 
       if (element) {
         setTimeout(() => {
-          element.scrollIntoView({ behavior: "smooth" });
-        }, 750);
+          element.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+          });
+        }, motionTokens.duration.feature * 1000 + 80);
       } else if (attempts < 10) {
         requestAnimationFrame(() => scrollWithRetry(attempts + 1));
       }

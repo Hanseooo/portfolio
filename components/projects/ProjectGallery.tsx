@@ -1,7 +1,8 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { easeOut, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { motionTokens } from "@/lib/motion";
 
 const itemVariants = {
   hidden: {
@@ -12,8 +13,8 @@ const itemVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 0.45,
-      ease: easeOut,
+      duration: motionTokens.duration.base,
+      ease: motionTokens.framerEase.enter,
     },
   },
 };

@@ -4,6 +4,7 @@ import { Github, Linkedin, Mail } from "lucide-react";
 import { BBH_Bartle } from "next/font/google";
 import { motion } from "framer-motion"
 import { EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL } from "../utils/externalLinks";
+import { motionTokens } from "@/lib/motion";
 
 const bbhBartle = BBH_Bartle({
   subsets: ["latin"],
@@ -40,7 +41,11 @@ export default function Footer() {
         initial={{opacity: 0}}
         viewport={{amount: 0.25}}
         whileInView={{opacity: 1}}
-        transition={{duration: 0.5, delay: 0.25}}
+        transition={{
+          duration: motionTokens.duration.base,
+          delay: motionTokens.stagger.text,
+          ease: motionTokens.framerEase.enter,
+        }}
         className="flex flex-wrap items-center gap-10 text-sm uppercase tracking-widest">
           <a
             href={`mailto:${EMAIL_ADDRESS}`}

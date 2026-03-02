@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/projects";
+import { motionTokens } from "@/lib/motion";
 
 export default function ProjectFeatures({ project }: { project: Project }) {
   if (!project.features || project.features.length === 0) return null;
@@ -11,7 +12,10 @@ export default function ProjectFeatures({ project }: { project: Project }) {
       <motion.h2
         initial={{ y: 20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{
+          duration: motionTokens.duration.base,
+          ease: motionTokens.framerEase.enter,
+        }}
         viewport={{ once: true }}
         className="mb-12 text-2xl font-bold tracking-tight"
       >
@@ -25,9 +29,9 @@ export default function ProjectFeatures({ project }: { project: Project }) {
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{
-              duration: 0.4,
-              ease: "easeOut",
-              delay: i * 0.05,
+              duration: motionTokens.duration.base,
+              ease: motionTokens.framerEase.enter,
+              delay: i * motionTokens.stagger.text,
             }}
             viewport={{ once: true }}
             className="
