@@ -17,7 +17,7 @@ export default function AboutMobileCard({
   return (
     <article
       className={cn(
-        "rounded-2xl border border-foreground/15 bg-background/90 p-4 shadow-primary-sharp backdrop-blur sm:p-6 dark:bg-background/70",
+        "rounded-2xl border border-foreground/15 bg-background/90 p-5 shadow-primary-sharp backdrop-blur sm:p-6 dark:bg-background/70",
         className
       )}
     >
@@ -25,7 +25,7 @@ export default function AboutMobileCard({
       <h3 className="mt-3 break-words text-lg font-bold leading-tight text-primary sm:text-2xl">
         {title}
       </h3>
-      <div className="mt-3 sm:mt-4">{children}</div>
+      <div className="mt-4">{children}</div>
     </article>
   );
 }

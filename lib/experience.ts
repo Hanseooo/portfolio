@@ -5,7 +5,7 @@ export const experience = [
     period: "2026 — Present",
     points: [
       "Designed and built an internal full-stack Recruitment Automation System from a PRD.",
-      "Implemented AI-assisted candidate processing workflows with Next.js, LangChain, TypeScript, Tailwind CSS, and PostgreSQL, integrated with Google Drive API.",
+      "Implemented AI-assisted Job Description and Social Media Posts generating workflows with Next.js, LangChain, TypeScript, Tailwind CSS, and PostgreSQL, integrated with Google Drive API.",
       "Reduced manual recruitment workload by about 80%, turning day-long operations into workflows completed in minutes.",
     ],
   },

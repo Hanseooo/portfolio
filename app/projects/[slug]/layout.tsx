@@ -7,19 +7,46 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const baseUrl = "https://hanseo.tech";
   const { slug } = await params;
   const project = projects.find((item) => item.slug === slug);
 
   if (!project) {
     return {
-      title: "Project | Hanseo",
-      description: "Project details from Hanseo's portfolio.",
+      title: "Project",
+      description: "Project details from Hans Amoguis' portfolio.",
+      alternates: {
+        canonical: `/projects/${slug}`,
+      },
+      robots: {
+        index: false,
+        follow: true,
+      },
     };
   }
 
+  const title = `${project.title} | Hans Amoguis`;
+  const description = project.subtitle;
+  const url = `${baseUrl}/projects/${project.slug}`;
+
   return {
-    title: `${project.title} | Hanseo`,
-    description: project.subtitle,
+    title,
+    description,
+    alternates: {
+      canonical: `/projects/${project.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      siteName: "Hans Amoguis Portfolio",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

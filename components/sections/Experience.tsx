@@ -2,35 +2,59 @@
 
 import { experience } from "@/lib/experience";
 import { motion } from "framer-motion";
-import { motionTokens } from "@/lib/motion";
-
-const itemVariants = {
-  hidden: { y: 28, opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-};
-
-const pointsVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: motionTokens.stagger.text,
-      delayChildren: motionTokens.stagger.text,
-    },
-  },
-};
-
-const pointVariants = {
-  hidden: { y: 12, opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-};
+import {
+  getEnterY,
+  getMotionDistance,
+  getMotionMode,
+  motionTokens,
+} from "@/lib/motion";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { getRuntimeEnv } from "@/components/utils/browserInfo";
+import { useClientReady } from "@/components/utils/useClientReady";
 
 
 export default function Experience() {
+  const isClient = useClientReady();
+  const reducedMotion = usePrefersReducedMotion();
+  const runtimeEnv = isClient
+    ? getRuntimeEnv()
+    : { isMobile: false, isWebView: false };
+  const motionMode = getMotionMode({
+    reducedMotion,
+    isMobile: runtimeEnv.isMobile,
+  });
+
+  const headingEnter = getEnterY("accent", motionMode);
+  const itemEnter = getEnterY("subtle", motionMode);
+  const pointDistance = getMotionDistance("subtle", motionMode) * 0.6;
+
+  const itemVariants = {
+    hidden: itemEnter,
+    visible: { y: 0, opacity: 1 },
+  };
+
+  const pointsVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren:
+          motionMode === "desktop"
+            ? motionTokens.stagger.text
+            : motionTokens.stagger.text * 0.7,
+        delayChildren: motionTokens.stagger.text,
+      },
+    },
+  };
+
+  const pointVariants = {
+    hidden: { y: pointDistance, opacity: motionMode === "reduced" ? 1 : 0 },
+    visible: { y: 0, opacity: 1 },
+  };
 
   return (
     <section id="experience" className="mx-auto max-w-6xl px-6 py-32">
       <motion.div
-        initial={{ y: 32, opacity: 0 }}
+        initial={headingEnter}
         whileInView={{ y: 0, opacity: 1 }}
         transition={{
           duration: motionTokens.duration.base,
