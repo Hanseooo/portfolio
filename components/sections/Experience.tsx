@@ -52,7 +52,7 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" className="mx-auto max-w-6xl px-6 py-32">
+    <section id="experience" className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:py-32">
       <motion.div
         initial={headingEnter}
         whileInView={{ y: 0, opacity: 1 }}
@@ -69,7 +69,7 @@ export default function Experience() {
           </span>
           <span className="text-[clamp(2rem,7vw,4rem)]">Experience</span>
         </h2>
-        <p className="mt-5 text-sm leading-relaxed opacity-75 sm:text-base">
+        <p className="mt-5 text-sm leading-relaxed text-foreground/80 sm:text-base">
           Academic and project-led roles that shaped collaboration, delivery speed, and systems thinking.
         </p>
       </motion.div>
@@ -95,14 +95,14 @@ export default function Experience() {
           >
             <div className="mb-2 flex items-center justify-between">
               <h3 className="text-xl font-semibold">{item.role}</h3>
-              <span className="text-sm opacity-60">{item.period}</span>
+              <span className="text-sm text-foreground/70">{item.period}</span>
             </div>
 
-            <p className="mb-4 opacity-80">{item.company}</p>
+            <p className="mb-4 text-foreground/85">{item.company}</p>
 
             <motion.ul
               variants={pointsVariants}
-              className="list-disc space-y-2 pl-5 opacity-80"
+              className="list-disc space-y-2 pl-5 text-foreground/85"
             >
               {item.points.map((point, idx) => (
                 <motion.li

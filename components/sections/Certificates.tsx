@@ -14,6 +14,7 @@ import {
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { getRuntimeEnv } from "@/components/utils/browserInfo";
 import { useClientReady } from "@/components/utils/useClientReady";
+import { sectionListCardClassName } from "@/components/sections/cardStyles";
 
 export default function Certificates() {
   const [active, setActive] = useState(certificates[0]);
@@ -47,7 +48,7 @@ export default function Certificates() {
   );
 
   return (
-    <section id="certificates" className="mx-auto max-w-6xl px-6 py-32">
+    <section id="certificates" className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:py-32">
       <motion.div
         initial={accentEnter}
         whileInView={{ y: 0, opacity: 1 }}
@@ -64,12 +65,12 @@ export default function Certificates() {
           </span>
           <span className="text-[clamp(2rem,7vw,4rem)]">Certificates</span>
         </h2>
-        <p className="mt-5 text-sm leading-relaxed opacity-75 sm:text-base">
+        <p className="mt-5 text-sm leading-relaxed text-foreground/80 sm:text-base">
           Verified training and industry learning milestones that support practical engineering decisions.
         </p>
       </motion.div>
 
-      <div className="grid gap-10 md:grid-cols-[360px_1fr]">
+      <div className="grid gap-10 lg:grid-cols-[360px_1fr]">
         {/* LEFT COLUMN — LIST */}
         <motion.div
           initial={subtleEnter}
@@ -87,22 +88,18 @@ export default function Certificates() {
               href={`/certificates/${cert.slug}`}
               onMouseEnter={() => setActive(cert)}
               onFocus={() => setActive(cert)}
-              className="
-                group block
-                border border-foreground/20
-                px-5 py-4
-                transition-colors
-                hover:border-primary
-                focus-visible:border-primary
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                shadow-primary-sharp
-                bg-background/50
-              "
+              className={`${sectionListCardClassName} lg:rounded-none lg:bg-background/50 lg:px-5 lg:py-4`}
             >
+              <Image
+                className="mb-4 w-full border-2 border-secondary md:hidden"
+                src={cert.image}
+                alt={`${cert.title} preview`}
+                sizes="(max-width: 767px) 100vw, 0px"
+              />
               <h3 className="font-semibold group-hover:text-primary">
                 {cert.title}
               </h3>
-              <p className="mt-2 text-sm opacity-72">
+              <p className="mt-2 text-sm text-foreground/80">
                 {cert.issuer} · {cert.date}
               </p>
             </Link>
@@ -110,7 +107,7 @@ export default function Certificates() {
         </motion.div>
 
         {/* RIGHT COLUMN — PREVIEW (hidden on mobile) */}
-        <div ref={previewRef} className="relative hidden md:block">
+        <div ref={previewRef} className="relative hidden lg:block">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.slug}

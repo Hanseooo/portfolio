@@ -20,16 +20,16 @@ export default function MenuToggle({
       ref={buttonRef}
       type="button"
       onClick={toggle}
-      className="relative z-[60] h-6 w-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="relative z-[60] flex h-11 w-11 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
       aria-controls={controlsId}
     >
       <motion.span
-        className="absolute top-1 left-0 h-0.5 w-full bg-current"
+        className="absolute top-3.5 left-1.5 h-0.5 w-8 bg-current"
         animate={{
           rotate: open ? 45 : 0,
-          y: open ? 8 : 0,
+          y: open ? 4 : 0,
         }}
         transition={{
           duration: motionTokens.duration.fast,
@@ -37,10 +37,10 @@ export default function MenuToggle({
         }}
       />
       <motion.span
-        className="absolute bottom-1 left-0 h-0.5 w-full bg-current"
+        className="absolute bottom-3.5 left-1.5 h-0.5 w-8 bg-current"
         animate={{
           rotate: open ? -45 : 0,
-          y: open ? -8 : 0,
+          y: open ? -4 : 0,
         }}
         transition={{
           duration: motionTokens.duration.fast,

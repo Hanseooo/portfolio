@@ -14,6 +14,7 @@ import {
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { getRuntimeEnv } from "@/components/utils/browserInfo";
 import { useClientReady } from "@/components/utils/useClientReady";
+import { sectionListCardClassName } from "@/components/sections/cardStyles";
 
 export default function Projects() {
   const [active, setActive] = useState(projects[0]);
@@ -47,7 +48,7 @@ export default function Projects() {
   );
 
   return (
-    <section id="projects" className="relative min-h-screen  px-6 py-32">
+    <section id="projects" className="relative min-h-screen px-6 py-20 sm:py-24 lg:py-32">
       {/* Heading */}
       <motion.div
         initial={accentEnter}
@@ -65,7 +66,7 @@ export default function Projects() {
           </span>
           <span className="text-[clamp(2.2rem,8vw,5rem)]">Projects</span>
         </h2>
-        <p className="mt-5 text-sm leading-relaxed opacity-75 sm:text-base">
+        <p className="mt-5 text-sm leading-relaxed text-foreground/80 sm:text-base">
           Real projects focused on architecture clarity, interaction quality, and production-minded implementation.
         </p>
       </motion.div>
@@ -89,17 +90,7 @@ export default function Projects() {
               href={`/projects/${project.slug}`}
               onMouseEnter={() => setActive(project)}
               onFocus={() => setActive(project)}
-              className="
-                group block
-                border border-foreground/20
-                px-6 py-5
-                transition-colors
-                hover:border-primary
-                focus-visible:border-primary
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                shadow-primary-sharp
-                bg-background/50
-              "
+              className={`${sectionListCardClassName} lg:rounded-none lg:bg-background/50 lg:px-6 lg:py-5`}
             >
               <Image
                 className="border-secondary border-2 mb-4  lg:hidden"
@@ -109,7 +100,7 @@ export default function Projects() {
               <h3 className="text-xl font-semibold group-hover:text-primary">
                 {project.title}
               </h3>
-              <p className="mt-2 line-clamp-2 text-sm leading-relaxed opacity-72">
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/80">
                 {project.subtitle}
               </p>
             </Link>
