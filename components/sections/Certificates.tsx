@@ -91,10 +91,10 @@ export default function Certificates() {
               className={`${sectionListCardClassName} lg:rounded-none lg:bg-background/50 lg:px-5 lg:py-4`}
             >
               <Image
-                className="mb-4 w-full border-2 border-secondary md:hidden"
+                className="mb-4 w-full border-2 border-secondary lg:hidden"
                 src={cert.image}
                 alt={`${cert.title} preview`}
-                sizes="(max-width: 767px) 100vw, 0px"
+                sizes="(max-width: 1023px) 100vw, 0px"
               />
               <h3 className="font-semibold group-hover:text-primary">
                 {cert.title}

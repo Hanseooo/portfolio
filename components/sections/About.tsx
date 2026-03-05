@@ -14,6 +14,7 @@ import { Kbd } from "../ui/kbd";
 import { useClientReady } from "@/components/utils/useClientReady";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import AboutMobile from "./about/AboutMobile";
+import AboutStacked from "./about/AboutStacked";
 
 
 function DragHint() {
@@ -32,6 +33,8 @@ export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const isClient = useClientReady();
+  const [viewportReady, setViewportReady] = useState(false);
+  const [viewportAllowsHorizontal, setViewportAllowsHorizontal] = useState(false);
 
   const runtimeEnv = isClient
     ? getRuntimeEnv()
@@ -39,7 +42,57 @@ export default function About() {
   const isMobile = runtimeEnv.isMobile;
   const isWebView = runtimeEnv.isWebView;
   const isReducedMotion = usePrefersReducedMotion();
-  const useHorizontalLayout = !isWebView && !isMobile && !isReducedMotion;
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    let resizeFrame = 0;
+
+    const evaluateViewport = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canEnterHorizontal =
+        (width >= 1500 && height >= 660) ||
+        (width >= 1360 && height >= 700) ||
+        (width >= 1285 && height >= 760) ||
+        (width >= 1240 && height >= 820);
+
+      const shouldStayHorizontal =
+        (width >= 1460 && height >= 640) ||
+        (width >= 1320 && height >= 680) ||
+        (width >= 1260 && height >= 740) ||
+        (width >= 1200 && height >= 800);
+
+      const nextHorizontal = viewportAllowsHorizontal
+        ? shouldStayHorizontal
+        : canEnterHorizontal;
+
+      setViewportAllowsHorizontal(nextHorizontal);
+      setViewportReady(true);
+    };
+
+    evaluateViewport();
+
+    const onResize = () => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(evaluateViewport);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [isClient, viewportAllowsHorizontal]);
+
+  const useHorizontalLayout =
+    viewportReady &&
+    viewportAllowsHorizontal &&
+    !isWebView &&
+    !isMobile &&
+    !isReducedMotion;
 
   const [dragEnabled, setDragEnabled] = useState(false);
   const isDesktop = !isMobile && useHorizontalLayout;
@@ -176,7 +229,7 @@ export default function About() {
           {isDesktop && showHint && <DragHint />}
         </>
       ) : (
-        <AboutMobile />
+        isMobile ? <AboutMobile /> : <AboutStacked />
       )}
     </section>
   );
