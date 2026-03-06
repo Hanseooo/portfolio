@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Github, ArrowDown } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BBH_Bartle } from "next/font/google";
@@ -42,16 +42,42 @@ export default function Hero() {
   const isWebView = runtimeEnv.isWebView;
   const isMobile = runtimeEnv.isMobile;
   const reducedMotion = usePrefersReducedMotion();
+  const [isShortViewport, setIsShortViewport] = useState(false);
   const motionMode = getMotionMode({ reducedMotion, isMobile });
   const subtleEnter = getEnterY("subtle", motionMode);
   const accentEnter = getEnterY("accent", motionMode);
   const enterTransition = getEnterYTransition(motionMode);
   const parallaxDistance = getMotionDistance("parallax", motionMode);
+  const effectiveParallaxDistance =
+    isMobile && isShortViewport ? parallaxDistance * 0.45 : parallaxDistance;
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    let resizeFrame = 0;
+    const updateViewportHeight = () => {
+      setIsShortViewport(window.innerHeight < 760);
+    };
+
+    updateViewportHeight();
+
+    const onResize = () => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(updateViewportHeight);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [isClient]);
 
 
   useLayoutEffect(() => {
     if (!rootRef.current) return;
-    if (isWebView || reducedMotion || parallaxDistance === 0) return;
+    if (isWebView || reducedMotion || effectiveParallaxDistance === 0) return;
 
     const ctx = gsap.context(() => {
       const start = "top top";
@@ -80,7 +106,7 @@ export default function Hero() {
       });
 
       gsap.to(roleRef.current, {
-        y: -parallaxDistance * 0.4,
+        y: -effectiveParallaxDistance * 0.4,
         scrollTrigger: {
           trigger: rootRef.current,
           start,
@@ -90,7 +116,7 @@ export default function Hero() {
       });
 
       gsap.to(buttonsRef.current, {
-        y: -parallaxDistance * 0.75,
+        y: -effectiveParallaxDistance * 0.75,
         scrollTrigger: {
           trigger: rootRef.current,
           start,
@@ -100,7 +126,7 @@ export default function Hero() {
       });
 
       gsap.to(scrollHintRef.current, {
-        y: -parallaxDistance,
+        y: -effectiveParallaxDistance,
         scrollTrigger: {
           trigger: rootRef.current,
           start,
@@ -111,7 +137,9 @@ export default function Hero() {
     }, rootRef);
 
     return () => ctx.revert();
-  }, [isWebView, reducedMotion, parallaxDistance]);
+  }, [isWebView, reducedMotion, effectiveParallaxDistance]);
+
+  const showScrollHint = !isWebView && !isShortViewport && !isMobile;
 
   return (
     <motion.section
@@ -124,10 +152,20 @@ export default function Hero() {
         ease: motionTokens.framerEase.enter,
         delay: reducedMotion ? 0 : 1.5,
       }}
-      className={`relative will-change-transform flex min-h-screen flex-col items-center justify-center overflow-hidden text-center ${bbhBartle.className}`}
+      className={`relative flex flex-col items-center justify-center overflow-hidden text-center will-change-transform ${
+        isMobile
+          ? "min-h-[78svh] px-4 pb-10 pt-24 sm:min-h-[84svh] sm:px-6 sm:pt-28"
+          : "min-h-screen"
+      } ${bbhBartle.className}`}
     >
       {/* NAME */}
-      <h1 className="leading-[0.9] will-change-transform tracking-tight text-[clamp(2.75rem,10vw,9rem)] text-primary">
+      <h1
+        className={`tracking-tight text-primary will-change-transform ${
+          isMobile
+            ? "leading-[0.95] text-[clamp(2rem,11.5vw,3.7rem)]"
+            : "leading-[0.9] text-[clamp(2.75rem,10vw,9rem)]"
+        }`}
+      >
         <span ref={firstNameRef} className="block">
           Hans 
         </span>
@@ -136,40 +174,68 @@ export default function Hero() {
         </span>
       </h1>
 
-      {/* ROLE */}
-      <motion.p
-        ref={roleRef}
-        initial={subtleEnter}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ ...enterTransition, delay: 0.12 }}
-        className="mt-4 text-sm uppercase tracking-[0.3em] opacity-80"
+      <div
+        className={isMobile
+          ? "mt-6 w-full max-w-md rounded-xl border border-foreground/20 bg-background/90 px-4 py-5 shadow-primary-sharp"
+          : ""
+        }
       >
-        Full-Stack Web Developer
-      </motion.p>
-
-      {/* BUTTONS */}
-      <motion.div
-        ref={buttonsRef}
-        initial={accentEnter}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ ...enterTransition, delay: 0.2 }}
-        className="mt-10 flex items-center gap-6"
-      >
-        <a
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 border border-foreground/30 px-5 py-3 text-sm transition hover:border-primary hover:text-primary"
+        {/* ROLE */}
+        <motion.p
+          ref={roleRef}
+          initial={subtleEnter}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ ...enterTransition, delay: 0.12 }}
+          className={`uppercase ${
+            isMobile
+              ? "text-xs tracking-[0.24em] text-foreground/80"
+              : "mt-4 text-sm tracking-[0.3em] opacity-80"
+          }`}
         >
-          <Github size={16} />
-          GitHub
-        </a>
+          Full-Stack Web Developer
+        </motion.p>
 
-        <ContactDialogTrigger email={EMAIL_ADDRESS} linkedinUrl={LINKEDIN_URL} phone={PHONE_NUMBER} />
-      </motion.div>
+        {/* BUTTONS */}
+        <motion.div
+          ref={buttonsRef}
+          initial={accentEnter}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ ...enterTransition, delay: 0.2 }}
+          className={
+            isMobile
+              ? "mt-5 grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2"
+              : "mt-10 flex items-center gap-6"
+          }
+        >
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex min-h-11 items-center justify-center gap-2 border px-5 py-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+              isMobile
+                ? "w-full rounded-md border-foreground/20 bg-background/70 font-sans hover:border-primary hover:text-primary"
+                : "rounded-md border-foreground/30 font-sans hover:border-primary hover:text-primary"
+            }`}
+          >
+            <Github size={16} />
+            GitHub
+          </a>
+
+          <ContactDialogTrigger
+            email={EMAIL_ADDRESS}
+            linkedinUrl={LINKEDIN_URL}
+            phone={PHONE_NUMBER}
+            className={
+              isMobile
+                ? "w-full justify-center border-foreground/20 bg-background/70 text-primary"
+                : undefined
+            }
+          />
+        </motion.div>
+      </div>
 
       {/* SCROLL INDICATOR */}
-      {!isWebView && (
+      {showScrollHint && (
         <motion.div
           ref={scrollHintRef}
           initial={subtleEnter}
