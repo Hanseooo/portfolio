@@ -143,3 +143,29 @@
   --tw-shadow-color: rgba(var(--primary-rgb));
   box-shadow: -4px 4px 0 0 var(--tw-shadow-color);
 }
+
+.scrollbar-live {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--foreground) 35%, transparent) transparent;
+}
+
+.scrollbar-live::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-live::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-live::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--foreground) 32%, transparent);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.scrollbar-live::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--foreground) 46%, transparent);
+  background-clip: content-box;
+}

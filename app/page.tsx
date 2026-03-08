@@ -5,6 +5,7 @@ import About from "@/components/sections/About";
 import Certificates from "@/components/sections/Certificates";
 import Experience from "@/components/sections/Experience";
 import Hero from "@/components/sections/Hero";
+import LiveActivity from "@/components/sections/LiveActivity";
 import Projects from "@/components/sections/Projects";
 import { GridPattern } from "@/components/ui/shadcn-io/grid-pattern";
 import HomeScrollHandler from "@/components/utils/HomeScrollHandler";
@@ -35,6 +36,7 @@ export default function Home() {
       {/* </GestureScrollProvider> */}
       <Projects />
       <Experience />
+      <LiveActivity />
       <Certificates />
     </div>
     </PageTransition>

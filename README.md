@@ -51,3 +51,23 @@ I design and build maintainable, UX-focused web systems with a strong emphasis o
 ```bash
 npm install
 npm run dev
+```
+
+## Live Activity Environment Variables
+
+If you plan to enable the Live Activity section, copy `.env.example` to `.env.local` and set the values.
+
+Required:
+
+- `GITHUB_TOKEN`
+- `GITHUB_USERNAME`
+- `SPOTIFY_CLIENT_ID`
+- `SPOTIFY_CLIENT_SECRET`
+- `SPOTIFY_REFRESH_TOKEN`
+- `DISCORD_USER_ID`
+
+Optional tuning:
+
+- `ACTIVITY_GITHUB_REVALIDATE_SECONDS`
+- `ACTIVITY_SPOTIFY_REVALIDATE_SECONDS`
+- `ACTIVITY_DISCORD_REVALIDATE_SECONDS`

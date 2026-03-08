@@ -154,7 +154,9 @@ export default function Hero() {
       }}
       className={`relative flex flex-col items-center justify-center overflow-hidden text-center will-change-transform ${
         isMobile
-          ? "min-h-[78svh] px-4 pb-10 pt-24 sm:min-h-[84svh] sm:px-6 sm:pt-28"
+          ? isShortViewport
+            ? "min-h-[74svh] px-4 pb-8 pt-20 sm:min-h-[80svh] sm:px-6 sm:pt-24"
+            : "min-h-[78svh] px-4 pb-10 pt-24 sm:min-h-[84svh] sm:px-6 sm:pt-28"
           : "min-h-screen"
       } ${bbhBartle.className}`}
     >
@@ -175,9 +177,10 @@ export default function Hero() {
       </h1>
 
       <div
-        className={isMobile
-          ? "mt-6 w-full max-w-md rounded-xl border border-foreground/20 bg-background/90 px-4 py-5 shadow-primary-sharp"
-          : ""
+        className={
+          isMobile
+            ? `${isShortViewport ? "mt-4" : "mt-6"} w-full max-w-md rounded-xl border border-foreground/20 bg-background/90 px-4 py-5 shadow-primary-sharp`
+            : ""
         }
       >
         {/* ROLE */}
@@ -188,11 +191,11 @@ export default function Hero() {
           transition={{ ...enterTransition, delay: 0.12 }}
           className={`uppercase ${
             isMobile
-              ? "text-xs tracking-[0.24em] text-foreground/80"
-              : "mt-4 text-sm tracking-[0.3em] opacity-80"
+              ? "text-xs tracking-[0.24em] text-foreground/82"
+              : "text-xs tracking-[0.34em] text-foreground/75"
           }`}
         >
-          Full-Stack Web Developer
+          Full-Stack Engineer
         </motion.p>
 
         {/* BUTTONS */}
@@ -203,8 +206,8 @@ export default function Hero() {
           transition={{ ...enterTransition, delay: 0.2 }}
           className={
             isMobile
-              ? "mt-5 grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2"
-              : "mt-10 flex items-center gap-6"
+              ? `${isShortViewport ? "mt-4" : "mt-5"} grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2`
+              : "mt-7 flex items-center justify-center gap-4"
           }
         >
           <a
@@ -214,7 +217,7 @@ export default function Hero() {
             className={`flex min-h-11 items-center justify-center gap-2 border px-5 py-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               isMobile
                 ? "w-full rounded-md border-foreground/20 bg-background/70 font-sans hover:border-primary hover:text-primary"
-                : "rounded-md border-foreground/30 font-sans hover:border-primary hover:text-primary"
+                : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
             }`}
           >
             <Github size={16} />
@@ -228,7 +231,7 @@ export default function Hero() {
             className={
               isMobile
                 ? "w-full justify-center border-foreground/20 bg-background/70 text-primary"
-                : undefined
+                : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em]"
             }
           />
         </motion.div>
