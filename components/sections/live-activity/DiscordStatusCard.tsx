@@ -165,6 +165,54 @@ export default function DiscordStatusCard({
               </div>
             </div>
           ) : null}
+
+          {data.live.otherActivities.length > 0 ? (
+            <div className="space-y-3">
+              <p className="text-[0.68rem] uppercase tracking-[0.14em] text-foreground/70">Other Activities</p>
+              {data.live.otherActivities.map((activity) => (
+                <div
+                  key={`${activity.type}-${activity.name}-${activity.startedAt ?? "na"}`}
+                  className="border border-foreground/15 bg-background/70 p-3"
+                >
+                  <div className="flex items-center gap-3">
+                    {activity.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={activity.imageUrl}
+                        alt={`${activity.name} artwork`}
+                        className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 object-cover"
+                      />
+                    ) : (
+                      <div className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 bg-background/60" />
+                    )}
+
+                    <div className="min-w-0">
+                      <p className="text-[0.68rem] uppercase tracking-[0.14em] text-foreground/70">
+                        {activity.typeLabel}
+                      </p>
+                      <p className="mt-1 line-clamp-1 text-sm text-foreground/85">{activity.name}</p>
+                      {activity.details ? (
+                        <p className="line-clamp-1 text-xs text-foreground/70">{activity.details}</p>
+                      ) : null}
+                      {activity.state ? (
+                        <p className="line-clamp-1 text-xs text-foreground/70">{activity.state}</p>
+                      ) : null}
+                      {activity.platform ? (
+                        <p className="line-clamp-1 text-xs uppercase tracking-[0.1em] text-foreground/65">
+                          {activity.platform}
+                        </p>
+                      ) : null}
+                      {activity.startedAt ? (
+                        <p className="mt-1 text-[0.68rem] text-foreground/65">
+                          Started {formatRelativeTime(new Date(activity.startedAt), now)}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </article>

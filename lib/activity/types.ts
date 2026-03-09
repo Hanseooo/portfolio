@@ -70,12 +70,6 @@ export type SpotifyActivity = {
     trackUrl: string;
     playedAt: string;
   }>;
-  recentArtists: Array<{
-    name: string;
-    artworkUrl: string;
-    artistUrl: string;
-    playCount: number;
-  }>;
   topTracks: Array<{
     title: string;
     artist: string;
@@ -120,5 +114,15 @@ export type DiscordActivity = {
       imageUrl?: string | null;
       startedAt?: number;
     } | null;
+    otherActivities: Array<{
+      type: number;
+      typeLabel: string;
+      name: string;
+      details?: string;
+      state?: string;
+      platform?: string;
+      imageUrl?: string | null;
+      startedAt?: number;
+    }>;
   };
 };

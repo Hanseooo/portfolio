@@ -36,6 +36,7 @@ type LanyardResponse = {
       name?: string;
       details?: string;
       state?: string;
+      platform?: string;
       assets?: {
         large_image?: string;
       };
@@ -86,6 +87,25 @@ function getDiscordActivityImageUrl(
   return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.png`;
 }
 
+function getActivityTypeLabel(type: number | undefined) {
+  switch (type) {
+    case 0:
+      return "Playing";
+    case 1:
+      return "Streaming";
+    case 2:
+      return "Listening";
+    case 3:
+      return "Watching";
+    case 4:
+      return "Custom";
+    case 5:
+      return "Competing";
+    default:
+      return "Activity";
+  }
+}
+
 export async function getDiscordActivity(): Promise<ActivityResponse<DiscordActivity>> {
   try {
     const { userId } = getDiscordEnv();
@@ -112,9 +132,26 @@ export async function getDiscordActivity(): Promise<ActivityResponse<DiscordActi
 
     const user = payload.data.discord_user;
     const spotify = payload.data.spotify;
-    const gamingActivity = (payload.data.activities ?? []).find(
+    const activities = payload.data.activities ?? [];
+    const gamingActivity = activities.find(
       (activity) => activity.type === 0 && activity.name
     );
+    const otherActivities = activities
+      .filter((activity) => Boolean(activity.name) && activity.type !== 0)
+      .slice(0, 3)
+      .map((activity) => ({
+        type: activity.type ?? -1,
+        typeLabel: getActivityTypeLabel(activity.type),
+        name: activity.name ?? "Unknown activity",
+        details: activity.details,
+        state: activity.state,
+        platform: activity.platform,
+        imageUrl: getDiscordActivityImageUrl(
+          activity.application_id,
+          activity.assets?.large_image
+        ),
+        startedAt: activity.timestamps?.start,
+      }));
 
     return {
       ok: true,
@@ -160,6 +197,7 @@ export async function getDiscordActivity(): Promise<ActivityResponse<DiscordActi
                 startedAt: gamingActivity.timestamps?.start,
               }
             : null,
+          otherActivities,
         },
       },
     };

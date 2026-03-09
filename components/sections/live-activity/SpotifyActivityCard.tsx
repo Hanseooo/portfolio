@@ -52,7 +52,6 @@ export default function SpotifyActivityCard({
     recentTracks: recentPayload?.data?.recentTracks ?? data?.recentTracks ?? [],
     topTracks: topPayload?.data?.topTracks ?? data?.topTracks ?? [],
     topArtists: topPayload?.data?.topArtists ?? data?.topArtists ?? [],
-    recentArtists: topPayload?.data?.recentArtists ?? data?.recentArtists ?? [],
   };
 
   const topStorageKey = "live-activity:spotify-top";
@@ -263,37 +262,6 @@ export default function SpotifyActivityCard({
                     <p className="text-sm text-foreground/75">No recent tracks found.</p>
                   )}
                 </section>
-
-                <HorizontalRail title="Recent Artists">
-                  {topLoading ? (
-                    <p className="text-sm text-foreground/75">Loading details...</p>
-                  ) : detailsData?.recentArtists.length ? (
-                    detailsData.recentArtists.slice(0, 5).map((artist) => (
-                      <a
-                        key={artist.name}
-                        href={artist.artistUrl || undefined}
-                        target={artist.artistUrl ? "_blank" : undefined}
-                        rel={artist.artistUrl ? "noopener noreferrer" : undefined}
-                        className="w-32 shrink-0 snap-start border border-foreground/20 bg-background/70 p-2 transition hover:border-primary"
-                      >
-                        {artist.artworkUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={artist.artworkUrl}
-                            alt={`${artist.name} artwork`}
-                            className="h-24 w-full rounded-md object-cover"
-                          />
-                        ) : (
-                          <div className="h-24 w-full rounded-md border border-foreground/15 bg-background/60" />
-                        )}
-                        <p className="mt-2 line-clamp-1 text-sm text-foreground/85">{artist.name}</p>
-                        <p className="text-xs text-foreground/70">{artist.playCount} plays</p>
-                      </a>
-                    ))
-                  ) : (
-                    <p className="text-sm text-foreground/75">No recent artist data.</p>
-                  )}
-                </HorizontalRail>
 
                 <HorizontalRail title="Top Tracks">
                   {topLoading ? (

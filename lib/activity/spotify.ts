@@ -87,7 +87,6 @@ function emptySpotifyData(nowPlaying: SpotifyActivity["nowPlaying"]): SpotifyAct
   return {
     nowPlaying,
     recentTracks: [],
-    recentArtists: [],
     topTracks: [],
     topArtists: [],
   };
@@ -314,58 +313,6 @@ async function fetchTopData(accessToken: string): Promise<{ data: TopData; sourc
   return { data, source: "live" };
 }
 
-function deriveRecentArtists(
-  recentTracks: SpotifyActivity["recentTracks"],
-  topArtists: SpotifyActivity["topArtists"]
-): SpotifyActivity["recentArtists"] {
-  const artistMetaByName = new Map(topArtists.map((artist) => [artist.name.toLowerCase(), artist]));
-  const frequency = new Map<string, { count: number; artworkUrl: string; artistUrl: string }>();
-
-  recentTracks.forEach((track) => {
-    track.artist
-      .split(",")
-      .map((name) => name.trim())
-      .filter(Boolean)
-      .forEach((artistName) => {
-        const key = artistName.toLowerCase();
-        const current = frequency.get(key);
-        const topArtistMeta = artistMetaByName.get(key);
-
-        if (!current) {
-          frequency.set(key, {
-            count: 1,
-            artworkUrl: topArtistMeta?.artworkUrl || track.artworkUrl,
-            artistUrl: topArtistMeta?.artistUrl || "",
-          });
-          return;
-        }
-
-        frequency.set(key, {
-          count: current.count + 1,
-          artworkUrl: current.artworkUrl || topArtistMeta?.artworkUrl || track.artworkUrl,
-          artistUrl: current.artistUrl || topArtistMeta?.artistUrl || "",
-        });
-      });
-  });
-
-  return Array.from(frequency.entries())
-    .map(([name, meta]) => ({
-      name,
-      artworkUrl: meta.artworkUrl,
-      artistUrl: meta.artistUrl,
-      playCount: meta.count,
-    }))
-    .sort((a, b) => b.playCount - a.playCount)
-    .slice(0, 5)
-    .map((artist) => ({
-      ...artist,
-      name: artist.name
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" "),
-    }));
-}
-
 export async function getSpotifyActivity(
   detailScope: SpotifyDetailScope = "none"
 ): Promise<ActivityResponse<SpotifyActivity>> {
@@ -393,8 +340,6 @@ export async function getSpotifyActivity(
       data.topTracks = topCache.data.topTracks;
       data.topArtists = topCache.data.topArtists;
     }
-
-    data.recentArtists = deriveRecentArtists(data.recentTracks, data.topArtists);
 
     return {
       ok: true,
