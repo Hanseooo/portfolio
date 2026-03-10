@@ -1,5 +1,6 @@
 "use client";
 
+import { Activity, Gamepad2, Headphones, PlayCircle } from "lucide-react";
 import type { ActivityResponse, DiscordActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
 
@@ -23,6 +24,30 @@ function LoadingState() {
       <div className="h-3 w-2/3 bg-foreground/10" />
     </div>
   );
+}
+
+function ActivityFallbackIcon({
+  kind,
+  type,
+}: {
+  kind: "spotify" | "activity";
+  type?: number;
+}) {
+  const iconClass = "h-5 w-5 text-primary/75";
+
+  if (kind === "spotify") {
+    return <Headphones className={iconClass} aria-hidden="true" />;
+  }
+
+  if (type === 0) {
+    return <Gamepad2 className={iconClass} aria-hidden="true" />;
+  }
+
+  if (type === 3) {
+    return <PlayCircle className={iconClass} aria-hidden="true" />;
+  }
+
+  return <Activity className={iconClass} aria-hidden="true" />;
 }
 
 export default function DiscordStatusCard({
@@ -82,10 +107,6 @@ export default function DiscordStatusCard({
             </div>
           </div>
 
-          {data.listeningToSpotify ? (
-            <p className="text-sm text-foreground/80">Currently listening to Spotify via Discord.</p>
-          ) : null}
-
           {data.live.spotify ? (
             <div
               className={`border border-foreground/15 bg-background/70 p-3 ${
@@ -101,7 +122,9 @@ export default function DiscordStatusCard({
                     className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 object-cover"
                   />
                 ) : (
-                  <div className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 bg-background/60" />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-foreground/20 bg-background/60">
+                    <ActivityFallbackIcon kind="spotify" />
+                  </div>
                 )}
 
                 <div className="min-w-0">
@@ -144,7 +167,9 @@ export default function DiscordStatusCard({
                     className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 object-cover"
                   />
                 ) : (
-                  <div className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 bg-background/60" />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-foreground/20 bg-background/60">
+                    <ActivityFallbackIcon kind="activity" type={0} />
+                  </div>
                 )}
 
                 <div className="min-w-0">
@@ -183,7 +208,9 @@ export default function DiscordStatusCard({
                         className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 object-cover"
                       />
                     ) : (
-                      <div className="h-12 w-12 shrink-0 rounded-md border border-foreground/20 bg-background/60" />
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-foreground/20 bg-background/60">
+                        <ActivityFallbackIcon kind="activity" type={activity.type} />
+                      </div>
                     )}
 
                     <div className="min-w-0">

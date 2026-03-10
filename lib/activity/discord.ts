@@ -137,7 +137,16 @@ export async function getDiscordActivity(): Promise<ActivityResponse<DiscordActi
       (activity) => activity.type === 0 && activity.name
     );
     const otherActivities = activities
-      .filter((activity) => Boolean(activity.name) && activity.type !== 0)
+      .filter((activity) => {
+        if (!activity.name || activity.type === 0) return false;
+
+        const isSpotifyActivity =
+          activity.type === 2 &&
+          activity.name.toLowerCase() === "spotify" &&
+          Boolean(payload.data?.listening_to_spotify || spotify);
+
+        return !isSpotifyActivity;
+      })
       .slice(0, 3)
       .map((activity) => ({
         type: activity.type ?? -1,
