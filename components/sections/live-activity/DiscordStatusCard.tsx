@@ -59,14 +59,15 @@ export default function DiscordStatusCard({
   const spotifyHasLink = Boolean(data?.live.spotify?.trackUrl);
 
   return (
-    <article className="rounded-xl border border-foreground/20 bg-background/90 p-5 sm:p-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
+    <article className="border border-border bg-card p-6 shadow-sm">
+      <div className="mb-6 flex items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-foreground/70">Live Signals</p>
-          <h3 className="mt-2 text-lg font-semibold text-primary sm:text-xl">Discord Presence</h3>
+          <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+            Discord Presence
+          </h3>
         </div>
-        <span className="text-xs text-foreground/70">
-          {payload?.updatedAt ? `Updated ${formatClockTime(payload.updatedAt)}` : "Not updated"}
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
         </span>
       </div>
 

@@ -166,7 +166,7 @@ export default function LiveActivity() {
   } as const;
 
   return (
-    <section id="live-activity" className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:py-32">
+    <section id="live-activity" className="mx-auto w-full max-w-[1400px] px-6 py-20 lg:py-32">
       <motion.div
         initial={headingEnter}
         whileInView={{ y: 0, opacity: 1 }}
@@ -174,27 +174,22 @@ export default function LiveActivity() {
           duration: motionTokens.duration.base,
           ease: motionTokens.framerEase.enter,
         }}
-        viewport={{ once: true, amount: 0.4 }}
-        className="mx-auto mb-16 max-w-3xl text-center"
+        viewport={{ once: true, margin: "-100px" }}
+        className="mb-20 flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-8 gap-6"
       >
-        <h2 className="font-black text-primary">
-          <span className="mb-3 block text-xs uppercase tracking-[0.26em] text-primary/80">
-            Live Signals
-          </span>
-          <span className="text-[clamp(2rem,7vw,4rem)]">Live Activity</span>
+        <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground">
+          Live <span className="text-primary">Signals</span>
         </h2>
-        <div className="mt-5 inline-flex items-center gap-2 border border-foreground/20 bg-background/80 px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.14em] text-foreground/80">
+        
+        <div className="flex items-center gap-2 border border-border bg-card px-3 py-1.5 text-xs uppercase tracking-widest text-muted-foreground/80">
           <span
-            className={`h-2.5 w-2.5 rounded-full ${liveStateClassMap[liveState]} ${
+            className={`h-2 w-2 rounded-full ${liveStateClassMap[liveState]} ${
               liveState === "live" ? "animate-pulse" : ""
             }`}
             aria-hidden="true"
           />
           <span>{liveStateLabelMap[liveState]}</span>
         </div>
-        <p className="mt-5 text-sm leading-relaxed text-foreground/80 sm:text-base">
-          What I am building, listening to, and where I am active right now.
-        </p>
       </motion.div>
 
       <motion.div
@@ -205,14 +200,14 @@ export default function LiveActivity() {
           ease: motionTokens.framerEase.enter,
           delay: reducedMotion ? 0 : motionTokens.stagger.text,
         }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="grid gap-6 lg:grid-cols-12"
+        viewport={{ once: true, margin: "-100px" }}
+        className="grid gap-8 lg:grid-cols-12"
       >
         <div className="lg:col-span-8">
           <GitHubActivityCard payload={github.payload} loading={github.loading} />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1">
+        <div className="grid gap-8 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1">
           <SpotifyActivityCard payload={spotify.payload} loading={spotify.loading} />
           <DiscordStatusCard payload={discord.payload} loading={discord.loading} now={now} />
         </div>

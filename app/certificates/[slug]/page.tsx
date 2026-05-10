@@ -11,6 +11,8 @@ import PageTransition from "@/components/layout/PageTransition";
 import { useResetScrollTop } from "@/components/utils/useResetScrollTop";
 import { motion } from "framer-motion";
 import { motionTokens } from "@/lib/motion";
+import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 
 export default function CertificatePage({
   params,
@@ -62,22 +64,24 @@ export default function CertificatePage({
             </p>
 
             {cert.credentialUrl && (
-              <Link
-                href={cert.credentialUrl}
-                target="_blank"
-                className="mt-8 inline-flex items-center gap-2 border border-primary px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-background"
-              >
-                View Credential
-                <ExternalLink size={16} />
-              </Link>
+              <div className="mt-8 flex">
+                <MagneticButton>
+                  <Button asChild className="font-semibold">
+                    <Link href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      View Credential
+                    </Link>
+                  </Button>
+                </MagneticButton>
+              </div>
             )}
           </div>
         </motion.div>
       </section>
 
       <section className="mx-auto w-full max-w-5xl px-6 py-20">
-        <div className="rounded-md border border-foreground/20 bg-muted/30 p-4 shadow-primary-sharp sm:p-6">
-          <div className="relative aspect-4/3 w-full overflow-hidden rounded-md border border-foreground/15 bg-background/60">
+        <div className="border border-foreground/20 bg-muted/30 p-4 shadow-primary-sharp sm:p-6">
+          <div className="relative aspect-4/3 w-full overflow-hidden border border-foreground/15 bg-background/60">
             <Image
               src={cert.image}
               alt={cert.title}

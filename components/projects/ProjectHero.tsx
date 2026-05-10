@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Github, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import type { Project } from "@/lib/projects";
 import { motionTokens } from "@/lib/motion";
 
@@ -49,25 +50,29 @@ export default function ProjectHero({ project }: { project: Project }) {
 
           <div className="mt-8 flex flex-wrap gap-3">
             {project.github && (
-              <Button variant="outline" asChild>
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="mr-2 h-4 w-4" />
-                  Source Code
-                </a>
-              </Button>
+              <MagneticButton>
+                <Button variant="outline" asChild>
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="mr-2 h-4 w-4" />
+                    Source Code
+                  </a>
+                </Button>
+              </MagneticButton>
             )}
 
             {project.live && (
-              <Button asChild className="font-semibold">
-                <a href={project.live} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Live Preview
-                </a>
-              </Button>
+              <MagneticButton>
+                <Button asChild className="font-semibold">
+                  <a href={project.live} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Live Preview
+                  </a>
+                </Button>
+              </MagneticButton>
             )}
           </div>
         </div>

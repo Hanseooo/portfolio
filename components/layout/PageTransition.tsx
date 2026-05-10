@@ -1,43 +1,68 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  getMotionDistance,
-  getMotionMode,
-  motionTokens,
-} from "@/lib/motion";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
-import { getRuntimeEnv } from "@/components/utils/browserInfo";
-import { useClientReady } from "@/components/utils/useClientReady";
 
 export default function PageTransition({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isClient = useClientReady();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
-  const runtimeEnv = isClient
-    ? getRuntimeEnv()
-    : { isMobile: false, isWebView: false };
-  const motionMode = getMotionMode({
-    reducedMotion,
-    isMobile: runtimeEnv.isMobile,
-  });
-  const enterOffset = getMotionDistance("subtle", motionMode) * 0.5;
-  const exitOffset = getMotionDistance("subtle", motionMode) * 0.35;
+
+  useEffect(() => {
+    if (!containerRef.current || !overlayRef.current || reducedMotion) {
+      if (overlayRef.current) gsap.set(overlayRef.current, { display: "none" });
+      return;
+    }
+
+    const tl = gsap.timeline();
+
+    // Cinematic Wipe Overlay
+    tl.to(overlayRef.current, {
+      scaleY: 0,
+      transformOrigin: "top",
+      duration: 1.2,
+      ease: "power4.inOut",
+    })
+    // Content Reveal
+    .fromTo(
+      containerRef.current,
+      {
+        opacity: 0,
+        y: 60,
+        scale: 0.98,
+        filter: "blur(10px)",
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "power3.out",
+        clearProps: "all"
+      },
+      "-=0.8" // Overlap the animations heavily
+    );
+
+    return () => {
+      tl.kill();
+    };
+  }, [reducedMotion]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: enterOffset }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -exitOffset }}
-      transition={{
-        duration: reducedMotion ? motionTokens.duration.fast : motionTokens.duration.base,
-        ease: motionTokens.framerEase.enter,
-      }}
-    >
-      {children}
-    </motion.div>
+    <>
+      <div 
+        ref={overlayRef} 
+        className="fixed inset-0 z-[100] bg-background pointer-events-none origin-top"
+      />
+      <div ref={containerRef}>
+        {children}
+      </div>
+    </>
   );
 }

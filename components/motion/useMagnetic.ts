@@ -7,7 +7,8 @@ export function useMagnetic(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!ref.current || "ontouchstart" in window) return;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!ref.current || "ontouchstart" in window || prefersReducedMotion) return;
 
 
     const onMove = (e: MouseEvent) => {
@@ -38,6 +39,7 @@ export function useMagnetic(ref: React.RefObject<HTMLElement | null>) {
     return () => {
       el.removeEventListener("mousemove", onMove);
       el.removeEventListener("mouseleave", onLeave);
+      gsap.killTweensOf(el);
     };
   }, [ref]);
 }

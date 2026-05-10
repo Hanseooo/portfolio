@@ -278,7 +278,7 @@ async function runQuery<T>(
   }
 }
 
-function getWeeklyActivity(
+function getCalendarActivity(
   weeks:
     | Array<{
         contributionDays: Array<{
@@ -288,7 +288,7 @@ function getWeeklyActivity(
         }>;
       }>
     | undefined
-): GitHubActivity["weeklyActivity"] {
+): GitHubActivity["calendar"] {
   const formatter = new Intl.DateTimeFormat("en-US", {
     timeZone: activityTimezone,
     year: "numeric",
@@ -308,13 +308,26 @@ function getWeeklyActivity(
     .sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
 
   if (allDays.length === 0) {
-    return weekOrder.map((day) => ({ day, count: 0 }));
+    return [];
   }
 
-  return allDays.slice(-7).map((day) => ({
-    day: weekDayMap[day.weekday],
-    count: day.contributionCount,
-  }));
+  // Get the last 140 days (20 weeks x 7 days) to fit nicely in a heatmap
+  const recentDays = allDays.slice(-140);
+  
+  return recentDays.map((day) => {
+    let level: 0 | 1 | 2 | 3 | 4 = 0;
+    const count = day.contributionCount;
+    if (count > 0) level = 1;
+    if (count >= 3) level = 2;
+    if (count >= 6) level = 3;
+    if (count >= 10) level = 4;
+    
+    return {
+      date: day.date || "",
+      count,
+      level,
+    };
+  });
 }
 
 function getStreakStats(
@@ -414,7 +427,7 @@ function emptyData(): GitHubActivity {
       issuesOpened: 0,
     },
     topLanguages: [],
-    weeklyActivity: weekOrder.map((day) => ({ day, count: 0 })),
+    calendar: [],
   };
 }
 
@@ -446,7 +459,7 @@ export async function getGitHubActivity(): Promise<ActivityResponse<GitHubActivi
       const calendar = user?.contributionsCollection?.contributionCalendar;
       const streaks = getStreakStats(calendar?.weeks);
 
-      base.weeklyActivity = getWeeklyActivity(calendar?.weeks);
+      base.calendar = getCalendarActivity(calendar?.weeks);
       base.stats = {
         currentStreak: streaks.currentStreak,
         longestStreak: streaks.longestStreak,

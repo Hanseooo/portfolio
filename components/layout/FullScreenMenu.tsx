@@ -5,11 +5,10 @@ import { gsap } from "@/lib/gsap";
 import { usePathname, useRouter } from "next/navigation";
 
 const links = [
-  { label: "Home", id: "home" },
-  { label: "About", id: "about" },
-  { label: "Projects", id: "projects" },
-  { label: "Experience", id: "experience" },
-  { label: "Certificates", id: "certificates" },
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "Experience", href: "/experience" },
+  { label: "Certificates", href: "/certificates" },
 ];
 
 export default function FullscreenMenu({
@@ -41,16 +40,20 @@ export default function FullscreenMenu({
         { y: "-100%" },
         { y: "0%", duration: 0.8, ease: "power4.inOut" } // Smoother ease for large panels
       )
-      .from(
-        ".menu-link",
+      .fromTo(
+        gsap.utils.toArray(".menu-link"),
         {
-          y: 50, // Start 50px lower
-          opacity: 1, // Start transparent
-          duration: 0.5,
-          stagger: 0.1, // Delay between each link
+          y: 50,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.15,
+          stagger: 0.1,
           ease: "power2.out",
         },
-        "-=0.5" // Start slightly before the menu finish sliding
+        "-=0.5"
       );
 
     // Cleanup to prevent memory leaks/glitches on hot reload
@@ -83,18 +86,11 @@ export default function FullscreenMenu({
     return () => window.removeEventListener("keydown", onEscape);
   }, [open, close]);
 
-  const handleClick = (id: string) => {
+  const handleClick = (href: string) => {
     close();
-
-    // If we're already on home, just scroll
-    if (pathname === "/") {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      return;
+    if (pathname !== href) {
+      router.push(href);
     }
-
-    // Otherwise: remember target, go home
-    sessionStorage.setItem("scrollTarget", id);
-    router.push("/");
   };
 
   return (
@@ -106,14 +102,14 @@ export default function FullscreenMenu({
       aria-hidden={!open}
       className={`fixed inset-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-background/85 text-foreground opacity-0 backdrop-blur-xl ${open ? "pointer-events-auto" : "pointer-events-none"}`}
     >
-      <ul className="mb-24 flex h-[90vh] flex-col justify-around space-y-4 py-24 text-center sm:py-0">
+      <ul className="flex flex-col items-center justify-center space-y-8 sm:space-y-12">
         {links.map((link, index) => (
-          <li key={link.id}>
+          <li key={link.href} className="overflow-hidden">
             <button
               ref={index === 0 ? firstLinkRef : undefined}
               type="button"
-              onClick={() => handleClick(link.id)}
-              className="menu-link py-2 text-[clamp(2.5rem,6vw,4rem)] uppercase tracking-wide text-center transition hover:text-primary"
+              onClick={() => handleClick(link.href)}
+              className="menu-link block py-2 text-[clamp(3rem,8vw,5rem)] font-black uppercase leading-none tracking-tight text-foreground transition-all duration-300 hover:text-primary hover:scale-105"
             >
               {link.label}
             </button>

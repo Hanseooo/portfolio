@@ -1,12 +1,23 @@
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { Poppins } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import AppProviders from "@/components/providers/AppProviders";
+import CustomCursor from "@/components/ui/CustomCursor";
+import Preloader from "@/components/ui/Preloader";
 
-const poppins = Poppins({ weight: "400" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+});
+
 const siteUrl = "https://hanseo.tech";
 
 export const metadata: Metadata = {
@@ -65,8 +76,10 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={poppins.className} suppressHydrationWarning>
-      <body className="bg-background text-foreground antialiased">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} font-sans`} suppressHydrationWarning>
+      <body className="bg-background text-foreground antialiased min-h-screen cursor-none">
+        <Preloader />
+        <CustomCursor />
         <AppProviders>
           <Navbar />
           {children}

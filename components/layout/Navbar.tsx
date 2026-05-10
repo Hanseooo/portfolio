@@ -1,17 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { BBH_Bartle } from "next/font/google";
 import { useRef, useState } from "react";
 import MenuToggle from "./MenuToggle";
 import FullscreenMenu from "./FullScreenMenu";
 import { ThemeToggle } from "./ThemeToggle";
-
-const bbhBartle = BBH_Bartle({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
 
 const MENU_ID = "site-fullscreen-menu";
 
@@ -26,21 +19,23 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 z-[60] w-full px-6 py-6">
-        <nav className={"flex items-center justify-between text-primary"}>
+      <ThemeToggle />
+      <header className="fixed top-0 z-[60] w-full px-6 py-4 bg-background/80 backdrop-blur-md border-b border-border/40 shadow-sm transition-colors duration-300">
+        <nav className="mx-auto flex max-w-[1400px] items-center justify-between text-foreground">
           <Link
             href="/"
-            className={`text-sm font-bold tracking-wide hover:text-foreground ${bbhBartle.className}`}
+            className="text-sm font-bold uppercase tracking-[0.2em] text-foreground transition-colors hover:text-primary"
           >
             Hanseo
           </Link>
-          <ThemeToggle />
-          <MenuToggle
-            open={open}
-            toggle={() => setOpen(!open)}
-            buttonRef={menuToggleRef}
-            controlsId={MENU_ID}
-          />
+          <div className="flex items-center gap-6">
+            <MenuToggle
+              open={open}
+              toggle={() => setOpen(!open)}
+              buttonRef={menuToggleRef}
+              controlsId={MENU_ID}
+            />
+          </div>
         </nav>
       </header>
 

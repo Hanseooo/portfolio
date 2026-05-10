@@ -1,41 +1,59 @@
 import type { GitHubActivity } from "@/lib/activity/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-type WeeklyActivityBarsProps = {
-  data: GitHubActivity["weeklyActivity"];
+type GitHubHeatmapProps = {
+  data: GitHubActivity["calendar"];
 };
 
-export default function WeeklyActivityBars({ data }: WeeklyActivityBarsProps) {
-  const maxCount = data.reduce((max, item) => Math.max(max, item.count), 0);
+export default function GitHubHeatmap({ data }: GitHubHeatmapProps) {
+  if (!data || data.length === 0) return null;
+
+  // Split into weeks (arrays of 7 days)
+  const weeks: typeof data[] = [];
+  let currentWeek: typeof data = [];
+  
+  data.forEach((day, i) => {
+    currentWeek.push(day);
+    // 7 days per column, or last item
+    if (currentWeek.length === 7 || i === data.length - 1) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  });
+
+  const getLevelColor = (level: number) => {
+    switch (level) {
+      case 1: return "bg-primary/30";
+      case 2: return "bg-primary/50";
+      case 3: return "bg-primary/80";
+      case 4: return "bg-primary shadow-[0_0_8px_rgba(var(--primary),0.8)]";
+      default: return "bg-foreground/5";
+    }
+  };
 
   return (
-    <div className="space-y-2">
-      <div className="flex h-14 items-end gap-1.5">
-        {data.map((item) => {
-          const ratio = maxCount === 0 ? 0 : item.count / maxCount;
-          const height = Math.max(0.15, ratio) * 100;
-
-          return (
-            <div key={item.day} className="flex flex-1 flex-col items-center gap-2">
-              <div className="relative flex h-11 w-full items-end">
-                <div
-                  className="w-full rounded-sm bg-primary/80"
-                  style={{ height: `${height}%` }}
-                  aria-label={`${item.day} ${item.count} commits`}
-                  title={`${item.day}: ${item.count} commits`}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="flex gap-1.5 text-[0.65rem] uppercase tracking-[0.14em] text-foreground/65">
-        {data.map((item) => (
-          <span key={item.day} className="flex-1 text-center">
-            {item.day}
-          </span>
+    <TooltipProvider delayDuration={100}>
+      <div className="flex w-full justify-between gap-[2px] sm:gap-1 overflow-hidden pb-2">
+        {weeks.map((week, weekIdx) => (
+          <div key={weekIdx} className="flex flex-col gap-[2px] sm:gap-1 flex-1 max-w-[12px] sm:max-w-[14px]">
+            {week.map((day, dayIdx) => (
+              <Tooltip key={day.date}>
+                <TooltipTrigger asChild>
+                  <div
+                    className={`aspect-square w-full rounded-[2px] ${getLevelColor(day.level)} transition-colors hover:border hover:border-foreground/30`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="bg-background/95 border-foreground/20 text-xs text-foreground px-2 py-1">
+                  <p>
+                    <span className="font-bold">{day.count}</span> contributions on{" "}
+                    {new Date(day.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
         ))}
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

@@ -5,7 +5,7 @@ import { Lock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { ActivityResponse, GitHubActivity } from "@/lib/activity/types";
 import { clampText, formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
-import WeeklyActivityBars from "./WeeklyActivityBars";
+import GitHubHeatmap from "./WeeklyActivityBars";
 
 type GitHubActivityCardProps = {
   payload: ActivityResponse<GitHubActivity> | null;
@@ -33,20 +33,21 @@ export default function GitHubActivityCard({
   const [detailsOpen, setDetailsOpen] = useState(false);
   const currentYear = new Date().getFullYear();
   const data = payload?.data;
-  const weekly = data?.weeklyActivity ?? [];
+  const calendar = data?.calendar ?? [];
 
   return (
-    <article className="rounded-xl border border-foreground/20 bg-background/90 p-5 shadow-primary-sharp sm:p-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
+    <article className="border border-border bg-card p-6 shadow-sm">
+      <div className="mb-8 flex items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-foreground/70">Live Signals</p>
-          <h3 className="mt-2 text-xl font-semibold text-primary sm:text-2xl">
-            GitHub Activity ({currentYear})
+          <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+            GitHub Activity
           </h3>
-          <p className="mt-1 text-xs uppercase tracking-[0.12em] text-foreground/65">Year-to-date metrics</p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">
+            {currentYear} Year-To-Date
+          </p>
         </div>
-        <span className="text-xs text-foreground/70">
-          {payload?.updatedAt ? `Updated ${formatClockTime(payload.updatedAt)}` : "Not updated"}
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
         </span>
       </div>
 
@@ -60,42 +61,42 @@ export default function GitHubActivityCard({
 
       {!loading && payload?.ok && data ? (
         <div className="space-y-5">
-          <div className="grid grid-cols-1 gap-2 min-[500px]:grid-cols-2 lg:grid-cols-3">
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:p-3">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">Current Streak</p>
-              <p className="mt-1 text-lg font-semibold text-foreground/90">{data.stats.currentStreak}</p>
+          <div className="grid grid-cols-1 gap-4 min-[500px]:grid-cols-2 lg:grid-cols-3">
+            <div className="border border-border bg-background p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">Current Streak</p>
+              <p className="mt-2 text-2xl font-black text-foreground">{data.stats.currentStreak}</p>
             </div>
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:p-3">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">Longest Streak</p>
-              <p className="mt-1 text-lg font-semibold text-foreground/90">{data.stats.longestStreak}</p>
+            <div className="border border-border bg-background p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">Longest Streak</p>
+              <p className="mt-2 text-2xl font-black text-foreground">{data.stats.longestStreak}</p>
             </div>
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:col-span-2 min-[500px]:p-3 lg:col-span-1">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">Total Contributions</p>
-              <p className="mt-1 text-lg font-semibold text-foreground/90">{data.stats.totalContributions}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-2 min-[500px]:grid-cols-3">
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:p-3">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">PR Opened</p>
-              <p className="mt-1 text-base font-semibold text-foreground/90">{data.stats.prOpened}</p>
-            </div>
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:p-3">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">PR Merged</p>
-              <p className="mt-1 text-base font-semibold text-foreground/90">{data.stats.prMerged}</p>
-            </div>
-            <div className="border border-foreground/15 bg-background/70 p-2.5 min-[500px]:p-3">
-              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-foreground/70">Issues Opened</p>
-              <p className="mt-1 text-base font-semibold text-foreground/90">{data.stats.issuesOpened}</p>
+            <div className="border border-border bg-background p-4 min-[500px]:col-span-2 lg:col-span-1">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">Total Contributions</p>
+              <p className="mt-2 text-2xl font-black text-primary">{data.stats.totalContributions}</p>
             </div>
           </div>
 
-          {weekly.length > 0 ? (
-            <div className="border border-foreground/15 bg-background/70 p-3">
-              <p className="mb-3 text-[0.68rem] uppercase tracking-[0.16em] text-foreground/70">
-                Weekly Activity
+          <div className="grid grid-cols-1 gap-4 min-[500px]:grid-cols-3">
+            <div className="border border-border bg-background p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">PR Opened</p>
+              <p className="mt-2 text-xl font-bold text-foreground">{data.stats.prOpened}</p>
+            </div>
+            <div className="border border-border bg-background p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">PR Merged</p>
+              <p className="mt-2 text-xl font-bold text-foreground">{data.stats.prMerged}</p>
+            </div>
+            <div className="border border-border bg-background p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">Issues Opened</p>
+              <p className="mt-2 text-xl font-bold text-foreground">{data.stats.issuesOpened}</p>
+            </div>
+          </div>
+
+          {calendar.length > 0 ? (
+            <div className="border border-border bg-background p-4">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">
+                140-Day Heatmap
               </p>
-              <WeeklyActivityBars data={weekly} />
+              <GitHubHeatmap data={calendar} />
             </div>
           ) : null}
 
