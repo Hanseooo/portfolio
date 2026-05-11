@@ -3,23 +3,16 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Github, ArrowDown } from "lucide-react";
 import { gsap } from "@/lib/gsap";
-import { BBH_Bartle } from "next/font/google";
 import { motion } from "framer-motion";
-import { getRuntimeEnv } from "../utils/browserInfo";
-import { EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL, PHONE_NUMBER } from "../utils/externalLinks";
-import ContactDialogTrigger from "../dialogs/ContactDialogTrigger";
-import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
-import {
-  getEnterY,
-  getEnterYTransition,
-  getMotionDistance,
-  getMotionMode,
-  motionTokens,
-} from "@/lib/motion";
+import { Playfair_Display } from "next/font/google";
 import { useClientReady } from "@/components/utils/useClientReady";
+import { getRuntimeEnv } from "../utils/browserInfo";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { getEnterY, getEnterYTransition, getMotionDistance, getMotionMode, motionTokens } from "@/lib/motion";
+import { EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL, PHONE_NUMBER } from "@/components/utils/externalLinks";
+import ContactDialogTrigger from "@/components/dialogs/ContactDialogTrigger";
 
-
-const bbhBartle = BBH_Bartle({
+const bbhBartle = Playfair_Display({
   subsets: ["latin"],
   weight: "400",
   display: "swap",

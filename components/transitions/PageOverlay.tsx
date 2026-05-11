@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
-import { BBH_Bartle } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 
-const bbhBartle = BBH_Bartle({
+const bbhBartle = Playfair_Display({
   subsets: ["latin"],
   weight: "400",
 });

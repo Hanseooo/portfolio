@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BBH_Bartle } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import { useRouter } from "next/navigation";
 
-const bbhBartle = BBH_Bartle({
+const bbhBartle = Playfair_Display({
   subsets: ["latin"],
   weight: "400",
   display: "swap",

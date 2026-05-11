@@ -51,6 +51,10 @@ export type GitHubActivity = {
     count: number;
     level: 0 | 1 | 2 | 3 | 4;
   }>;
+  weeklyActivity: Array<{
+    day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+    count: number;
+  }>;
 };
 
 export type SpotifyActivity = {

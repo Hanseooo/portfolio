@@ -428,6 +428,7 @@ function emptyData(): GitHubActivity {
     },
     topLanguages: [],
     calendar: [],
+    weeklyActivity: [],
   };
 }
 
