@@ -2,12 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
-import { Playfair_Display } from "next/font/google";
-
-const bbhBartle = Playfair_Display({
-  subsets: ["latin"],
-  weight: "400",
-});
 
 export default function PageOverlay({ active }: { active: boolean }) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -67,7 +61,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
     >
       <h1
         ref={textRef}
-        className={` ${bbhBartle.className} text-[clamp(3rem,10vw,8rem)] font-black italic text-primary tracking-tight`}
+        className="font-sans text-[clamp(3rem,10vw,8rem)] font-black leading-[0.85] tracking-tighter text-foreground"
       >
         HANSEO
       </h1>
