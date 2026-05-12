@@ -17,20 +17,14 @@ export default function HeroSection({ id }: { id: string }) {
       id={id}
       className="relative flex min-h-screen items-center justify-center px-6 pt-20 overflow-hidden"
     >
-      {/* Abstract Background Elements */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[30vw] h-[30vw] rounded-full bg-red-900/20 blur-[100px]" />
-      </div>
-
-      <div className="relative z-10 mx-auto w-full max-w-[1400px] flex flex-col lg:flex-row items-center gap-16">
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] flex flex-col lg:grid lg:grid-cols-12 lg:gap-8 items-center">
         <motion.div
-          className="flex-1"
+          className="lg:col-span-7"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          <p className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-primary">
+          <p className="mb-6 font-bold text-xs uppercase tracking-[0.2em] text-primary">
             Hans Amoguis
           </p>
           <h1 className="font-sans text-[clamp(3rem,8vw,8rem)] font-black leading-[0.85] tracking-tighter text-foreground">
@@ -47,20 +41,20 @@ export default function HeroSection({ id }: { id: string }) {
         </motion.div>
 
         <motion.div
-          className="flex-1 w-full max-w-md lg:max-w-lg"
+          className="lg:col-span-5 w-full mt-12 lg:mt-0"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.4 }}
         >
-          <div className="group relative mx-auto w-full overflow-hidden rounded-2xl border-2 border-border shadow-2xl">
+          <div className="group relative mx-auto w-full max-w-md lg:max-w-none overflow-hidden">
             <Image
               src={currentImage}
               alt="Hanseo portrait"
-              className="block w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="block w-full object-cover transition-transform duration-700 group-hover:scale-105"
               priority
             />
             <div className="absolute bottom-0 w-full bg-background/80 px-4 py-3 text-center backdrop-blur">
-              <span className="text-sm font-semibold tracking-wide text-foreground">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">
                 Hanseo
               </span>
             </div>

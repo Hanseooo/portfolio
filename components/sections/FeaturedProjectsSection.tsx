@@ -49,7 +49,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
           {projects.slice(0, 3).map((project, idx) => (
             <motion.div variants={itemVariants} key={project.title}>
               <Link href={`/projects/${project.slug}`} className="group block">
-                <div className="aspect-[4/5] w-full overflow-hidden border border-border bg-card relative">
+                <div className="aspect-[4/5] w-full overflow-hidden relative">
                   <Image
                     src={project.heroImage}
                     alt={project.title}
@@ -59,8 +59,8 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
                 </div>
                 <div className="mt-6 flex flex-col gap-2">
-                  <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground/80">
-                    0{idx + 1} {"//"} {project.subtitle.substring(0, 40)}{project.subtitle.length > 40 ? "..." : ""}
+                  <span className="font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
+                    <span className="font-mono mr-2">0{idx + 1} {"//"}</span> {project.subtitle.substring(0, 40)}{project.subtitle.length > 40 ? "..." : ""}
                   </span>
                   <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
                     {project.title}

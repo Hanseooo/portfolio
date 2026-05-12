@@ -17,14 +17,14 @@ export default function PhilosophySection({ id }: { id: string }) {
     <section id={id} className="relative flex min-h-screen items-center px-6 py-32">
       <div className="mx-auto w-full max-w-[1400px]">
         <motion.div 
-          className="grid grid-cols-1 gap-16 lg:grid-cols-2"
+          className="grid grid-cols-1 gap-16 lg:grid-cols-12"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
           {/* Header */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={itemVariants} className="lg:col-span-5">
             <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-black leading-none tracking-tighter text-foreground">
               Design Systems, <br />
               <span className="text-primary">Then Ship Them.</span>
@@ -32,9 +32,9 @@ export default function PhilosophySection({ id }: { id: string }) {
           </motion.div>
           
           {/* Content */}
-          <div className="flex flex-col justify-center space-y-12">
+          <div className="flex flex-col justify-center space-y-12 lg:col-span-6 lg:col-start-7">
             <motion.div variants={itemVariants}>
-              <h3 className="mb-4 font-mono text-xs uppercase tracking-widest text-muted-foreground/80">01 / Architecture</h3>
+              <h3 className="mb-4 font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80"><span className="font-mono mr-2">01 /</span>Architecture</h3>
               <p className="text-xl text-muted-foreground">
                 I design architectures from PRDs before implementation so delivery stays clear, scalable, and maintainable.
               </p>
@@ -43,7 +43,7 @@ export default function PhilosophySection({ id }: { id: string }) {
             <motion.div variants={itemVariants} className="h-px w-full bg-border origin-left scale-x-0 animate-[grow_1s_ease-out_forwards] [animation-delay:0.5s]" style={{ transformOrigin: 'left' }} />
             
             <motion.div variants={itemVariants}>
-              <h3 className="mb-4 font-mono text-xs uppercase tracking-widest text-muted-foreground/80">02 / Execution</h3>
+              <h3 className="mb-4 font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80"><span className="font-mono mr-2">02 /</span>Execution</h3>
               <p className="text-xl text-muted-foreground">
                 Responsive interfaces with accessible interaction patterns, built on solid API-driven features across client and server boundaries.
               </p>
