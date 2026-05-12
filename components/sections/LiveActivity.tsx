@@ -181,9 +181,9 @@ export default function LiveActivity() {
           Live <span className="text-primary">Signals</span>
         </h2>
         
-        <div className="flex items-center gap-2 border border-border bg-card px-3 py-1.5 text-xs uppercase tracking-widest text-muted-foreground/80">
+        <div className="flex items-center gap-2 border-none bg-transparent px-0 py-1.5 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
           <span
-            className={`h-2 w-2 rounded-full ${liveStateClassMap[liveState]} ${
+            className={`h-1.5 w-1.5 rounded-full ${liveStateClassMap[liveState]} ${
               liveState === "live" ? "animate-pulse" : ""
             }`}
             aria-hidden="true"

@@ -26,7 +26,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
           className="mb-20 flex items-end justify-between border-b border-border pb-8"
         >
           <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground">
-            Trajectory
+            Experience
           </h2>
           <Link
             href="/experience"

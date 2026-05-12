@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import type { Project } from "@/lib/projects";
 import { motionTokens } from "@/lib/motion";
 
 export default function ProjectBrief({ project }: { project: Project }) {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-24">
-      <div className="grid gap-16 md:grid-cols-2">
+    <section className="mx-auto max-w-[1400px] px-6 py-24">
+      <div className="grid grid-cols-1 gap-16 md:grid-cols-12 md:gap-8">
         {/* OVERVIEW */}
         <motion.div
+          className="md:col-span-7"
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{
@@ -19,16 +19,17 @@ export default function ProjectBrief({ project }: { project: Project }) {
           }}
           viewport={{ once: true }}
         >
-          <h2 className="mb-4 text-2xl font-semibold tracking-tight">
+          <h2 className="mb-6 text-2xl font-black tracking-tight uppercase">
             Overview
           </h2>
-          <p className="max-w-3xl text-base leading-relaxed opacity-85">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             {project.overview}
           </p>
         </motion.div>
 
         {/* META */}
         <motion.div
+          className="md:col-span-4 md:col-start-9 space-y-12"
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{
@@ -37,41 +38,47 @@ export default function ProjectBrief({ project }: { project: Project }) {
             delay: motionTokens.stagger.text,
           }}
           viewport={{ once: true }}
-          className="space-y-8"
         >
-          <Card>
-            <CardContent className="pt-6 space-y-2">
-              <h3 className="text-sm uppercase tracking-widest opacity-60">
-                Role
-              </h3>
-              <p className="text-base font-medium opacity-90">{project.role}</p>
-            </CardContent>
-          </Card>
+          <div>
+            <h3 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+              Role
+            </h3>
+            <p className="text-base font-medium text-foreground">{project.role}</p>
+          </div>
 
-          <Card>
-            <CardContent className="pt-6 space-y-4">
-              <h3 className="text-sm uppercase tracking-widest opacity-60">
-                Stack
-              </h3>
+          <div>
+            <h3 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+              Stack
+            </h3>
+            <ul className="flex flex-wrap gap-2">
+              {project.stack.map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-              <ul className="flex flex-wrap gap-3">
-                {project.stack.map((tech) => (
+          {project.integrations && project.integrations.length > 0 && (
+            <div>
+              <h3 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+                Integrations & Services
+              </h3>
+              <ul className="flex flex-wrap gap-2">
+                {project.integrations.map((item) => (
                   <li
-                    key={tech}
-                    className="
-                        rounded-full
-                        border border-foreground/25
-                        px-3 py-1
-                        text-xs font-medium
-                        tracking-wide
-                    "
+                    key={item}
+                    className="rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
                   >
-                    {tech}
+                    {item}
                   </li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
+            </div>
+          )}
         </motion.div>
       </div>
     </section>

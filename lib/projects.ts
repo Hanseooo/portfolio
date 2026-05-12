@@ -77,6 +77,7 @@ export type Project = {
     features: string[];
     role: string;
     stack: string[];
+    integrations?: string[];
     gallery: StaticImageData[];
     github?: string;
     live?: string;
@@ -106,6 +107,7 @@ export const projects: Project[] = [
     ],
     role: "Solo Developer",
     stack: ["React", "TypeScript", "Tailwind CSS", "Shadcn/ui", "Zustand", "Tanstack Router", "Tanstack Query", "Django REST Framework", "PostgreSQL", "Brevo"],
+    integrations: [],
     gallery: simplyNoteImages,
     github: "https://github.com/Hanseooo/simply-note",
     live: "https://simplynote-ai.vercel.app",

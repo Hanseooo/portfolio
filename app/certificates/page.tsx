@@ -28,7 +28,7 @@ export default function CertificatesPage() {
                   <h3 className="text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
                     {cert.title}
                   </h3>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">
+                  <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 mt-1">
                     {cert.issuer} {"//"} {cert.date}
                   </p>
                 </div>

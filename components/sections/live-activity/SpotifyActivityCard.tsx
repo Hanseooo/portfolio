@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { ActivityResponse, SpotifyActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
+import { ArrowRight } from "lucide-react";
 
 type SpotifyActivityCardProps = {
   payload: ActivityResponse<SpotifyActivity> | null;
@@ -30,9 +31,9 @@ type RailProps = {
 function HorizontalRail({ title, children }: RailProps) {
   return (
     <section>
-      <p className="mb-2 text-[0.68rem] uppercase tracking-[0.14em] text-foreground/70">{title}</p>
+      <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">{title}</p>
       <div className="scrollbar-live snap-x snap-mandatory overflow-x-auto pb-2">
-        <div className="flex min-w-max gap-3">{children}</div>
+        <div className="flex min-w-max gap-4">{children}</div>
       </div>
     </section>
   );
@@ -151,14 +152,14 @@ export default function SpotifyActivityCard({
   };
 
   return (
-    <article className="border border-border bg-card p-6 shadow-sm">
+    <article className="border-t border-white/10 bg-transparent py-6">
       <div className="mb-6 flex items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+          <h3 className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
             Now Playing
           </h3>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
           {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
         </span>
       </div>
@@ -178,37 +179,37 @@ export default function SpotifyActivityCard({
               href={data.nowPlaying.trackUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block border border-foreground/15 bg-background/70 p-3 transition hover:border-primary"
+              className="block group py-2"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 {data.nowPlaying.artworkUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={data.nowPlaying.artworkUrl}
                     alt={`${data.nowPlaying.album} cover`}
-                    className="h-14 w-14 shrink-0 rounded-md object-cover"
+                    className="h-16 w-16 shrink-0 object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                   />
                 ) : (
-                  <div className="h-14 w-14 shrink-0 rounded-md border border-foreground/15 bg-background/60" />
+                  <div className="h-16 w-16 shrink-0 border border-border bg-background/60" />
                 )}
                 <div className="min-w-0">
-                  <p className="line-clamp-1 text-sm font-medium text-foreground/90">
+                  <p className="line-clamp-1 text-sm font-bold text-foreground/90 transition-colors group-hover:text-primary">
                     {data.nowPlaying.title}
                   </p>
-                  <p className="line-clamp-1 text-xs text-foreground/75">{data.nowPlaying.artist}</p>
-                  <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-foreground/65">
+                  <p className="line-clamp-1 text-xs text-foreground/75 mt-1">{data.nowPlaying.artist}</p>
+                  <p className="mt-2 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
                     {data.nowPlaying.isPlaying ? "Playing" : "Recently played"}
                   </p>
                 </div>
               </div>
             </a>
           ) : (
-            <div className="border border-foreground/15 bg-background/70 p-3">
-              <p className="text-sm text-foreground/80">Not playing right now.</p>
+            <div className="py-2">
+              <p className="text-sm text-foreground/80 font-bold uppercase tracking-[0.2em]">Not playing right now.</p>
             </div>
           )}
 
-          <div className="flex items-center justify-end border-t border-foreground/15 pt-1">
+          <div className="flex items-center justify-end pt-4">
           <Dialog
             open={detailsOpen}
             onOpenChange={(open) => {
@@ -222,37 +223,38 @@ export default function SpotifyActivityCard({
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex min-h-10 w-full items-center justify-center border border-foreground/25 px-4 text-xs uppercase tracking-[0.12em] text-foreground/85 transition hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="group inline-flex items-center gap-2 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground transition hover:text-primary focus-visible:outline-none"
                 >
                   View details
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </DialogTrigger>
             <DialogContent className="flex h-[min(82vh,44rem)] w-[min(92vw,48rem)] max-w-3xl flex-col overflow-hidden p-0">
               <DialogHeader>
-                <DialogTitle className="border-b border-foreground/15 px-6 pb-4 pt-6 text-sm uppercase tracking-[0.2em] text-foreground/75">
+                <DialogTitle className="px-6 pb-4 pt-8 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
                   Spotify Activity Details
                 </DialogTitle>
               </DialogHeader>
 
-              <div className="scrollbar-live min-h-0 flex-1 space-y-5 overflow-y-auto px-6 pb-6 pt-1">
+              <div data-lenis-prevent className="scrollbar-live min-h-0 flex-1 space-y-8 overflow-y-auto px-6 pb-6 pt-1">
                 <section>
-                  <p className="mb-2 text-[0.68rem] uppercase tracking-[0.14em] text-foreground/70">
+                  <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
                     Recent Tracks
                   </p>
                   {recentLoading ? (
-                    <p className="text-sm text-foreground/75">Loading details...</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
                   ) : detailsData?.recentTracks.length ? (
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                       {detailsData.recentTracks.slice(0, 5).map((track) => (
-                        <li key={`${track.trackUrl}-${track.playedAt}`} className="min-w-0 border-l border-foreground/20 pl-3">
+                        <li key={`${track.trackUrl}-${track.playedAt}`} className="min-w-0 pl-0">
                           <a
                             href={track.trackUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block"
+                            className="block group"
                           >
-                            <p className="line-clamp-1 text-sm text-foreground/85">{track.title}</p>
-                            <p className="line-clamp-1 text-xs text-foreground/70">
+                            <p className="line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{track.title}</p>
+                            <p className="line-clamp-1 text-xs text-foreground/70 mt-1">
                               {track.artist} · {formatRelativeTime(track.playedAt)}
                             </p>
                           </a>
@@ -260,13 +262,13 @@ export default function SpotifyActivityCard({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-foreground/75">No recent tracks found.</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">No recent tracks found.</p>
                   )}
                 </section>
 
                 <HorizontalRail title="Top Tracks">
                   {topLoading ? (
-                    <p className="text-sm text-foreground/75">Loading details...</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
                   ) : detailsData?.topTracks.length ? (
                     detailsData.topTracks.slice(0, 5).map((track) => (
                       <a
@@ -274,30 +276,30 @@ export default function SpotifyActivityCard({
                         href={track.trackUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-36 shrink-0 snap-start border border-foreground/20 bg-background/70 p-2 transition hover:border-primary"
+                        className="w-36 shrink-0 snap-start group"
                       >
                         {track.artworkUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={track.artworkUrl}
                             alt={`${track.album} cover`}
-                            className="h-24 w-full rounded-md object-cover"
+                            className="h-36 w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                           />
                         ) : (
-                          <div className="h-24 w-full rounded-md border border-foreground/15 bg-background/60" />
+                          <div className="h-36 w-full border border-border bg-background/60" />
                         )}
-                        <p className="mt-2 line-clamp-1 text-sm text-foreground/85">{track.title}</p>
-                        <p className="line-clamp-1 text-xs text-foreground/70">{track.artist}</p>
+                        <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{track.title}</p>
+                        <p className="line-clamp-1 text-xs text-foreground/70 mt-1">{track.artist}</p>
                       </a>
                     ))
                   ) : (
-                    <p className="text-sm text-foreground/75">Top tracks unavailable.</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Top tracks unavailable.</p>
                   )}
                 </HorizontalRail>
 
                 <HorizontalRail title="Top Artists">
                   {topLoading ? (
-                    <p className="text-sm text-foreground/75">Loading details...</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
                   ) : detailsData?.topArtists.length ? (
                     detailsData.topArtists.slice(0, 5).map((artist) => (
                       <a
@@ -305,23 +307,23 @@ export default function SpotifyActivityCard({
                         href={artist.artistUrl || undefined}
                         target={artist.artistUrl ? "_blank" : undefined}
                         rel={artist.artistUrl ? "noopener noreferrer" : undefined}
-                        className="w-32 shrink-0 snap-start border border-foreground/20 bg-background/70 p-2 transition hover:border-primary"
+                        className="w-36 shrink-0 snap-start group"
                       >
                         {artist.artworkUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={artist.artworkUrl}
                             alt={`${artist.name} artwork`}
-                            className="h-24 w-full rounded-md object-cover"
+                            className="h-36 w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                           />
                         ) : (
-                          <div className="h-24 w-full rounded-md border border-foreground/15 bg-background/60" />
+                          <div className="h-36 w-full border border-border bg-background/60" />
                         )}
-                        <p className="mt-2 line-clamp-1 text-sm text-foreground/85">{artist.name}</p>
+                        <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{artist.name}</p>
                       </a>
                     ))
                   ) : (
-                    <p className="text-sm text-foreground/75">Top artists unavailable.</p>
+                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Top artists unavailable.</p>
                   )}
                 </HorizontalRail>
               </div>

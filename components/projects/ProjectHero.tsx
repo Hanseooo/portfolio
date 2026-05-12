@@ -31,11 +31,11 @@ export default function ProjectHero({ project }: { project: Project }) {
           duration: motionTokens.duration.feature,
           ease: motionTokens.framerEase.enter,
         }}
-        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl px-6 pb-10"
+        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-[1400px] px-6 pb-12"
       >
-        <div className="max-w-4xl border border-black/35 bg-black/45 p-6 shadow-primary-sharp backdrop-blur-lg dark:border-primary/35 dark:bg-background/22 sm:p-8">
-          <div className="mb-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.22em] text-white/72">
-            <span className="border border-primary/70 px-2 py-1 text-primary">Case Study</span>
+        <div className="max-w-4xl py-8">
+          <div className="mb-6 flex flex-wrap items-center gap-3 font-bold text-[10px] uppercase tracking-[0.2em] text-white">
+            <span className="text-primary">Case Study</span>
             <span className="h-px w-10 bg-primary/70" aria-hidden="true" />
             <span>{project.role}</span>
           </div>
@@ -44,7 +44,7 @@ export default function ProjectHero({ project }: { project: Project }) {
             {project.title}
           </h1>
 
-          <p className="mt-5 max-w-3xl border-l-2 border-primary/70 pl-4 text-base leading-relaxed text-white/86 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/86 sm:text-lg">
             {project.subtitle}
           </p>
 
