@@ -209,7 +209,7 @@ export default function LiveActivity() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1">
           <SpotifyActivityCard payload={spotify.payload} loading={spotify.loading} />
-          <DiscordStatusCard payload={discord.payload} loading={discord.loading} now={now} />
+          <DiscordStatusCard payload={discord.payload} loading={discord.loading} />
         </div>
       </motion.div>
     </section>
