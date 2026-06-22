@@ -118,3 +118,42 @@
   background: var(--muted-foreground);
   background-clip: content-box;
 }
+
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes ticker-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0%); }
+}
+
+.ticker-track {
+  animation: ticker linear infinite;
+}
+
+.ticker-track-reverse {
+  animation: ticker-reverse linear infinite;
+}
+
+.ticker-row:hover .ticker-track,
+.ticker-row:hover .ticker-track-reverse {
+  animation-play-state: paused;
+}
+
+.ticker-fade {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .ticker-track-reverse {
+    animation-play-state: paused;
+  }
+}

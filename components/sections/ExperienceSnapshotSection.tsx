@@ -1,30 +1,80 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 export default function ExperienceSnapshotSection({ id }: { id: string }) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  };
+  const reducedMotion = usePrefersReducedMotion();
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
-  };
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    if (!timelineRef.current || !lineRef.current) return;
+
+    // Resolve CSS variable to a concrete color GSAP can parse — hsl(var(--x)) fails GSAP's color parser
+    const primaryColor = `hsl(${getComputedStyle(document.documentElement).getPropertyValue("--primary").trim()})`;
+
+    const ctx = gsap.context(() => {
+      // Animated line draws as user scrolls through the timeline section
+      gsap.fromTo(
+        lineRef.current,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 70%",
+            end: "bottom 70%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Per-entry: dot activates then text slides in
+      gsap.utils.toArray<HTMLElement>(".experience-entry").forEach((entry) => {
+        const dot = entry.querySelector<HTMLElement>(".entry-dot");
+
+        // Set initial hidden state only after animation guard has passed
+        gsap.set(entry, { opacity: 0, x: -20 });
+        if (dot) gsap.set(dot, { scale: 0.5 });
+
+        const tl = gsap.timeline({ paused: true });
+        if (dot) {
+          tl.to(dot, {
+            scale: 1,
+            backgroundColor: primaryColor,
+            duration: 0.3,
+            ease: "back.out(1.4)",
+          });
+        }
+        tl.to(
+          entry,
+          { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.2"
+        );
+
+        ScrollTrigger.create({
+          trigger: entry,
+          start: "top 65%",
+          onEnter: () => tl.play(),
+          onLeaveBack: () => tl.reverse(),
+        });
+      });
+    }, timelineRef);
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
 
   return (
     <section id={id} className="relative min-h-screen px-6 py-32">
       <div className="mx-auto w-full max-w-[1400px]">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
-          className="mb-20 flex items-end justify-between border-b border-border pb-8"
-        >
+        <div className="mb-20 flex items-end justify-between border-b border-border pb-8">
           <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground">
             Experience
           </h2>
@@ -33,35 +83,55 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
             className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
           >
             <span>Full History</span>
-            <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            <ArrowUpRight
+              size={16}
+              className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="flex flex-col gap-12 lg:w-2/3 lg:gap-24"
+        {/* Timeline wrapper — single animated line replaces per-entry border-l */}
+        <div
+          ref={timelineRef}
+          className="relative flex flex-col gap-12 lg:w-2/3 lg:gap-24"
         >
-          <motion.div variants={itemVariants} className="group relative border-l border-border pl-8 transition-colors hover:border-primary">
-            <span className="absolute -left-[5px] top-2 h-2 w-2 rounded-full bg-border transition-colors group-hover:bg-primary" />
-            <h3 className="text-2xl font-bold text-foreground mb-2">AI Solutions Development Intern</h3>
-            <p className="font-mono text-sm uppercase tracking-widest text-primary mb-6">Eskwelabs // 2026</p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Designed and built an internal full-stack Recruitment Automation System. Reduced manual workload by 80%, turning day-long operations into workflows completed in minutes.
-            </p>
-          </motion.div>
+          {/* Animated line */}
+          <div
+            ref={lineRef}
+            className="absolute left-0 top-0 w-px h-full bg-border"
+            style={{ transformOrigin: "top" }}
+          />
 
-          <motion.div variants={itemVariants} className="group relative border-l border-border pl-8 transition-colors hover:border-primary">
-            <span className="absolute -left-[5px] top-2 h-2 w-2 rounded-full bg-border transition-colors group-hover:bg-primary" />
-            <h3 className="text-2xl font-bold text-foreground mb-2">Full-Stack Web Developer</h3>
-            <p className="font-mono text-sm uppercase tracking-widest text-muted-foreground/80 mb-6">Freelance // 2023 - 2024</p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Built full-stack web applications using Next.js, React, PostgreSQL, and Django with a focus on robust architecture and scalable features.
+          {/* Entry 1 */}
+          <div className="experience-entry group relative pl-8">
+            <span className="entry-dot absolute -left-[5px] top-2 h-2 w-2 rounded-full bg-border" />
+            <h3 className="text-2xl font-bold text-foreground mb-2 transition-colors group-hover:text-primary">
+              AI Solutions Development Intern
+            </h3>
+            <p className="font-mono text-sm uppercase tracking-widest text-primary mb-6">
+              Eskwelabs // 2026
             </p>
-          </motion.div>
-        </motion.div>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Designed and built an internal full-stack Recruitment Automation
+              System. Reduced manual workload by 80%, turning day-long
+              operations into workflows completed in minutes.
+            </p>
+          </div>
+
+          {/* Entry 2 */}
+          <div className="experience-entry group relative pl-8">
+            <span className="entry-dot absolute -left-[5px] top-2 h-2 w-2 rounded-full bg-border" />
+            <h3 className="text-2xl font-bold text-foreground mb-2 transition-colors group-hover:text-primary">
+              Full-Stack Web Developer
+            </h3>
+            <p className="font-mono text-sm uppercase tracking-widest text-muted-foreground/80 mb-6">
+              Freelance // 2023 - 2024
+            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Built The Podium for HCDC's VPAA, a seminar tracking platform with QR attendance, certificate generation, and email notifications. Also built HCDC LFMS, a lost and found platform with real-time claims, moderation, and role-based access control.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

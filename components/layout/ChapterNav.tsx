@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { ScrollTrigger } from "@/lib/gsap";
 
 interface Chapter {
   id: string;
@@ -12,44 +13,47 @@ interface Chapter {
 const chapters: Chapter[] = [
   { id: "identity", title: "Identity", number: "01" },
   { id: "approach", title: "Approach", number: "02" },
-  { id: "work", title: "Selected Work", number: "03" },
-  { id: "trajectory", title: "Trajectory", number: "04" },
+  { id: "stack", title: "Stack", number: "03" },
+  { id: "work", title: "Selected Work", number: "04" },
+  { id: "trajectory", title: "Trajectory", number: "05" },
 ];
 
 export default function ChapterNav() {
   const [activeId, setActiveId] = useState<string>("identity");
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-      
-      for (let i = chapters.length - 1; i >= 0; i--) {
-        const chapter = chapters[i];
-        const element = document.getElementById(chapter.id);
-        
-        if (element) {
-          const { top } = element.getBoundingClientRect();
-          const elementTop = top + window.scrollY;
-          
-          if (scrollPosition >= elementTop) {
-            setActiveId(chapter.id);
-            break;
-          }
-        }
-      }
+    let triggers: (ReturnType<typeof ScrollTrigger.create> | null)[] = [];
+
+    const buildTriggers = () => {
+      triggers.forEach((t) => t?.kill());
+      triggers = chapters.map((chapter) => {
+        const el = document.getElementById(chapter.id);
+        if (!el) return null;
+        return ScrollTrigger.create({
+          trigger: el,
+          start: "top 50%",
+          end: "bottom 50%",
+          onEnter: () => setActiveId(chapter.id),
+          onEnterBack: () => setActiveId(chapter.id),
+        });
+      });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Init
+    buildTriggers();
+    // Rebuild after refresh so positions account for pin spacers (FeaturedProjects, Philosophy)
+    ScrollTrigger.addEventListener("refresh", buildTriggers);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      ScrollTrigger.removeEventListener("refresh", buildTriggers);
+      triggers.forEach((t) => t?.kill());
+    };
   }, []);
 
   return (
     <div className="fixed left-6 top-1/2 z-50 hidden -translate-y-1/2 flex-col gap-8 xl:flex">
       {chapters.map((chapter) => (
-        <button 
-          key={chapter.id} 
+        <button
+          key={chapter.id}
           onClick={() => {
             document.getElementById(chapter.id)?.scrollIntoView({ behavior: "smooth" });
           }}
