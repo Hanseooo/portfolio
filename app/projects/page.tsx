@@ -31,7 +31,7 @@ export default function ProjectsPage() {
                 </div>
                 <div className="mt-6 flex flex-col gap-2">
                   <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                    <span className="font-mono mr-2">0{idx + 1} {"//"}</span> {project.subtitle}
+                    <span className="font-mono mr-2">0{idx + 1} {"//"}</span> {project.year} — {project.subtitle}
                   </span>
                   <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
                     {project.title}

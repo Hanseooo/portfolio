@@ -46,6 +46,8 @@ export default function ProjectHero({ project }: { project: Project }) {
               </>
             )}
             <span>{project.role}</span>
+            <span className="h-px w-10 bg-primary/70" aria-hidden="true" />
+            <span>{project.year}</span>
           </div>
 
           <h1 className="text-pretty text-[clamp(2.5rem,6vw,5.1rem)] font-black leading-[0.92] text-white">
