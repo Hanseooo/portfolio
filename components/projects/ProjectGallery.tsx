@@ -26,6 +26,7 @@ export default function ProjectGallery({
 }) {
   return (
     <section className="mx-auto max-w-5xl px-6 py-24 space-y-16">
+      <h2 className="text-2xl font-black tracking-tight uppercase">Screenshots</h2>
       {images.map((img, i) => (
         <motion.div
           key={i}

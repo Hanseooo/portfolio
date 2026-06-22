@@ -39,6 +39,20 @@ export default function ProjectBrief({ project }: { project: Project }) {
           }}
           viewport={{ once: true }}
         >
+          {project.client && (
+            <div>
+              <h3 className="mb-3 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+                Client
+              </h3>
+              <p className="text-base font-medium text-foreground">{project.client}</p>
+              {project.clientConsent && (
+                <p className="mt-2 font-mono text-[10px] leading-relaxed text-muted-foreground/50">
+                  * Shared with client permission.
+                </p>
+              )}
+            </div>
+          )}
+
           <div>
             <h3 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
               Role
