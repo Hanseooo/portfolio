@@ -81,6 +81,8 @@ export type Project = {
     gallery: StaticImageData[];
     github?: string;
     live?: string;
+    client?: string;
+    clientConsent?: boolean;
 }
 
 export const projects: Project[] = [
@@ -138,6 +140,8 @@ export const projects: Project[] = [
     gallery: thePodiumImages,
     github: "https://github.com/Hanseooo/attendance-evaluation-certification",
     live: "https://hcdc-podium.vercel.app",
+    client: "HCDC – VPAA",
+    clientConsent: true,
   },
   {
     slug: "hcdc-lfms",
@@ -173,5 +177,7 @@ export const projects: Project[] = [
     ],
     gallery: hcdcLFMSImages,
     github: "https://github.com/Hanseooo/hcdc-lfms",
+    client: "HCDC",
+    clientConsent: true,
   },
 ];
