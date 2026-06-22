@@ -11,44 +11,29 @@ export default function PageOverlay({ active }: { active: boolean }) {
     if (!overlayRef.current || !textRef.current) return;
 
     if (active) {
-      // ENTER
       gsap.set(overlayRef.current, { y: "100%" });
-      gsap.set(textRef.current, { y: 40, opacity: 0 });
+      gsap.set(textRef.current, { y: 30, opacity: 0 });
 
       gsap
         .timeline()
-        .to(overlayRef.current, {
-          y: "0%",
-          duration: 0.9,
-          ease: "power4.out",
-        })
+        .to(overlayRef.current, { y: "0%", duration: 0.75, ease: "power4.out" })
         .to(
           textRef.current,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.45,
-            ease: "power3.out",
-          },
-          "-=0.4"
+          { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+          "-=0.35"
         );
     } else {
-      // EXIT
       gsap
         .timeline()
         .to(textRef.current, {
-          y: -40,
+          y: -30,
           opacity: 0,
-          duration: 0.45,
+          duration: 0.35,
           ease: "power3.in",
         })
         .to(
           overlayRef.current,
-          {
-            y: "-100%",
-            duration: 0.9,
-            ease: "power4.inOut",
-          },
+          { y: "-100%", duration: 0.75, ease: "power4.inOut" },
           "-=0.1"
         );
     }
@@ -57,7 +42,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
   return (
     <div
       ref={overlayRef}
-      className="pointer-events-none will-change-transform border-y-2 shadow border-primary fixed inset-0 z-100 flex items-center justify-center bg-background"
+      className="pointer-events-none will-change-transform fixed inset-0 z-200 flex items-center justify-center bg-background"
     >
       <h1
         ref={textRef}

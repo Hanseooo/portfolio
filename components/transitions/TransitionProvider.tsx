@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import PageOverlay from "./PageOverlay";
-import { motionTokens } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+
+// Time before triggering exit: overlay enters (~750ms) + brief hold
+const HOLD_MS = 950;
 
 export default function TransitionProvider({
   children,
@@ -12,42 +14,21 @@ export default function TransitionProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const isFirstRouteRenderRef = useRef(true);
   const reducedMotion = usePrefersReducedMotion();
 
-  // Initial load
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    const timeout = setTimeout(() => {
-      setActive(false);
-    }, motionTokens.duration.feature * 1000 + 120);
-
-    return () => clearTimeout(timeout);
-  }, [reducedMotion]);
-
-  // Route change
+  // Route change only — Preloader handles the initial-load entrance
   useEffect(() => {
     if (isFirstRouteRenderRef.current) {
       isFirstRouteRenderRef.current = false;
       return;
     }
-
     if (reducedMotion) return;
 
-    const openTimeout = setTimeout(() => {
-      setActive(true);
-    }, 0);
-
-    const timeout = setTimeout(() => {
-      setActive(false);
-    }, motionTokens.duration.feature * 1000 + 120);
-
-    return () => {
-      clearTimeout(openTimeout);
-      clearTimeout(timeout);
-    };
+    setActive(true);
+    const timeout = setTimeout(() => setActive(false), HOLD_MS);
+    return () => clearTimeout(timeout);
   }, [pathname, reducedMotion]);
 
   return (

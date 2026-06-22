@@ -7,18 +7,15 @@ export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if the user has visited in this session
     const hasVisited = sessionStorage.getItem("hasVisited");
     if (hasVisited) {
       setIsLoading(false);
       return;
     }
-
     const timer = setTimeout(() => {
       setIsLoading(false);
       sessionStorage.setItem("hasVisited", "true");
-    }, 2500); // 2.5 second cinematic load
-
+    }, 2200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -28,28 +25,24 @@ export default function Preloader() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-background"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed inset-0 z-10000 flex flex-col items-center justify-center bg-background"
         >
-          {/* Minimalist Ice Blue loading line */}
-          <div className="relative h-[1px] w-64 overflow-hidden bg-zinc-900">
+          {/* Progress line — fills left-to-right then exits with the overlay */}
+          <div className="relative h-px w-56 bg-zinc-800">
             <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: "100%" }}
-              transition={{
-                repeat: Infinity,
-                duration: 1.2,
-                ease: "easeInOut",
-              }}
-              className="absolute inset-y-0 w-full bg-primary"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.6, ease: [0.22, 0.61, 0.36, 1] }}
+              className="absolute inset-0 origin-left bg-primary"
             />
           </div>
-          
+
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-500"
           >
             Hanseo
           </motion.div>
