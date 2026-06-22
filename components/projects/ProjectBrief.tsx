@@ -8,9 +8,9 @@ export default function ProjectBrief({ project }: { project: Project }) {
   return (
     <section className="mx-auto max-w-[1400px] px-6 py-24">
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12 md:gap-8">
-        {/* OVERVIEW */}
+        {/* PROBLEM + SOLUTION */}
         <motion.div
-          className="md:col-span-7"
+          className="md:col-span-7 flex flex-col gap-10"
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{
@@ -19,12 +19,24 @@ export default function ProjectBrief({ project }: { project: Project }) {
           }}
           viewport={{ once: true }}
         >
-          <h2 className="mb-6 text-2xl font-black tracking-tight uppercase">
-            Overview
-          </h2>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            {project.overview}
-          </p>
+          {project.problem && (
+            <div>
+              <h2 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+                Problem
+              </h2>
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                {project.problem}
+              </p>
+            </div>
+          )}
+          <div>
+            <h2 className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+              Solution
+            </h2>
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              {project.overview}
+            </p>
+          </div>
         </motion.div>
 
         {/* META */}
