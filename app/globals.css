@@ -38,6 +38,7 @@
   --popover-foreground: #09090B;
   --primary: #e10600;
   --primary-foreground: #FFFFFF;
+  --primary-glow: rgba(225, 6, 0, 0.8);
   --secondary: #F4F4F5;
   --secondary-foreground: #09090B;
   --muted: #F4F4F5;
@@ -59,6 +60,7 @@
   --popover-foreground: #FAFAFA;
   --primary: #00E5FF;
   --primary-foreground: #000000;
+  --primary-glow: rgba(0, 229, 255, 0.8);
   --secondary: #18181B;
   --secondary-foreground: #FAFAFA;
   --muted: #18181B;
@@ -117,4 +119,43 @@
 .scrollbar-live::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
   background-clip: content-box;
+}
+
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes ticker-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0%); }
+}
+
+.ticker-track {
+  animation: ticker linear infinite;
+}
+
+.ticker-track-reverse {
+  animation: ticker-reverse linear infinite;
+}
+
+.ticker-row:hover .ticker-track,
+.ticker-row:hover .ticker-track-reverse {
+  animation-play-state: paused;
+}
+
+.ticker-fade {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .ticker-track-reverse {
+    animation-play-state: paused;
+  }
 }

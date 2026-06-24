@@ -3,6 +3,8 @@
 import { Activity, Gamepad2, Headphones, PlayCircle } from "lucide-react";
 import type { ActivityResponse, DiscordActivity } from "@/lib/activity/types";
 import { formatClockTime } from "@/lib/activity/formatters";
+import { useClientReady } from "@/components/utils/useClientReady";
+import { getRuntimeEnv } from "@/components/utils/browserInfo";
 
 type DiscordStatusCardProps = {
   payload: ActivityResponse<DiscordActivity> | null;
@@ -55,6 +57,8 @@ export default function DiscordStatusCard({
 }: DiscordStatusCardProps) {
   const data = payload?.data;
   const spotifyHasLink = Boolean(data?.live.spotify?.trackUrl);
+  const isClient = useClientReady();
+  const isMobile = isClient ? getRuntimeEnv().isMobile : false;
 
   return (
     <article className="border-t border-white/10 bg-transparent py-6">
@@ -85,7 +89,7 @@ export default function DiscordStatusCard({
               <img
                 src={data.user.avatarUrl}
                 alt={`${data.user.displayName ?? data.user.username} avatar`}
-                className="h-14 w-14 shrink-0 object-cover grayscale transition-all duration-500 hover:grayscale-0"
+                className={`h-14 w-14 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
               />
             ) : (
               <div className="h-14 w-14 shrink-0 border border-border bg-background/60" />
@@ -114,7 +118,7 @@ export default function DiscordStatusCard({
                   <img
                     src={data.live.spotify.albumArtUrl}
                     alt={`${data.live.spotify.album} cover`}
-                    className="h-12 w-12 shrink-0 object-cover grayscale transition-all duration-500 hover:grayscale-0"
+                    className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">
@@ -154,7 +158,7 @@ export default function DiscordStatusCard({
                   <img
                     src={data.live.gaming.imageUrl}
                     alt={`${data.live.gaming.name} cover`}
-                    className="h-12 w-12 shrink-0 object-cover grayscale transition-all duration-500 hover:grayscale-0"
+                    className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">
@@ -190,7 +194,7 @@ export default function DiscordStatusCard({
                       <img
                         src={activity.imageUrl}
                         alt={`${activity.name} artwork`}
-                        className="h-12 w-12 shrink-0 object-cover grayscale transition-all duration-500 hover:grayscale-0"
+                        className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                       />
                     ) : (
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">

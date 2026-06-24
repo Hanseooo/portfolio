@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import GitHubActivityCard from "@/components/sections/live-activity/GitHubActivityCard";
 import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
 import DiscordStatusCard from "@/components/sections/live-activity/DiscordStatusCard";
@@ -110,9 +110,10 @@ export default function LiveActivity() {
     reducedMotion,
     isMobile: runtimeEnv.isMobile,
   });
-  const headingEnter = getEnterY("accent", motionMode);
   const cardEnter = getEnterY("subtle", motionMode);
   const [now, setNow] = useState(() => new Date());
+  const liveHeaderRef = useRef<HTMLDivElement>(null);
+  const liveHeaderInView = useInView(liveHeaderRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -167,21 +168,27 @@ export default function LiveActivity() {
 
   return (
     <section id="live-activity" className="mx-auto w-full max-w-[1400px] px-6 py-20 lg:py-32">
-      <motion.div
-        initial={headingEnter}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{
-          duration: motionTokens.duration.base,
-          ease: motionTokens.framerEase.enter,
-        }}
-        viewport={{ once: true, margin: "-100px" }}
+      <div
+        ref={liveHeaderRef}
         className="mb-20 flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-8 gap-6"
       >
-        <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground">
-          Live <span className="text-primary">Signals</span>
-        </h2>
-        
-        <div className="flex items-center gap-2 border-none bg-transparent px-0 py-1.5 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+        <div className="overflow-hidden">
+          <motion.h2
+            initial={reducedMotion ? { clipPath: "inset(0 0 0% 0)" } : { clipPath: "inset(0 0 100% 0)" }}
+            animate={(reducedMotion || liveHeaderInView) ? { clipPath: "inset(0 0 0% 0)" } : { clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
+            className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground"
+          >
+            Live <span className="text-primary">Signals</span>
+          </motion.h2>
+        </div>
+
+        <motion.div
+          initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          animate={(reducedMotion || liveHeaderInView) ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, delay: 0.15 }}
+          className="flex items-center gap-2 border-none bg-transparent px-0 py-1.5 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80"
+        >
           <span
             className={`h-1.5 w-1.5 rounded-full ${liveStateClassMap[liveState]} ${
               liveState === "live" ? "animate-pulse" : ""
@@ -189,8 +196,8 @@ export default function LiveActivity() {
             aria-hidden="true"
           />
           <span>{liveStateLabelMap[liveState]}</span>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       <motion.div
         initial={cardEnter}

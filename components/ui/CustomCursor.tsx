@@ -10,7 +10,6 @@ export default function CustomCursor() {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    // Check if device supports hover
     const isTouchDevice =
       "ontouchstart" in window ||
       navigator.maxTouchPoints > 0 ||
@@ -24,18 +23,17 @@ export default function CustomCursor() {
     const setX = gsap.quickSetter(cursor, "x", "px");
     const setY = gsap.quickSetter(cursor, "y", "px");
 
+    const interactiveSelector = "a, button, input, textarea, select, [role='button']";
+
     const onMouseMove = (e: MouseEvent) => {
       setX(e.clientX);
       setY(e.clientY);
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-
-    // Add hover states for interactive elements
-    const interactiveSelector = "a, button, input, textarea, select, [role='button']";
-    const interactiveElements = document.querySelectorAll(interactiveSelector);
-
-    const onMouseEnter = () => {
+    const onMouseOver = (e: MouseEvent) => {
+      // Only fire when crossing INTO an interactive element from a non-interactive one
+      if (!(e.target as Element).closest?.(interactiveSelector)) return;
+      if ((e.relatedTarget as Element | null)?.closest?.(interactiveSelector)) return;
       gsap.to(cursor, {
         scale: 2.5,
         backgroundColor: "transparent",
@@ -45,7 +43,10 @@ export default function CustomCursor() {
       });
     };
 
-    const onMouseLeave = () => {
+    const onMouseOut = (e: MouseEvent) => {
+      // Only fire when crossing OUT OF an interactive element to a non-interactive one
+      if (!(e.target as Element).closest?.(interactiveSelector)) return;
+      if ((e.relatedTarget as Element | null)?.closest?.(interactiveSelector)) return;
       gsap.to(cursor, {
         scale: 1,
         backgroundColor: "var(--primary)",
@@ -55,49 +56,21 @@ export default function CustomCursor() {
       });
     };
 
-    interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", onMouseEnter);
-      el.addEventListener("mouseleave", onMouseLeave);
-    });
-
-    // Handle dynamically added elements
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.addedNodes.length) {
-          mutation.addedNodes.forEach((node) => {
-            if (node instanceof HTMLElement) {
-              const elements = node.querySelectorAll?.(interactiveSelector);
-              elements?.forEach((el) => {
-                el.addEventListener("mouseenter", onMouseEnter);
-                el.addEventListener("mouseleave", onMouseLeave);
-              });
-              if (node.matches?.(interactiveSelector)) {
-                node.addEventListener("mouseenter", onMouseEnter);
-                node.addEventListener("mouseleave", onMouseLeave);
-              }
-            }
-          });
-        }
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseover", onMouseOver);
+    document.addEventListener("mouseout", onMouseOut);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      const currentElements = document.querySelectorAll(interactiveSelector);
-      currentElements.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnter);
-        el.removeEventListener("mouseleave", onMouseLeave);
-      });
-      observer.disconnect();
+      document.removeEventListener("mouseover", onMouseOver);
+      document.removeEventListener("mouseout", onMouseOut);
     };
   }, []);
 
   return (
     <div
       ref={cursorRef}
-      className="pointer-events-none fixed left-0 top-0 z-[9999] h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(0,229,255,0.8)]"
+      className="pointer-events-none fixed left-0 top-0 z-[9999] h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_10px_var(--primary-glow)]"
     />
   );
 }

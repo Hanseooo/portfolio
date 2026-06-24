@@ -23,10 +23,15 @@ export default function ProjectsPage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
+                  {project.client && (
+                    <span className="absolute top-3 left-3 border border-primary/60 bg-black/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-primary backdrop-blur-sm">
+                      Client
+                    </span>
+                  )}
                 </div>
                 <div className="mt-6 flex flex-col gap-2">
                   <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                    <span className="font-mono mr-2">0{idx + 1} {"//"}</span> {project.subtitle}
+                    <span className="font-mono mr-2">0{idx + 1} {"//"}</span> {project.year} — {project.subtitle}
                   </span>
                   <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
                     {project.title}

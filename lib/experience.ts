@@ -2,7 +2,7 @@ export const experience = [
   {
     role: "AI Solutions Development Intern",
     company: "Eskwelabs",
-    period: "2026 — Present",
+    period: "Feb 2026 — May 2026",
     points: [
       "Designed and built an internal full-stack Recruitment Automation System from a PRD.",
       "Implemented AI-assisted Job Description and Social Media Posts generating workflows with Next.js, LangChain, TypeScript, Tailwind CSS, and PostgreSQL, integrated with Google Drive API.",

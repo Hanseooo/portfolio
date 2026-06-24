@@ -37,7 +37,17 @@ export default function ProjectHero({ project }: { project: Project }) {
           <div className="mb-6 flex flex-wrap items-center gap-3 font-bold text-[10px] uppercase tracking-[0.2em] text-white">
             <span className="text-primary">Case Study</span>
             <span className="h-px w-10 bg-primary/70" aria-hidden="true" />
+            {project.client && (
+              <>
+                <span className="border border-primary/60 bg-black/50 px-2 py-0.5 font-mono text-[9px] text-primary backdrop-blur-sm">
+                  Client Project
+                </span>
+                <span className="h-px w-10 bg-primary/70" aria-hidden="true" />
+              </>
+            )}
             <span>{project.role}</span>
+            <span className="h-px w-10 bg-primary/70" aria-hidden="true" />
+            <span>{project.year}</span>
           </div>
 
           <h1 className="text-pretty text-[clamp(2.5rem,6vw,5.1rem)] font-black leading-[0.92] text-white">

@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import type { ActivityResponse, SpotifyActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
 import { ArrowRight } from "lucide-react";
+import { useClientReady } from "@/components/utils/useClientReady";
+import { getRuntimeEnv } from "@/components/utils/browserInfo";
 
 type SpotifyActivityCardProps = {
   payload: ActivityResponse<SpotifyActivity> | null;
@@ -49,6 +51,8 @@ export default function SpotifyActivityCard({
   const [recentPayload, setRecentPayload] = useState<ActivityResponse<SpotifyActivity> | null>(null);
   const [topPayload, setTopPayload] = useState<ActivityResponse<SpotifyActivity> | null>(null);
   const data = payload?.data;
+  const isClient = useClientReady();
+  const isMobile = isClient ? getRuntimeEnv().isMobile : false;
   const detailsData = {
     recentTracks: recentPayload?.data?.recentTracks ?? data?.recentTracks ?? [],
     topTracks: topPayload?.data?.topTracks ?? data?.topTracks ?? [],
@@ -187,7 +191,7 @@ export default function SpotifyActivityCard({
                   <img
                     src={data.nowPlaying.artworkUrl}
                     alt={`${data.nowPlaying.album} cover`}
-                    className="h-16 w-16 shrink-0 object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                    className={`h-16 w-16 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                   />
                 ) : (
                   <div className="h-16 w-16 shrink-0 border border-border bg-background/60" />
@@ -283,7 +287,7 @@ export default function SpotifyActivityCard({
                           <img
                             src={track.artworkUrl}
                             alt={`${track.album} cover`}
-                            className="h-36 w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                            className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                           />
                         ) : (
                           <div className="h-36 w-full border border-border bg-background/60" />
@@ -314,7 +318,7 @@ export default function SpotifyActivityCard({
                           <img
                             src={artist.artworkUrl}
                             alt={`${artist.name} artwork`}
-                            className="h-36 w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                            className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                           />
                         ) : (
                           <div className="h-36 w-full border border-border bg-background/60" />

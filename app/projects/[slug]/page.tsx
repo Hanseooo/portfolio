@@ -9,6 +9,8 @@ import BackButton from "@/components/utils/BackButton";
 import ProjectHero from "@/components/projects/ProjectHero";
 import ProjectBrief from "@/components/projects/ProjectBrief";
 import ProjectFeatures from "@/components/projects/ProjectFeatures";
+import ProjectTechnicalDecisions from "@/components/projects/ProjectTechnicalDecisions";
+import ProjectNextPrev from "@/components/projects/ProjectNextPrev";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { useResetScrollTop } from "@/components/utils/useResetScrollTop";
 
@@ -30,9 +32,12 @@ export default function ProjectPage({
       <SectionDivider />
       <ProjectFeatures project={project} />
       <SectionDivider />
+      <ProjectTechnicalDecisions project={project} />
+      <SectionDivider />
       <ProjectGallery images={project.gallery} />
       <SectionDivider />
-
+      <ProjectNextPrev project={project} />
+      <SectionDivider />
       <BackButton sectionId="projects" text="Back to Projects" />
     </PageTransition>
   );

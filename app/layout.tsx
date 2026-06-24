@@ -78,9 +78,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} font-sans`} suppressHydrationWarning>
       <body className="bg-background text-foreground antialiased min-h-screen cursor-none">
-        <Preloader />
         <CustomCursor />
         <AppProviders>
+          <Preloader />
           <Navbar />
           {children}
           <Footer />

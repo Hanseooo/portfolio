@@ -37,11 +37,16 @@ export default function ProjectFeatures({ project }: { project: Project }) {
                 delay: i * motionTokens.stagger.text,
               }}
               viewport={{ once: true }}
-              className="py-6 transition-colors hover:text-primary group"
+              className="py-6 group"
             >
-              <p className="text-base leading-relaxed text-muted-foreground group-hover:text-primary transition-colors">
-                {feature}
-              </p>
+              <div className="flex items-baseline gap-5">
+                <span className="shrink-0 font-mono text-[10px] text-primary/50 transition-colors group-hover:text-primary/80">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-base leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground">
+                  {feature}
+                </p>
+              </div>
             </motion.li>
           ))}
         </ul>
