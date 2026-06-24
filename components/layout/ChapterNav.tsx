@@ -56,7 +56,13 @@ export default function ChapterNav() {
         <button
           key={chapter.id}
           onClick={() => {
-            document.getElementById(chapter.id)?.scrollIntoView({ behavior: "smooth" });
+            const el = document.getElementById(chapter.id);
+            if (!el) return;
+            if (window.__lenis) {
+              window.__lenis.scrollTo(el);
+            } else {
+              el.scrollIntoView({ behavior: "smooth" });
+            }
           }}
           className="relative flex items-center gap-4 group cursor-pointer"
         >
