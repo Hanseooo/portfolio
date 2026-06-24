@@ -181,6 +181,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   src={project.heroImage}
                   alt={project.title}
                   fill
+                  priority={idx === 0}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
