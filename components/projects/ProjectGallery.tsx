@@ -49,7 +49,7 @@ export default function ProjectGallery({
               alt={`Project image ${i + 1}`}
               fill
               sizes="(max-width: 768px) 100vw, 900px"
-              className="object-cover"
+              className="object-contain"
               priority={i === 0}
             />
           </div>

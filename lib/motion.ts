@@ -77,3 +77,27 @@ export function prefersReducedMotion() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+export function clipReveal(reducedMotion: boolean) {
+  if (reducedMotion) return {};
+  return {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true as const, amount: 0.5 },
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  };
+}
+
+export function fadeUpReveal(reducedMotion: boolean, delay = 0) {
+  if (reducedMotion) return {};
+  return {
+    initial: { opacity: 0, y: 10 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true as const, amount: 0.5 },
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1] as const,
+      ...(delay ? { delay } : {}),
+    },
+  };
+}

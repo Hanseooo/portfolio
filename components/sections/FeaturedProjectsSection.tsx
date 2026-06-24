@@ -9,9 +9,10 @@ import { projects } from "@/lib/projects";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useClientReady } from "@/components/utils/useClientReady";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { clipReveal } from "@/lib/motion";
 
 const FEATURED = projects.slice(0, 3);
-const CARD_VW = 0.85; // 85vw per card
+const CARD_VW = 1; // 100vw per card — full viewport, no bleed-through
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,7 +37,6 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
 
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-
   // Viewport detection
   useEffect(() => {
     if (!isClient) return;
@@ -147,10 +147,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
         }`}
       >
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+          {...clipReveal(reducedMotion)}
           className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground"
         >
           Projects
@@ -174,11 +171,12 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
             <Link
               key={project.title}
               href={`/projects/${project.slug}`}
-              className="group relative flex-shrink-0 w-[85vw] h-full block"
+              className="group relative shrink-0 w-screen h-full flex"
               aria-hidden={activeCardIndex !== idx ? true : undefined}
               tabIndex={activeCardIndex !== idx ? -1 : 0}
             >
-              <div className="relative h-[65%] overflow-hidden">
+              {/* Left: full-height image */}
+              <div className="relative w-[60%] h-full overflow-hidden shrink-0">
                 <Image
                   src={project.heroImage}
                   alt={project.title}
@@ -192,21 +190,42 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   </span>
                 )}
               </div>
-              <div className="h-[35%] flex flex-col justify-center px-8 gap-3">
-                <span className="font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
-                  <span className="font-mono mr-2">
-                    0{idx + 1} {"//"}
-                  </span>{" "}
-                  {project.subtitle.substring(0, 40)}
-                  {project.subtitle.length > 40 ? "..." : ""}
-                </span>
-                <h3 className="text-3xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary flex items-center gap-2">
+
+              {/* Right: metadata panel */}
+              <div className="flex-1 h-full flex flex-col justify-center px-10 gap-5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xl font-bold text-primary">0{idx + 1}</span>
+                  <span className="font-mono text-xs tracking-widest text-muted-foreground">{project.year}</span>
+                </div>
+                <div className="h-px bg-border" />
+                <h3 className="text-[clamp(2rem,3.5vw,4rem)] font-black tracking-tight leading-none text-foreground transition-colors group-hover:text-primary flex items-start gap-3">
                   {project.title}
                   <ArrowUpRight
-                    size={20}
-                    className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                    size={24}
+                    className="mt-1.5 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
                   />
                 </h3>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {project.role}
+                </span>
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 max-w-sm">
+                  {project.subtitle}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {project.stack.slice(0, 4).map((tech) => (
+                    <span
+                      key={tech}
+                      className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                  {project.stack.length > 4 && (
+                    <span className="font-mono text-[9px] text-muted-foreground self-center">
+                      +{project.stack.length - 4}
+                    </span>
+                  )}
+                </div>
               </div>
             </Link>
           ))}
@@ -240,7 +259,7 @@ function VerticalCard({
 }) {
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
-      <div className="aspect-[4/5] w-full overflow-hidden relative">
+      <div className="aspect-video w-full overflow-hidden relative">
         <Image
           src={project.heroImage}
           alt={project.title}
@@ -254,15 +273,34 @@ function VerticalCard({
           </span>
         )}
       </div>
-      <div className="mt-6 flex flex-col gap-2">
-        <span className="font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
-          <span className="font-mono mr-2">0{idx + 1} {"//"}</span>{" "}
-          {project.subtitle.substring(0, 40)}
-          {project.subtitle.length > 40 ? "..." : ""}
-        </span>
-        <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-sm font-bold text-primary">0{idx + 1}</span>
+          <span className="font-mono text-xs text-muted-foreground">{project.year}</span>
+        </div>
+        <div className="h-px bg-border" />
+        <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary flex items-center gap-2">
           {project.title}
+          <ArrowUpRight size={18} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </h3>
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          {project.role}
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {project.stack.slice(0, 3).map((tech) => (
+            <span
+              key={tech}
+              className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground"
+            >
+              {tech}
+            </span>
+          ))}
+          {project.stack.length > 3 && (
+            <span className="font-mono text-[9px] text-muted-foreground self-center">
+              +{project.stack.length - 3}
+            </span>
+          )}
+        </div>
       </div>
     </Link>
   );

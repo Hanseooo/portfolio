@@ -29,6 +29,20 @@ import hcdcLFMS4 from "@/app/assets/projects/hcdcLFMS/4.webp";
 import hcdcLFMS5 from "@/app/assets/projects/hcdcLFMS/5.webp";
 import hcdcLFMS6 from "@/app/assets/projects/hcdcLFMS/6.webp";
 
+import clariftHero from "@/app/assets/projects/clarift/hero.webp";
+import clarift1 from "@/app/assets/projects/clarift/1.webp";
+import clarift2 from "@/app/assets/projects/clarift/2.webp";
+import clarift3 from "@/app/assets/projects/clarift/3.webp";
+import clarift4 from "@/app/assets/projects/clarift/4.webp";
+import clarift5 from "@/app/assets/projects/clarift/5.webp";
+
+import leDouxHero from "@/app/assets/projects/leDoux/hero.png";
+import leDoux1 from "@/app/assets/projects/leDoux/1.webp";
+import leDoux2 from "@/app/assets/projects/leDoux/2.webp";
+import leDoux3 from "@/app/assets/projects/leDoux/3.webp";
+import leDoux4 from "@/app/assets/projects/leDoux/4.webp";
+import leDoux5 from "@/app/assets/projects/leDoux/5.webp";
+
 import { StaticImageData } from "next/image";
 
 
@@ -65,6 +79,22 @@ const hcdcLFMSImages  : StaticImageData[] = [
   hcdcLFMS6,
 ]
 
+const clariftImages : StaticImageData[] = [
+  clarift1,
+  clarift2,
+  clarift3,
+  clarift4,
+  clarift5,
+]
+
+const leDouxImages : StaticImageData[] = [
+  leDoux1,
+  leDoux2,
+  leDoux3,
+  leDoux4,
+  leDoux5,
+]
+
 
 export type Project = {
     slug: string;
@@ -88,12 +118,132 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "le-doux",
+    title: "Le Doux",
+    subtitle:
+      "Artisanal cookie ordering platform with a public order form and comprehensive admin dashboard for managing orders, products, payments, and analytics",
+    heroImage: leDouxHero,
+    year: "2026",
+    problem:
+      "A cookie seller relied on Instagram for discovery and Google Forms for order intake. Manual payment screenshot review, no order tracking, no CRM data, and no analytics made operations slow and error-prone.",
+    technicalDecisions: [
+      "Next.js full-stack App Router: Server Components, Server Actions, Route Handlers, and Middleware in a single deployment — no separate backend needed for this scope.",
+      "Supabase for database, auth, and storage: PostgreSQL with RLS handles multi-tenant data isolation, Supabase Auth manages admin sessions, and Storage handles payment proofs and menu images without custom upload logic.",
+      "Order snapshot strategy with JSONB: all customer, payment, and form response data is denormalized into snapshots at creation time. Historical orders render from snapshots only, ensuring accuracy as products, prices, or settings change.",
+      "Server-side price recalculation: the client submits line items but the server re-fetches product prices from the database and recalculates all totals. Client-submitted totals are never trusted, preventing price tampering.",
+      "Tesseract.js for client-side OCR: payment screenshots are processed in the browser to auto-extract GCash reference numbers, reducing manual entry errors without a server-side OCR pipeline.",
+      "Dynamic form builder with draft/publish workflow: admins configure the public order form through a visual block editor stored as JSONB, with publish validation ensuring no orphaned categories or empty product lists.",
+    ],
+    overview:
+      "Le Doux is a full-stack cookie ordering platform built for an artisanal cookie business in Davao. It replaces a Google Forms-based workflow with a branded, multi-step order wizard and a comprehensive admin dashboard. The system handles structured product ordering across multiple template types (cookies, boxes, tubs, bento cakes), GCash payment verification with client-side OCR, confirmation emails via Brevo, and a full admin suite covering orders, menu management, form building, customer CRM, and analytics.",
+    features: [
+      "Multi-step order wizard with admin-configurable form blocks",
+      "Structured product catalog with template-based UIs (cookie, box, tub, bento cake)",
+      "Exact-quantity flavor distribution for cookie boxes",
+      "Customizable tub selector (3 flavors + 1 sauce)",
+      "GCash payment with QR display and client-side OCR for reference extraction",
+      "Server-side price recalculation to prevent tampering",
+      "Order snapshot strategy for historical accuracy",
+      "Admin dashboard with at-a-glance stats",
+      "Orders management with status filters, CSV export, and activity logs",
+      "Payment verification with screenshot lightbox review",
+      "Email workflow with branded confirmation templates and preview",
+      "Full menu CRUD with template types and sold-out toggles",
+      "Dynamic form builder with draft/publish workflow",
+      "Content management for welcome messages, reminders, and email templates",
+      "Pickup slot management with capacity controls",
+      "Customer CRM with auto-created records and order history",
+      "Analytics with revenue charts, top products, and customer insights",
+    ],
+    role: "Sole Full Stack Developer",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Supabase",
+      "Zod",
+      "Lucide React",
+      "Recharts",
+      "Tesseract.js",
+      "Brevo",
+    ],
+    integrations: ["Supabase", "Brevo", "Vercel"],
+    gallery: leDouxImages,
+    client: "Le Doux",
+    clientConsent: true,
+  },
+  {
+    slug: "clarift",
+    title: "Clarift",
+    subtitle:
+      "AI-powered study engine for Filipino students — transforms uploaded materials into summaries, quizzes, and targeted practice",
+    heroImage: clariftHero,
+    year: "2026",
+    problem:
+      "Filipino students and review center learners waste hours reformatting raw study material into usable review content. Existing tools either ignore uploaded notes or generate content from general knowledge rather than the student's own materials.",
+    technicalDecisions: [
+      "Split architecture (Next.js frontend + FastAPI backend): AI pipelines need persistent processes with proper task isolation, serverless functions hit timeout limits for LangChain chains.",
+      "ARQ worker with Redis queue: async job processing for document ingestion and AI generation keeps the API responsive and allows SSE progress tracking.",
+      "pgvector for embeddings: leverages the existing Neon PostgreSQL database rather than adding a separate vector store, reducing infrastructure complexity.",
+      "Clerk for auth with JWT verification in FastAPI: OAuth handled by a dedicated service, backend verifies tokens directly for tenant isolation.",
+      "Cloudflare R2 for file storage: S3-compatible, cost-effective for PDF uploads without vendor lock-in.",
+    ],
+    overview:
+      "Clarift is an AI-powered study engine built specifically for Filipino students and review center learners. It transforms uploaded study material into structured summaries, quizzes, and targeted practice through an active learning loop designed for high-stakes exams. The system uses RAG to ground all AI outputs in the student's own notes, never generating from general knowledge.",
+    features: [
+      "Document ingestion — upload PDFs as study material",
+      "Structured summaries — multi-step AI chain with MermaidJS diagrams",
+      "Quiz generation — auto-generated from uploaded material only",
+      "Weak area diagnosis — identifies knowledge gaps from quiz performance",
+      "Targeted practice — personalized drills focused on specific weak topics",
+      "Grounded RAG chat — answers exclusively from uploaded notes",
+      "Quota system — daily usage limits with free and Pro tiers",
+    ],
+    role: "Sole Full Stack Developer",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "shadcn/ui",
+      "Radix UI",
+      "Framer Motion",
+      "TanStack React Query",
+      "Zustand",
+      "Tiptap",
+      "Recharts",
+      "FastAPI",
+      "Python 3.12",
+      "LangChain",
+      "SQLAlchemy async",
+      "Alembic",
+      "Neon PostgreSQL",
+      "pgvector",
+    ],
+    integrations: [
+      "Clerk",
+      "Google Gemini API",
+      "Cloudflare R2",
+      "Upstash Redis",
+      "PayMongo",
+      "Sentry",
+      "Vercel",
+      "Railway",
+    ],
+    gallery: clariftImages,
+    github: "https://github.com/Hanseooo/clarift",
+    live: "https://www.clarift.me/",
+  },
+  {
     slug: "simply-note",
     title: "SimplyNote",
-    subtitle: "An AI-Powered Learning Productivity Web Application with Note Summarization and Quiz Generation capabilities",
+    subtitle:
+      "An AI-Powered Learning Productivity Web Application with Note Summarization and Quiz Generation capabilities",
     heroImage: simplyNoteHero,
     year: "2025",
-    problem: "Students studying with raw notes had no fast way to turn them into structured study material. Existing tools either required manual reformatting or didn't work with your own content.",
+    problem:
+      "Students studying with raw notes had no fast way to turn them into structured study material. Existing tools either required manual reformatting or didn't work with your own content.",
     technicalDecisions: [
       "Rolling-window AI quota system: tracks usage per user over a sliding 24h window rather than a hard daily reset, fairer distribution and harder to game than a midnight cutoff.",
       "Django REST over Next.js API routes: the quota logic, PDF parsing, and AI orchestration needed a persistent process with proper task isolation, serverless functions would hit timeout limits.",
@@ -113,8 +263,19 @@ export const projects: Project[] = [
       "Transparent AI quota system",
       "Feedback & bug reporting system",
     ],
-    role: "Solo Developer",
-    stack: ["React", "TypeScript", "Tailwind CSS", "Shadcn/ui", "Zustand", "Tanstack Router", "Tanstack Query", "Django REST Framework", "PostgreSQL", "Brevo"],
+    role: "Sole Full Stack Developer",
+    stack: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Shadcn/ui",
+      "Zustand",
+      "Tanstack Router",
+      "Tanstack Query",
+      "Django REST Framework",
+      "PostgreSQL",
+      "Brevo",
+    ],
     integrations: [],
     gallery: simplyNoteImages,
     github: "https://github.com/Hanseooo/simply-note",
@@ -123,10 +284,12 @@ export const projects: Project[] = [
   {
     slug: "the-podium",
     title: "The Podium",
-    subtitle: "A Seminar Tracking Platform with automated Certifications and Attendance System",
+    subtitle:
+      "A Seminar Tracking Platform with automated Certifications and Attendance System",
     heroImage: ThePodiumHero,
     year: "2024",
-    problem: "HCDC's VPAA managed seminar attendance and certificate distribution manually, spreadsheets, printed sign-in sheets, and emailed certificates sent one by one.",
+    problem:
+      "HCDC's VPAA managed seminar attendance and certificate distribution manually, spreadsheets, printed sign-in sheets, and emailed certificates sent one by one.",
     technicalDecisions: [
       "QR codes generated server-side and validated on scan: avoids the race condition where a client-generated code could be shared or reused before the server invalidates it.",
       "Certificate rendering via canvas/PNG rather than PDF: gives admins live preview of font and position changes, and Cloudinary can serve the PNG directly without a PDF renderer on the client.",
@@ -144,21 +307,31 @@ export const projects: Project[] = [
       "Seminar evaluation analytics: collect participant feedback, admin dashboards and charts for ratings, satisfaction, responses",
       "Seminar management: create, edit, delete seminars, upload images, view attendance, export data",
     ],
-    role: "Solo Developer",
-    stack: ["React", "TypeScript", "Tailwind CSS", "Shadcn/ui", "Zustand", "Django REST Framework", "PostgreSQL", "Brevo", "Cloudinary"],
+    role: "Sole Full Stack Developer",
+    stack: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Shadcn/ui",
+      "Zustand",
+      "Django REST Framework",
+      "PostgreSQL",
+      "Brevo",
+      "Cloudinary",
+    ],
     gallery: thePodiumImages,
     github: "https://github.com/Hanseooo/attendance-evaluation-certification",
     live: "https://hcdc-podium.vercel.app",
-    client: "HCDC – VPAA",
-    clientConsent: true,
   },
   {
     slug: "hcdc-lfms",
     title: "Lost and Found Management System",
-    subtitle: "A centralized Lost and Found Management System with reporting, claims, notifications, and admin moderation",
+    subtitle:
+      "A centralized Lost and Found Management System with reporting, claims, notifications, and admin moderation",
     heroImage: hcdcLFMSHero,
     year: "2023",
-    problem: "Lost and found items at HCDC were reported informally, word of mouth, group chats, bulletin boards. No central record meant items went unclaimed and disputes had no audit trail.",
+    problem:
+      "Lost and found items at HCDC were reported informally, word of mouth, group chats, bulletin boards. No central record meant items went unclaimed and disputes had no audit trail.",
     technicalDecisions: [
       "Role-based access at the API layer, not just the UI: admin-only endpoints validate the role on every request so a user who inspects the frontend cannot call moderation routes directly.",
       "Cloudinary for image uploads: offloads resizing and storage from the Django server, keeping the API layer stateless and the server footprint small.",
@@ -177,7 +350,7 @@ export const projects: Project[] = [
       "Role-based access control (user and admin roles)",
       "Responsive UI with light, dark, and system theme support",
     ],
-    role: "Solo Developer",
+    role: "Sole Full Stack Developer",
     stack: [
       "React",
       "TypeScript",
@@ -189,7 +362,5 @@ export const projects: Project[] = [
     ],
     gallery: hcdcLFMSImages,
     github: "https://github.com/Hanseooo/hcdc-lfms",
-    client: "HCDC",
-    clientConsent: true,
   },
 ];

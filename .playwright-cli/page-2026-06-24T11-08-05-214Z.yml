@@ -1,0 +1,99 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic:
+      - generic: H
+      - generic: A
+      - generic: "N"
+      - generic: S
+      - generic: E
+      - generic: O
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: H
+      - generic [ref=e5]: A
+      - generic [ref=e6]: "N"
+      - generic [ref=e7]: S
+      - generic [ref=e8]: E
+      - generic [ref=e9]: O
+    - paragraph [ref=e10]: "00"
+    - paragraph [ref=e11]: Portfolio
+  - banner [ref=e12]:
+    - navigation [ref=e13]:
+      - link "Hanseo" [ref=e14] [cursor=pointer]:
+        - /url: /
+      - button "Open menu" [ref=e16]
+  - dialog:
+    - list:
+      - listitem:
+        - button: Home
+      - listitem:
+        - button: Projects
+      - listitem:
+        - button: Experience
+      - listitem:
+        - button: Certificates
+  - generic [ref=e19]:
+    - img [ref=e20]
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: Certificate
+        - generic [ref=e29]: Cisco Networking Academy
+        - generic [ref=e31]: December 8, 2025
+      - heading "Introduction to Modern AI" [level=1] [ref=e32]
+      - paragraph [ref=e33]: "Covers the foundations of modern AI: machine learning paradigms, neural network architectures, large language models, and responsible AI principles. Completed through Cisco's self-paced Networking Academy curriculum with a verified credential on Credly."
+      - link "View Credential" [ref=e36] [cursor=pointer]:
+        - /url: https://www.credly.com/badges/505dca5f-4aa7-48c6-9b06-c37495b9b9d0/public_url
+        - img
+        - text: View Credential
+  - generic [ref=e40]:
+    - heading "Certificate" [level=2] [ref=e41]
+    - img "Introduction to Modern AI" [ref=e43]
+  - generic [ref=e48]:
+    - link "National Programming Challenge 2024 Next → National Programming Challenge 2024 Codechum" [ref=e50] [cursor=pointer]:
+      - /url: /certificates/national-programming-challenge-2024
+      - img "National Programming Challenge 2024" [ref=e51]
+      - generic [ref=e53]:
+        - paragraph [ref=e54]:
+          - generic [ref=e55]: Next
+          - generic [ref=e56]: →
+        - heading "National Programming Challenge 2024" [level=3] [ref=e57]
+        - paragraph [ref=e58]: Codechum
+    - link "Eskwelabs AI Solution Development Track ← Previous Eskwelabs AI Solution Development Track Eskwelabs" [ref=e60] [cursor=pointer]:
+      - /url: /certificates/eskwelabs-ai-solution-development-track
+      - img "Eskwelabs AI Solution Development Track" [ref=e61]
+      - generic [ref=e63]:
+        - paragraph [ref=e64]:
+          - generic [ref=e65]: ←
+          - generic [ref=e66]: Previous
+        - heading "Eskwelabs AI Solution Development Track" [level=3] [ref=e67]
+        - paragraph [ref=e68]: Eskwelabs
+  - button "Back to Certificates" [ref=e74]:
+    - img [ref=e76]
+    - generic [ref=e78]: Back to Certificates
+  - contentinfo [ref=e79]:
+    - generic [ref=e80]:
+      - heading "Let’s Connect." [level=2] [ref=e82]:
+        - text: Let’s
+        - text: Connect.
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - link "Email" [ref=e86] [cursor=pointer]:
+            - /url: mailto:amoguishans@gmail.com
+            - img [ref=e87]
+            - generic [ref=e90]: Email
+            - img [ref=e91]
+          - link "LinkedIn" [ref=e94] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/hanseooo
+            - img [ref=e95]
+            - generic [ref=e99]: LinkedIn
+            - img [ref=e100]
+          - link "GitHub" [ref=e103] [cursor=pointer]:
+            - /url: https://github.com/Hanseooo
+            - img [ref=e104]
+            - generic [ref=e107]: GitHub
+            - img [ref=e108]
+        - generic [ref=e111]:
+          - generic [ref=e112]: © 2026 Hans Amoguis
+          - generic [ref=e113]: Building with intent
+  - button "Open Next.js Dev Tools" [ref=e119] [cursor=pointer]:
+    - img [ref=e120]

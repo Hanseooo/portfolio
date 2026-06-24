@@ -16,6 +16,7 @@ const chapters: Chapter[] = [
   { id: "stack", title: "Stack", number: "03" },
   { id: "work", title: "Selected Work", number: "04" },
   { id: "trajectory", title: "Trajectory", number: "05" },
+  { id: "credentials", title: "Credentials", number: "06" },
 ];
 
 export default function ChapterNav() {

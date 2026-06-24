@@ -38,6 +38,7 @@
   --popover-foreground: #09090B;
   --primary: #e10600;
   --primary-foreground: #FFFFFF;
+  --primary-glow: rgba(225, 6, 0, 0.8);
   --secondary: #F4F4F5;
   --secondary-foreground: #09090B;
   --muted: #F4F4F5;
@@ -59,6 +60,7 @@
   --popover-foreground: #FAFAFA;
   --primary: #00E5FF;
   --primary-foreground: #000000;
+  --primary-glow: rgba(0, 229, 255, 0.8);
   --secondary: #18181B;
   --secondary-foreground: #FAFAFA;
   --muted: #18181B;

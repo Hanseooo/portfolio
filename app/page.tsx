@@ -8,6 +8,7 @@ import PhilosophySection from "@/components/sections/PhilosophySection";
 import FeaturedProjectsSection from "@/components/sections/FeaturedProjectsSection";
 import TechStackSection from "@/components/sections/TechStackSection";
 import ExperienceSnapshotSection from "@/components/sections/ExperienceSnapshotSection";
+import FeaturedCertificatesSection from "@/components/sections/FeaturedCertificatesSection";
 import LiveActivity from "@/components/sections/LiveActivity";
 import { useResetScrollTop } from "@/components/utils/useResetScrollTop";
 import { ScrollTrigger } from "@/lib/gsap";
@@ -31,6 +32,7 @@ export default function Home() {
           <TechStackSection id="stack" />
           <FeaturedProjectsSection id="work" />
           <ExperienceSnapshotSection id="trajectory" />
+          <FeaturedCertificatesSection id="credentials" />
           <LiveActivity />
         </main>
       </div>

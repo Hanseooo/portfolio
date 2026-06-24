@@ -3,8 +3,10 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { clipReveal, fadeUpReveal } from "@/lib/motion";
 
 export default function ExperienceSnapshotSection({ id }: { id: string }) {
   const reducedMotion = usePrefersReducedMotion();
@@ -75,19 +77,24 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
     <section id={id} className="relative min-h-screen px-6 py-32">
       <div className="mx-auto w-full max-w-[1400px]">
         <div className="mb-20 flex items-end justify-between border-b border-border pb-8">
-          <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground">
-            Experience
-          </h2>
-          <Link
-            href="/experience"
-            className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+          <motion.h2
+            {...clipReveal(reducedMotion)}
+            className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground"
           >
-            <span>Full History</span>
-            <ArrowUpRight
-              size={16}
-              className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-            />
-          </Link>
+            Experience
+          </motion.h2>
+          <motion.div {...fadeUpReveal(reducedMotion, 0.15)}>
+            <Link
+              href="/experience"
+              className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+            >
+              <span>Full History</span>
+              <ArrowUpRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
+            </Link>
+          </motion.div>
         </div>
 
         {/* Timeline wrapper — single animated line replaces per-entry border-l */}
@@ -125,10 +132,10 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
               Full-Stack Web Developer
             </h3>
             <p className="font-mono text-sm uppercase tracking-widest text-muted-foreground/80 mb-6">
-              Freelance // 2023 - 2024
+              Freelance
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Built The Podium for HCDC's VPAA, a seminar tracking platform with QR attendance, certificate generation, and email notifications. Also built HCDC LFMS, a lost and found platform with real-time claims, moderation, and role-based access control.
+              Built a custom ordering form for a cookie seller with a dynamic form builder, analytics, ocr for extracting reference numbers from receipts, and automated email notifications. The client was able to process orders 50% faster compared to using google forms where visuals were limited.
             </p>
           </div>
         </div>

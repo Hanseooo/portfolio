@@ -80,7 +80,7 @@ export default function ProjectBrief({ project }: { project: Project }) {
               {project.stack.map((tech) => (
                 <li
                   key={tech}
-                  className="rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
+                  className="bg-foreground/5 rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
                 >
                   {tech}
                 </li>
@@ -97,7 +97,7 @@ export default function ProjectBrief({ project }: { project: Project }) {
                 {project.integrations.map((item) => (
                   <li
                     key={item}
-                    className="rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
+                    className="bg-foreground/5 rounded-none border border-border px-3 py-1 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/80"
                   >
                     {item}
                   </li>

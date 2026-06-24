@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic:
+      - generic: H
+      - generic: A
+      - generic: "N"
+      - generic: S
+      - generic: E
+      - generic: O
+  - button "Toggle theme" [ref=e123]:
+    - img [ref=e124]
+  - banner [ref=e12]:
+    - navigation [ref=e13]:
+      - link "Hanseo" [ref=e14] [cursor=pointer]:
+        - /url: /
+      - button "Open menu" [ref=e16]
+  - dialog:
+    - list:
+      - listitem:
+        - button: Home
+      - listitem:
+        - button: Projects
+      - listitem:
+        - button: Experience
+      - listitem:
+        - button: Certificates
+  - generic [ref=e131]:
+    - img [ref=e132]
+    - generic [ref=e137]:
+      - generic [ref=e138]:
+        - generic [ref=e139]: Certificate
+        - generic [ref=e141]: Codechum
+        - generic [ref=e143]: December 5, 2024
+      - heading "National Programming Challenge 2024" [level=1] [ref=e144]
+      - paragraph [ref=e145]: Competed in a national-level algorithmic programming competition hosted by Codechum, testing problem-solving speed and accuracy across data structures, algorithms, and logic challenges under timed conditions.
+      - link "View Credential" [ref=e148] [cursor=pointer]:
+        - /url: https://hcdc.codechum.com/certificates/4235
+        - img
+        - text: View Credential
+  - generic [ref=e152]:
+    - heading "Certificate" [level=2] [ref=e153]
+    - img "National Programming Challenge 2024" [ref=e155]
+  - generic [ref=e160]:
+    - link "Python Essentials 1 Next → Python Essentials 1 Cisco Networking Academy" [ref=e162] [cursor=pointer]:
+      - /url: /certificates/python-essentials-1
+      - img "Python Essentials 1" [ref=e163]
+      - generic [ref=e165]:
+        - paragraph [ref=e166]:
+          - generic [ref=e167]: Next
+          - generic [ref=e168]: →
+        - heading "Python Essentials 1" [level=3] [ref=e169]
+        - paragraph [ref=e170]: Cisco Networking Academy
+    - link "Introduction to Modern AI ← Previous Introduction to Modern AI Cisco Networking Academy" [ref=e172] [cursor=pointer]:
+      - /url: /certificates/introduction-to-modern-ai
+      - img "Introduction to Modern AI" [ref=e173]
+      - generic [ref=e175]:
+        - paragraph [ref=e176]:
+          - generic [ref=e177]: ←
+          - generic [ref=e178]: Previous
+        - heading "Introduction to Modern AI" [level=3] [ref=e179]
+        - paragraph [ref=e180]: Cisco Networking Academy
+  - button "Back to Certificates" [ref=e186]:
+    - img [ref=e188]
+    - generic [ref=e190]: Back to Certificates
+  - contentinfo [ref=e79]:
+    - generic [ref=e80]:
+      - heading "Let’s Connect." [level=2] [ref=e82]:
+        - text: Let’s
+        - text: Connect.
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - link "Email" [ref=e86] [cursor=pointer]:
+            - /url: mailto:amoguishans@gmail.com
+            - img [ref=e87]
+            - generic [ref=e90]: Email
+            - img [ref=e91]
+          - link "LinkedIn" [ref=e94] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/hanseooo
+            - img [ref=e95]
+            - generic [ref=e99]: LinkedIn
+            - img [ref=e100]
+          - link "GitHub" [ref=e103] [cursor=pointer]:
+            - /url: https://github.com/Hanseooo
+            - img [ref=e104]
+            - generic [ref=e107]: GitHub
+            - img [ref=e108]
+        - generic [ref=e111]:
+          - generic [ref=e112]: © 2026 Hans Amoguis
+          - generic [ref=e113]: Building with intent
+  - button "Open Next.js Dev Tools" [ref=e119] [cursor=pointer]:
+    - img [ref=e120]
+  - alert [ref=e130]: National Programming Challenge 2024 | Hans Amoguis | Hans Amoguis

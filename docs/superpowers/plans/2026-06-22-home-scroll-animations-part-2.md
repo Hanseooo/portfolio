@@ -309,7 +309,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
             href="/experience"
             className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
           >
-            <span>Full History</span>
+            <span>History</span>
             <ArrowUpRight
               size={16}
               className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"

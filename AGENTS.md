@@ -1,170 +1,67 @@
-# AGENTS.md
+# Project Agents Configuration
 
-This file guides coding agents working in this repository.
-Scope: entire repo (`C:\Users\Asus\Desktop\Portfolio\portfolio`).
+## Metadata
+- Owner: `Hanseooo (amoguishans@gmail.com)`
+- Last reviewed: `2026-06-23`
+- Review cadence: `monthly`
 
-## Project Snapshot
+## Scope & Precedence
+- This file records repo-specific deltas only.
+- Global behavioral rules in `~/.claude/CLAUDE.md` remain primary (Karpathy principles, workflow orchestration, task management).
+- Conflict order: Safety > Security > User intent > Workflow > Style.
 
-- Framework: Next.js 16 (App Router) + React 19 + TypeScript (strict mode).
-- Styling: Tailwind CSS v4 with CSS variables in `app/globals.css`.
-- UI primitives: shadcn/ui conventions (`components.json`, `components/ui/*`).
-- Animation/scroll stack: GSAP + ScrollTrigger + Lenis + Framer Motion.
-- Package manager: npm (`package-lock.json` is committed).
+## Project Context
+- Stack: `Next.js 16 + React 19 + TypeScript + Tailwind CSS v4 + Framer Motion + GSAP + Radix UI + shadcn/ui`
+- Architecture: Single-page portfolio (`app/` router) with chapter-based storytelling sections. Components live in `components/sections/`, `components/layout/`, `components/ui/`, `components/motion/`, `components/transitions/`, and `components/dialogs/`. Animation utilities in `lib/animation.ts`. No backend — static site with Vercel deployment target.
+- Critical paths: None (no auth/billing/infra). Animation smoothness and scroll behavior are the highest-risk areas for regressions.
 
-## Source Layout
+## Documentation Context Map
+- Always read: `docs/01-project-brief.md`, `docs/05-design-system.md`
+- Read when:
+  - UI/section work → `docs/04-visual-direction.md`, `docs/06-ux-interactions.md`
+  - Layout/structure → `docs/03-information-architecture.md`
+  - Responsive work → `docs/07-responsive-behavior.md`
+  - Accessibility → `docs/08-accessibility-performance.md`
+  - Implementation planning → `docs/09-implementation-plan.md`
+  - Active feature specs → `docs/superpowers/specs/` (most recent by date)
+  - Active feature plans → `docs/superpowers/plans/` (most recent by date)
 
-- `app/`: routes, layout, global CSS, and route-level pages.
-- `components/`: feature UI split by domain (`layout`, `sections`, `projects`, `ui`, `providers`, `utils`).
-- `lib/`: typed data/config helpers (projects, certificates, utils, animation constants).
-- `public/`: static assets.
+## Commands (Use Exactly)
+- Install: `npm install` (evidence: `package-lock.json`)
+- Lint: `npx eslint` (evidence: `package.json` scripts)
+- Build/Typecheck: `npm run build` (evidence: `package.json` scripts — Next.js build includes tsc)
+- Dev server: `npm run dev` (evidence: `package.json` scripts)
+- Unit tests: none configured
+- Integration/E2E: none configured
+- Pre-merge verify: `npm run lint && npm run build`
 
-## Setup Commands
+### Granular Testing
+- No test runner configured. Verify visually via `npm run dev` and browser inspection.
 
-- Install deps: `npm install`
-- Start dev server: `npm run dev`
-- Build production: `npm run build`
-- Start production server: `npm run start`
-- Lint repo: `npm run lint`
+## Critical Paths & Extra Review Triggers
+- Scroll/animation code (`lib/animation.ts`, `components/transitions/PageOverlay.tsx`, `components/motion/`) — jank or layout shift breaks the cinematic feel
+- `app/layout.tsx` — root layout; changes here affect all pages
+- `components/layout/ChapterNav.tsx` — global nav; test across all scroll positions
 
-## Build / Lint / Test Commands
+## Definition of Done
+- Completion report includes: commands run, key results, what was verified vs not, residual risks.
+- Never mark complete without proof (passing lint/build, visual verification in browser).
+- Ask: "Would a staff engineer approve this?"
 
-### Build
+## Security
+- Never read `.env` files or secrets. Request sanitized inputs from the user instead.
 
-- Full build: `npm run build`
-- Run build then serve: `npm run build && npm run start`
+## Tooling Lock
+- Canonical package manager: `npm` (evidence: `package-lock.json`)
+- Forbidden alternatives: `pnpm`, `yarn`, `bun`
 
-### Lint
+## Project-Specific Invariants
+- Color palette: deep black base + "Ice Blue" accents — do not introduce other accent colors
+- Chapter-based layout: sections are numbered/themed (01 Identity, 02 Approach, etc.) — maintain this structure
+- Animation: prefer Framer Motion for React component animations; GSAP for scroll-trigger sequences; never mix both on the same element
+- `prefers-reduced-motion` must be respected in all animation code
+- Tailwind v4 is in use — use the v4 API (no `tailwind.config.js`, config is in CSS or `postcss.config.mjs`)
 
-- Project lint: `npm run lint`
-- Lint one file: `npx eslint app/page.tsx`
-- Lint/fix one file: `npx eslint app/page.tsx --fix`
-- Lint whole repo with fixes: `npx eslint . --fix`
-
-### Type Checking
-
-- Type-check without emit: `npx tsc --noEmit`
-
-### Tests (Current Status)
-
-- There is currently no test framework configured (no Jest/Vitest/Playwright config and no `*.test.*` files).
-- There is no working `npm test` command at the moment.
-- For validation today, use: `npm run lint` and `npx tsc --noEmit` and `npm run build`.
-
-### Running a Single Test (When Tests Are Added)
-
-Use the framework-native single-test command once a runner is introduced:
-
-- Vitest single file: `npx vitest run path/to/file.test.ts`
-- Vitest single test name: `npx vitest run -t "test name"`
-- Jest single file: `npx jest path/to/file.test.ts`
-- Jest single test name: `npx jest -t "test name"`
-- Playwright single spec: `npx playwright test tests/example.spec.ts`
-- Playwright single test title: `npx playwright test -g "test name"`
-
-If you add a test framework, also add scripts to `package.json`:
-
-- `"test"`: full suite
-- `"test:watch"`: watch mode (unit tests)
-- `"test:one"`: targeted single file/name helper
-
-## Cursor / Copilot Rules
-
-- `.cursorrules`: not found.
-- `.cursor/rules/`: not found.
-- `.github/copilot-instructions.md`: not found.
-- No external agent-rule files are currently enforced beyond this document and repo configs.
-
-## Code Style Guidelines
-
-### General Principles
-
-- Keep changes minimal and scoped; avoid broad refactors unless requested.
-- Preserve existing architecture and naming in the touched area.
-- Prefer readability over cleverness; avoid over-abstraction.
-- Do not add headers/license blocks unless explicitly requested.
-
-### TypeScript and Types
-
-- `tsconfig` has `strict: true`; keep all new code type-safe.
-- Prefer explicit interfaces/types for shared props and domain data.
-- Use narrow unions/literal types when values are constrained.
-- Avoid `any`; if unavoidable, isolate and document why in-line.
-- Prefer typed utility helpers (example pattern: `cn(...inputs: ClassValue[])`).
-- For route params in this codebase, follow existing Next 16 pattern used in pages (`params: Promise<{ slug: string }>` + `use(params)`).
-
-### React / Next.js Conventions
-
-- Add `"use client"` only when component needs hooks/browser APIs/event handlers.
-- Keep server/client boundaries intentional; do not move large trees to client unnecessarily.
-- Prefer small composable components in `components/` over monolithic page files.
-- Use `notFound()` for missing dynamic resources where UX should be a 404.
-- Keep provider wiring centralized in `app/layout.tsx` unless route-specific behavior is required.
-
-### Imports
-
-- Use `@/*` alias for internal imports (configured in `tsconfig.json`).
-- Prefer absolute alias imports across folders; use relative imports for same-folder siblings when already established.
-- Group imports in this order when practical:
-  1) framework/external packages,
-  2) internal alias imports,
-  3) local relative imports,
-  4) type-only imports.
-- Remove unused imports; avoid duplicate import lines.
-
-### Naming
-
-- Components: PascalCase (`ProjectGallery`, `ThemeProvider`).
-- Hooks: camelCase with `use` prefix (`useScrollManager`, `useHorizontalDrag`).
-- Utility files/functions: descriptive camelCase (`browserInfo`, `getRuntimeEnv`).
-- Constants: `UPPER_SNAKE_CASE` only for true compile-time constants; otherwise `const` camelCase.
-- Route segment folders should remain lowercase and URL-safe.
-
-### Formatting
-
-- Follow existing file-local style for semicolons/quote usage; do not reformat unrelated files.
-- Prefer double quotes in non-shadcn files if creating new code in app/lib/components areas that already use them.
-- Keep JSX prop wrapping readable; avoid very long single-line JSX.
-- Keep Tailwind class lists logically grouped (layout -> spacing -> typography -> color -> effects).
-- Run lint after edits; use `--fix` only if it does not cause broad noisy diffs.
-
-### UI and Styling
-
-- Reuse design tokens and CSS vars from `app/globals.css` (`--primary`, `--background`, etc.).
-- Prefer existing utility classes/components before introducing new custom CSS.
-- Keep dark-mode behavior compatible with `next-themes` and existing `.dark` tokens.
-- Maintain responsiveness and avoid regressions in mobile/webview behavior.
-
-### Data and Domain Objects
-
-- Keep structured content typed in `lib/*` (projects/certificates/etc.).
-- Co-locate related type definitions with domain data when practical.
-- When extending data models, update all rendering consumers in `app/` and `components/`.
-
-### Error Handling and Edge Cases
-
-- Fail gracefully for missing content: prefer `notFound()` for dynamic routes.
-- Guard browser-only APIs with runtime checks when code can execute during SSR.
-- For optional links/media, render conditionally rather than assuming existence.
-- Avoid swallowing errors silently; at minimum, keep behavior deterministic and user-safe.
-
-### Performance and Animation
-
-- Keep GSAP/Lenis/ScrollTrigger lifecycle cleanup explicit in effects.
-- Avoid creating duplicate animation instances on re-render.
-- Use `requestAnimationFrame` and cleanup patterns consistent with existing providers/hooks.
-- Prefer route-level transitions/components already in repo (`PageTransition`, `TransitionProvider`).
-
-### Accessibility and UX
-
-- Ensure interactive elements remain keyboard accessible.
-- Preserve visible focus styles (Tailwind/variant classes already support this in UI primitives).
-- Always provide meaningful `alt` text for images.
-- Keep motion tasteful; avoid blocking core navigation/content.
-
-## Change Checklist for Agents
-
-- Run `npm run lint`.
-- Run `npx tsc --noEmit` for typed changes.
-- Run `npm run build` for route/config/provider-level changes.
-- Confirm no accidental edits to unrelated files.
-- Summarize touched files and behavior changes in your handoff.
+## Validation Notes
+- No test suite exists — all verification is manual (lint + build + visual browser check)
+- No README.md at repo root — `docs/01-project-brief.md` serves as project intent doc
