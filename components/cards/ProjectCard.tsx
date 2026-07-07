@@ -18,6 +18,7 @@ export default function ProjectCard({ project, idx }: Props) {
           src={project.heroImage}
           alt={project.title}
           fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />

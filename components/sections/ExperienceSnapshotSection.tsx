@@ -86,7 +86,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
           <motion.div {...fadeUpReveal(reducedMotion, 0.15)}>
             <Link
               href="/experience"
-              className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+              className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
             >
               <span>View All</span>
               <ArrowUpRight

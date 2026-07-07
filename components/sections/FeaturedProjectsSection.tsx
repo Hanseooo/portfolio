@@ -113,7 +113,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
             </h2>
             <Link
               href="/projects"
-              className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+              className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
             >
               <span>View All</span>
               <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -155,7 +155,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
         </motion.h2>
         <Link
           href="/projects"
-          className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+          className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
         >
           <span>All Projects</span>
           <ArrowUpRight
@@ -182,6 +182,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   src={project.heroImage}
                   alt={project.title}
                   fill
+                  sizes="60vw"
                   priority={idx === 0}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
