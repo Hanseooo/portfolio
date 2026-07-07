@@ -353,7 +353,7 @@ export const projects: Project[] = [
       "A centralized Lost and Found Management System with reporting, claims, notifications, and admin moderation",
     heroImage: hcdcLFMSHero,
     ogImageSrc: "app/assets/projects/hcdcLFMS/hero.webp",
-    year: "2023",
+    year: "2024",
     problem:
       "Lost and found items at HCDC were reported informally, word of mouth, group chats, bulletin boards. No central record meant items went unclaimed and disputes had no audit trail.",
     technicalDecisions: [
