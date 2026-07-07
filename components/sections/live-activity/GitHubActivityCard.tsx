@@ -1,8 +1,9 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { ArrowRight, Lock, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Scrollbar from "@/components/ui/Scrollbar";
 import type { ActivityResponse, GitHubActivity } from "@/lib/activity/types";
 import { clampText, formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
 import GitHubHeatmap from "./WeeklyActivityBars";
@@ -44,6 +45,7 @@ function GitHubActivityCard({
   loading = false,
 }: GitHubActivityCardProps) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const currentYear = new Date().getFullYear();
   const data = payload?.data;
   const calendar = data?.calendar ?? [];
@@ -137,7 +139,8 @@ function GitHubActivityCard({
                   </DialogTitle>
                 </DialogHeader>
 
-                <div data-lenis-prevent className="scrollbar-live min-h-0 flex-1 space-y-8 overflow-y-auto px-6 pb-6 pt-1">
+                <div className="relative min-h-0 flex-1">
+                <div ref={scrollRef} data-lenis-prevent className="no-native-scrollbar h-full space-y-8 overflow-y-auto px-6 pb-6 pt-1">
                   <div>
                     <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
                       Top Languages
@@ -229,6 +232,8 @@ function GitHubActivityCard({
                       <p className="text-sm text-foreground/75">No active repositories found.</p>
                     )}
                   </div>
+                </div>
+                <Scrollbar containerRef={scrollRef} />
                 </div>
               </DialogContent>
             </Dialog>
