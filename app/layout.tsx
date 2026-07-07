@@ -56,9 +56,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  verification: {
-    google: "REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_CODE",
-  },
   openGraph: {
     type: "website",
     url: siteUrl,
