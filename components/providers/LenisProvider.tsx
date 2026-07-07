@@ -2,12 +2,9 @@
 
 import Lenis from "lenis";
 import { useEffect, type ReactNode, useRef } from "react";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { usePathname } from "next/navigation";
 import { getRuntimeEnv } from "../utils/browserInfo";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface LenisProviderProps {
   children: ReactNode;
@@ -16,7 +13,6 @@ interface LenisProviderProps {
 export function LenisProvider({ children }: LenisProviderProps) {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
-  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const isMobile = getRuntimeEnv().isMobile;
@@ -31,19 +27,17 @@ export function LenisProvider({ children }: LenisProviderProps) {
     lenisRef.current = lenis;
     window.__lenis = lenis;
 
-    const raf = (time: number) => {
-      lenis.raf(time);
-      ScrollTrigger.update();
-      rafIdRef.current = requestAnimationFrame(raf);
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const update = (time: number) => {
+      lenis.raf(time * 1000);
     };
 
-    rafIdRef.current = requestAnimationFrame(raf);
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
-
+      gsap.ticker.remove(update);
       window.__lenis = undefined;
       lenis.destroy();
       lenisRef.current = null;
