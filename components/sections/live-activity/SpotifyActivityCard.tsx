@@ -1,7 +1,8 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Scrollbar from "@/components/ui/Scrollbar";
 import type { ActivityResponse, SpotifyActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
 import { ArrowRight, AlertTriangle } from "lucide-react";
@@ -49,6 +50,7 @@ function SpotifyActivityCard({
   loading = false,
 }: SpotifyActivityCardProps) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [recentLoading, setRecentLoading] = useState(false);
   const [topLoading, setTopLoading] = useState(false);
   const [recentPayload, setRecentPayload] = useState<ActivityResponse<SpotifyActivity> | null>(null);
@@ -246,7 +248,8 @@ function SpotifyActivityCard({
                 </DialogTitle>
               </DialogHeader>
 
-              <div data-lenis-prevent className="scrollbar-live min-h-0 flex-1 space-y-8 overflow-y-auto px-6 pb-6 pt-1">
+              <div className="relative min-h-0 flex-1">
+              <div ref={scrollRef} data-lenis-prevent className="no-native-scrollbar h-full space-y-8 overflow-y-auto px-6 pb-6 pt-1">
                 <section>
                   <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
                     Recent Tracks
@@ -364,6 +367,8 @@ function SpotifyActivityCard({
                     <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Top artists unavailable.</p>
                   )}
                 </HorizontalRail>
+              </div>
+              <Scrollbar containerRef={scrollRef} />
               </div>
             </DialogContent>
             </Dialog>
