@@ -1,6 +1,7 @@
 "use client";
 
-import { Activity, Gamepad2, Headphones, PlayCircle } from "lucide-react";
+import { memo } from "react";
+import { Activity, Gamepad2, Headphones, PlayCircle, AlertTriangle } from "lucide-react";
 import type { ActivityResponse, DiscordActivity } from "@/lib/activity/types";
 import { formatClockTime } from "@/lib/activity/formatters";
 import { useClientReady } from "@/components/utils/useClientReady";
@@ -20,9 +21,15 @@ const statusClassMap: Record<DiscordActivity["status"], string> = {
 
 function LoadingState() {
   return (
-    <div className="space-y-4 animate-pulse">
-      <div className="h-10 w-full bg-foreground/10" />
-      <div className="h-3 w-2/3 bg-foreground/10" />
+    <div className="space-y-6 pt-2 animate-pulse">
+      <div className="flex items-center gap-4">
+        <div className="h-14 w-14 shrink-0 bg-foreground/10" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="h-4 w-1/2 bg-foreground/10" />
+          <div className="h-3 w-1/3 bg-foreground/10" />
+          <div className="h-3 w-1/4 bg-foreground/10 mt-3" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -51,7 +58,7 @@ function ActivityFallbackIcon({
   return <Activity className={iconClass} aria-hidden="true" />;
 }
 
-export default function DiscordStatusCard({
+function DiscordStatusCard({
   payload,
   loading = false,
 }: DiscordStatusCardProps) {
@@ -76,9 +83,10 @@ export default function DiscordStatusCard({
       {loading ? <LoadingState /> : null}
 
       {!loading && payload && !payload.ok ? (
-        <p className="text-sm text-foreground/75">
-          {payload.error?.message ?? "Discord presence is temporarily unavailable."}
-        </p>
+        <div className="flex items-center gap-3 rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <p>{payload.error?.message ?? "Discord presence is temporarily unavailable."}</p>
+        </div>
       ) : null}
 
       {!loading && payload?.ok && data ? (
@@ -89,6 +97,8 @@ export default function DiscordStatusCard({
               <img
                 src={data.user.avatarUrl}
                 alt={`${data.user.displayName ?? data.user.username} avatar`}
+                loading="lazy"
+                decoding="async"
                 className={`h-14 w-14 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
               />
             ) : (
@@ -118,6 +128,8 @@ export default function DiscordStatusCard({
                   <img
                     src={data.live.spotify.albumArtUrl}
                     alt={`${data.live.spotify.album} cover`}
+                    loading="lazy"
+                    decoding="async"
                     className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                   />
                 ) : (
@@ -158,6 +170,8 @@ export default function DiscordStatusCard({
                   <img
                     src={data.live.gaming.imageUrl}
                     alt={`${data.live.gaming.name} cover`}
+                    loading="lazy"
+                    decoding="async"
                     className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                   />
                 ) : (
@@ -194,6 +208,8 @@ export default function DiscordStatusCard({
                       <img
                         src={activity.imageUrl}
                         alt={`${activity.name} artwork`}
+                        loading="lazy"
+                        decoding="async"
                         className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
                       />
                     ) : (
@@ -229,3 +245,5 @@ export default function DiscordStatusCard({
     </article>
   );
 }
+
+export default memo(DiscordStatusCard);

@@ -23,7 +23,7 @@ const categories = [
   },
   {
     label: "Tools",
-    items: ["Claude Code", "Codex", "Gemini CLI", "OpenCode", "Playwright CLI", "Github CLI", "Docker"],
+    items: ["Claude Code", "Codex", "Antigravity CLI", "OpenCode", "Playwright CLI", "Github CLI", "Docker"],
     duration: "45s",
   },
   {

@@ -7,6 +7,9 @@ import type { ReactNode } from "react";
 import AppProviders from "@/components/providers/AppProviders";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Preloader from "@/components/ui/Preloader";
+import JsonLd from "@/components/seo/JsonLd";
+import { GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/components/utils/externalLinks";
+import hansPortrait from "@/app/assets/myImages/hans.webp";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
-const siteUrl = "https://hanseo.tech";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -70,6 +73,25 @@ export const metadata: Metadata = {
   },
 };
 
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Hans Amoguis",
+  alternateName: "Hanseo",
+  jobTitle: "Full-Stack Engineer",
+  url: siteUrl,
+  image: new URL(hansPortrait.src, siteUrl).toString(),
+  sameAs: [GITHUB_URL, LINKEDIN_URL],
+};
+
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Hans Amoguis Portfolio",
+  url: siteUrl,
+  author: personLd,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -78,6 +100,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} font-sans`} suppressHydrationWarning>
       <body className="bg-background text-foreground antialiased min-h-screen cursor-none">
+        <JsonLd data={personLd} />
+        <JsonLd data={websiteLd} />
         <CustomCursor />
         <AppProviders>
           <Preloader />

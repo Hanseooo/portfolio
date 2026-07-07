@@ -1,6 +1,16 @@
 import PageTransition from "@/components/layout/PageTransition";
 import { experience } from "@/lib/experience";
 import BackButton from "@/components/utils/BackButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Experience",
+  description:
+    "Professional experience of Hans Amoguis — AI Solutions Development Intern at Eskwelabs and freelance full-stack development work.",
+  alternates: {
+    canonical: "/experience",
+  },
+};
 
 export default function ExperiencePage() {
   return (

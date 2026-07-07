@@ -3,6 +3,16 @@ import { certificates } from "@/lib/certificates";
 import Image from "next/image";
 import Link from "next/link";
 import BackButton from "@/components/utils/BackButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Certificates",
+  description:
+    "Certifications and credentials earned by Hans Amoguis, including Cisco Networking Academy and competitive programming credentials.",
+  alternates: {
+    canonical: "/certificates",
+  },
+};
 
 export default function CertificatesPage() {
   return (

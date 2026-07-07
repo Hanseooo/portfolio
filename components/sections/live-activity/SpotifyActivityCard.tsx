@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { ActivityResponse, SpotifyActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, AlertTriangle } from "lucide-react";
 import { useClientReady } from "@/components/utils/useClientReady";
 import { getRuntimeEnv } from "@/components/utils/browserInfo";
 
@@ -15,11 +15,14 @@ type SpotifyActivityCardProps = {
 
 function LoadingState() {
   return (
-    <div className="space-y-4 animate-pulse">
-      <div className="h-16 w-full bg-foreground/10" />
-      <div className="space-y-2">
-        <div className="h-3 w-2/3 bg-foreground/10" />
-        <div className="h-3 w-1/2 bg-foreground/10" />
+    <div className="space-y-4 animate-pulse py-2">
+      <div className="flex items-center gap-4">
+        <div className="h-16 w-16 shrink-0 bg-foreground/10" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="h-4 w-3/4 bg-foreground/10" />
+          <div className="h-3 w-1/2 bg-foreground/10" />
+          <div className="h-3 w-1/4 bg-foreground/10 mt-2" />
+        </div>
       </div>
     </div>
   );
@@ -41,7 +44,7 @@ function HorizontalRail({ title, children }: RailProps) {
   );
 }
 
-export default function SpotifyActivityCard({
+function SpotifyActivityCard({
   payload,
   loading = false,
 }: SpotifyActivityCardProps) {
@@ -171,9 +174,10 @@ export default function SpotifyActivityCard({
       {loading ? <LoadingState /> : null}
 
       {!loading && payload && !payload.ok ? (
-        <p className="text-sm text-foreground/75">
-          {payload.error?.message ?? "Spotify activity is temporarily unavailable."}
-        </p>
+        <div className="flex items-center gap-3 rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <p>{payload.error?.message ?? "Spotify activity is temporarily unavailable."}</p>
+        </div>
       ) : null}
 
       {!loading && payload?.ok && data ? (
@@ -191,6 +195,8 @@ export default function SpotifyActivityCard({
                   <img
                     src={data.nowPlaying.artworkUrl}
                     alt={`${data.nowPlaying.album} cover`}
+                    loading="lazy"
+                    decoding="async"
                     className={`h-16 w-16 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                   />
                 ) : (
@@ -246,7 +252,16 @@ export default function SpotifyActivityCard({
                     Recent Tracks
                   </p>
                   {recentLoading ? (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
+                    <ul className="space-y-4 animate-pulse">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <li key={i} className="min-w-0 pl-0">
+                          <div className="block py-1">
+                            <div className="h-4 w-2/3 bg-foreground/10 mb-2" />
+                            <div className="h-3 w-1/3 bg-foreground/10" />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   ) : detailsData?.recentTracks.length ? (
                     <ul className="space-y-4">
                       {detailsData.recentTracks.slice(0, 5).map((track) => (
@@ -272,7 +287,15 @@ export default function SpotifyActivityCard({
 
                 <HorizontalRail title="Top Tracks">
                   {topLoading ? (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
+                    <>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="w-36 shrink-0 snap-start animate-pulse">
+                          <div className="h-36 w-full border border-border bg-foreground/10 mb-3" />
+                          <div className="h-4 w-3/4 bg-foreground/10 mb-2" />
+                          <div className="h-3 w-1/2 bg-foreground/10" />
+                        </div>
+                      ))}
+                    </>
                   ) : detailsData?.topTracks.length ? (
                     detailsData.topTracks.slice(0, 5).map((track) => (
                       <a
@@ -287,6 +310,8 @@ export default function SpotifyActivityCard({
                           <img
                             src={track.artworkUrl}
                             alt={`${track.album} cover`}
+                            loading="lazy"
+                            decoding="async"
                             className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                           />
                         ) : (
@@ -303,7 +328,14 @@ export default function SpotifyActivityCard({
 
                 <HorizontalRail title="Top Artists">
                   {topLoading ? (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Loading details...</p>
+                    <>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="w-36 shrink-0 snap-start animate-pulse">
+                          <div className="h-36 w-full border border-border bg-foreground/10 mb-3" />
+                          <div className="h-4 w-3/4 bg-foreground/10" />
+                        </div>
+                      ))}
+                    </>
                   ) : detailsData?.topArtists.length ? (
                     detailsData.topArtists.slice(0, 5).map((artist) => (
                       <a
@@ -318,6 +350,8 @@ export default function SpotifyActivityCard({
                           <img
                             src={artist.artworkUrl}
                             alt={`${artist.name} artwork`}
+                            loading="lazy"
+                            decoding="async"
                             className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
                           />
                         ) : (
@@ -339,3 +373,5 @@ export default function SpotifyActivityCard({
     </article>
   );
 }
+
+export default memo(SpotifyActivityCard);

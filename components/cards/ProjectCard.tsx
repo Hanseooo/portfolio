@@ -1,126 +1,68 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import { Github, ExternalLink } from "lucide-react";
-import { useMagnetic } from "@/components/motion/useMagnetic";
-import { motionTokens } from "@/lib/motion";
-
+import { ArrowUpRight } from "lucide-react";
+import type { Project } from "@/lib/projects";
 
 type Props = {
-  slug: string;
-  title: string;
-  subtitle: string;
-  heroImage: string | StaticImageData;
-  github?: string | null;
-  live?: string | null;
+  project: Project;
+  idx: number;
 };
 
-export default function ProjectCard({
-  slug,
-  title,
-  subtitle,
-  heroImage,
-  github,
-  live,
-}: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useMagnetic(ref);
-
+export default function ProjectCard({ project, idx }: Props) {
   return (
-    <motion.article
-      className="project-card group relative hover:text-primary"
-      initial={{ y: 40, opacity: 0, scale: 1 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true, amount: 0.25 }}
-      whileHover={{ scale: 0.98 }}
-      transition={{
-        duration: motionTokens.duration.base,
-        ease: motionTokens.framerEase.enter,
-      }}
-    >
-      {/* IMAGE */}
-      <div
-        ref={ref}
-        className="relative aspect-video w-full overflow-hidden rounded-md sm:aspect-auto sm:h-[60vh]"
-      >
-        <motion.div
-          className="h-full w-full"
-          whileHover={{ scale: 1.05 }}
-          transition={{
-            duration: motionTokens.duration.feature,
-            ease: motionTokens.framerEase.enter,
-          }}
-        >
-          <Image
-            src={heroImage}
-            alt={title}
-            fill
-            sizes="(min-width: 1280px) 70vw, (min-width: 640px) 90vw, 100vw"
-            className="object-cover"
-          />
-        </motion.div>
-
-        <Link
-          href={`/projects/${slug}`}
-          aria-label={`Open ${title} project details`}
-          className="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    <Link href={`/projects/${project.slug}`} className="group block">
+      <div className="aspect-video w-full overflow-hidden relative border border-border bg-card">
+        <Image
+          src={project.heroImage}
+          alt={project.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
-
-        {/* ACTION ICONS */}
-        {(github || live) && (
-          <div className="absolute bottom-4 right-4 z-20 flex gap-3">
-            {github && (
-              <motion.a
-                href={github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${title} GitHub repository`}
-                // Change initial opacity to 1 on mobile, 0 on desktop
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                // For desktop hover
-                whileHover={{ scale: 1.1 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
-              >
-                <Github size={20} />
-              </motion.a>
-            )}
-
-            {live && (
-              <motion.a
-                href={live}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${title} live preview`}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.1 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-foreground backdrop-blur-md transition-colors hover:bg-primary hover:text-background sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
-              >
-                <ExternalLink size={20} />
-              </motion.a>
-            )}
-          </div>
+        <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
+        {project.client && (
+          <span className="absolute top-3 left-3 border border-primary/30 dark:border-primary/60 bg-white/90 dark:bg-black/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-primary backdrop-blur-sm shadow-sm">
+            Client
+          </span>
         )}
       </div>
-      {/* TEXT */}
-      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-        <h3 className="text-2xl sm:text-3xl font-semibold leading-tight">
-          {title}
+      <div className="mt-5 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-sm font-bold text-primary">0{idx + 1}</span>
+          <span className="font-mono text-xs text-muted-foreground">{project.year}</span>
+        </div>
+        <div className="h-px w-full bg-border" />
+        <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary flex items-start justify-between gap-2">
+          {project.title}
+          <ArrowUpRight size={20} className="mt-0.5 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </h3>
-
-        {/* Remove whitespace-nowrap or make it conditional */}
-        <span className="text-sm opacity-70 sm:whitespace-nowrap">
-          {subtitle}
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          {project.role}
         </span>
+        
+        {/* Subtitle / Overview preview */}
+        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mt-0.5">
+          {project.subtitle}
+        </p>
+        
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {project.stack.slice(0, 4).map((tech) => (
+            <span
+              key={tech}
+              className="bg-foreground/5 border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground/80 transition-colors group-hover:bg-foreground/10 group-hover:border-foreground/20"
+            >
+              {tech}
+            </span>
+          ))}
+          {project.stack.length > 4 && (
+            <span className="font-mono text-[9px] text-muted-foreground self-center ml-1">
+              +{project.stack.length - 4}
+            </span>
+          )}
+        </div>
       </div>
-    </motion.article>
+    </Link>
   );
 }

@@ -11,6 +11,7 @@ export interface Certificate {
   slug: string;
   issuer: string;
   image: StaticImageData;
+  ogImageSrc: string;
   date: string;
   credentialUrl: string | null;
   description?: string;
@@ -22,6 +23,7 @@ export const certificates: Certificate[] = [
     slug: "eskwelabs-ai-solution-development-track",
     issuer: "Eskwelabs",
     image: eskwelabsAITrackCert,
+    ogImageSrc: "app/assets/certificates/eskwelabs-cert.jpg",
     date: "May 9, 2026",
     credentialUrl: null,
     description:
@@ -32,6 +34,7 @@ export const certificates: Certificate[] = [
     slug: "introduction-to-modern-ai",
     issuer: "Cisco Networking Academy",
     image: introToModernAICert,
+    ogImageSrc: "app/assets/certificates/intro-to-modern-ai.webp",
     date: "December 8, 2025",
     credentialUrl:
       "https://www.credly.com/badges/505dca5f-4aa7-48c6-9b06-c37495b9b9d0/public_url",
@@ -43,6 +46,7 @@ export const certificates: Certificate[] = [
     slug: "national-programming-challenge-2024",
     issuer: "Codechum",
     image: nationalProgrammingChallenge2024,
+    ogImageSrc: "app/assets/certificates/national-programming-challenge-2024.webp",
     date: "December 5, 2024",
     credentialUrl: "https://hcdc.codechum.com/certificates/4235",
     description:
@@ -53,6 +57,7 @@ export const certificates: Certificate[] = [
     slug: "python-essentials-1",
     issuer: "Cisco Networking Academy",
     image: pythonEssentials1Cert,
+    ogImageSrc: "app/assets/certificates/pythonEssentials1.webp",
     date: "December 5, 2025",
     credentialUrl:
       "https://www.credly.com/badges/bdec1c5f-e5af-423d-b0e1-e5f934f97054/public_url",

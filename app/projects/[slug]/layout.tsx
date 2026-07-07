@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { projects } from "@/lib/projects";
+import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/components/utils/externalLinks";
+
+const baseUrl = SITE_URL;
+
+export async function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }));
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const baseUrl = "https://hanseo.tech";
   const { slug } = await params;
   const project = projects.find((item) => item.slug === slug);
 
@@ -50,10 +57,48 @@ export async function generateMetadata({
   };
 }
 
-export default function ProjectSlugLayout({
+export default async function ProjectSlugLayout({
   children,
+  params,
 }: {
   children: ReactNode;
+  params: Promise<{ slug: string }>;
 }) {
-  return children;
+  const { slug } = await params;
+  const project = projects.find((item) => item.slug === slug);
+
+  if (!project) {
+    return children;
+  }
+
+  const url = `${baseUrl}/projects/${project.slug}`;
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+      { "@type": "ListItem", position: 2, name: "Projects", item: `${baseUrl}/projects` },
+      { "@type": "ListItem", position: 3, name: project.title, item: url },
+    ],
+  };
+
+  const creativeWorkLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.subtitle,
+    image: new URL(project.heroImage.src, baseUrl).toString(),
+    url,
+    author: { "@type": "Person", name: "Hans Amoguis", url: baseUrl },
+    keywords: project.stack.join(", "),
+  };
+
+  return (
+    <>
+      <JsonLd data={breadcrumbLd} />
+      <JsonLd data={creativeWorkLd} />
+      {children}
+    </>
+  );
 }

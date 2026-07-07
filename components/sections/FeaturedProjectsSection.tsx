@@ -10,6 +10,7 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useClientReady } from "@/components/utils/useClientReady";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { clipReveal } from "@/lib/motion";
+import ProjectCard from "@/components/cards/ProjectCard";
 
 const FEATURED = projects.slice(0, 3);
 const CARD_VW = 1; // 100vw per card — full viewport, no bleed-through
@@ -112,7 +113,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
             </h2>
             <Link
               href="/projects"
-              className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+              className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
             >
               <span>View All</span>
               <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -120,7 +121,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
           </div>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {FEATURED.map((project, idx) => (
-              <VerticalCard key={project.title} project={project} idx={idx} />
+              <ProjectCard key={project.title} project={project} idx={idx} />
             ))}
           </div>
         </div>
@@ -154,9 +155,9 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
         </motion.h2>
         <Link
           href="/projects"
-          className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+          className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
         >
-          <span>View All</span>
+          <span>All Projects</span>
           <ArrowUpRight
             size={16}
             className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
@@ -181,12 +182,13 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   src={project.heroImage}
                   alt={project.title}
                   fill
+                  sizes="60vw"
                   priority={idx === 0}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
                 {project.client && (
-                  <span className="absolute top-4 left-4 border border-primary/60 bg-black/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-primary backdrop-blur-sm">
+                  <span className="absolute top-4 left-4 border border-primary/30 dark:border-primary/60 bg-white/90 dark:bg-black/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-primary backdrop-blur-sm shadow-sm">
                     Client
                   </span>
                 )}
@@ -216,7 +218,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
                   {project.stack.slice(0, 4).map((tech) => (
                     <span
                       key={tech}
-                      className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground"
+                      className="bg-foreground/5 border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground/80 transition-colors group-hover:bg-foreground/10 group-hover:border-foreground/20"
                     >
                       {tech}
                     </span>
@@ -242,67 +244,11 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
         >
           {FEATURED.map((project, idx) => (
             <motion.div variants={itemVariants} key={project.title}>
-              <VerticalCard project={project} idx={idx} />
+              <ProjectCard project={project} idx={idx} />
             </motion.div>
           ))}
         </motion.div>
       )}
     </section>
-  );
-}
-
-function VerticalCard({
-  project,
-  idx,
-}: {
-  project: (typeof FEATURED)[number];
-  idx: number;
-}) {
-  return (
-    <Link href={`/projects/${project.slug}`} className="group block">
-      <div className="aspect-video w-full overflow-hidden relative">
-        <Image
-          src={project.heroImage}
-          alt={project.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-primary/0 transition-colors duration-500 group-hover:bg-primary/5" />
-        {project.client && (
-          <span className="absolute top-3 left-3 border border-primary/60 bg-black/60 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-primary backdrop-blur-sm">
-            Client
-          </span>
-        )}
-      </div>
-      <div className="mt-4 flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-sm font-bold text-primary">0{idx + 1}</span>
-          <span className="font-mono text-xs text-muted-foreground">{project.year}</span>
-        </div>
-        <div className="h-px bg-border" />
-        <h3 className="text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary flex items-center gap-2">
-          {project.title}
-          <ArrowUpRight size={18} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-        </h3>
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-          {project.role}
-        </span>
-        <div className="flex flex-wrap gap-1.5">
-          {project.stack.slice(0, 3).map((tech) => (
-            <span
-              key={tech}
-              className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground"
-            >
-              {tech}
-            </span>
-          ))}
-          {project.stack.length > 3 && (
-            <span className="font-mono text-[9px] text-muted-foreground self-center">
-              +{project.stack.length - 3}
-            </span>
-          )}
-        </div>
-      </div>
-    </Link>
   );
 }

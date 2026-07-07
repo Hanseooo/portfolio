@@ -26,7 +26,7 @@ const cardVariants = {
 };
 
 const mobileCardVariants = {
-  hidden: { opacity: 0, x: 30 },
+  hidden: { opacity: 0, x: -5},
   visible: {
     opacity: 1,
     x: 0,
@@ -112,7 +112,7 @@ function SectionHeader() {
       </h2>
       <Link
         href="/certificates"
-        className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+        className="group flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
       >
         <span>View All</span>
         <ArrowUpRight

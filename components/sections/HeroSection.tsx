@@ -53,7 +53,7 @@ export default function HeroSection({ id }: { id: string }) {
     if (!reducedMotion) {
       const isFirstVisit = !sessionStorage.getItem("hasVisited");
       sessionStorage.setItem("hasVisited", "1");
-      delay = isFirstVisit ? 2500 : 1750;
+      delay = isFirstVisit ? 2000 : 1750;
     }
     const t = setTimeout(() => setEntered(true), delay);
     return () => clearTimeout(t);
