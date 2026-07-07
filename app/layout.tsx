@@ -24,10 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 const siteUrl = SITE_URL;
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#e10600" },
-    { media: "(prefers-color-scheme: dark)", color: "#00E5FF" },
-  ],
+  themeColor: "#e10600",
 };
 
 export const metadata: Metadata = {
