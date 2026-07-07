@@ -122,6 +122,51 @@
   background-clip: content-box;
 }
 
+.no-native-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-native-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-track {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  bottom: 0;
+  width: 8px;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.scrollbar-track--page {
+  position: fixed;
+  z-index: 90;
+}
+
+.scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  border-radius: 9999px;
+  background: var(--border);
+  cursor: grab;
+  touch-action: none;
+}
+
+.scrollbar-thumb:hover,
+.scrollbar-thumb.is-dragging {
+  background: var(--muted-foreground);
+}
+
+.scrollbar-thumb.is-dragging {
+  cursor: grabbing;
+}
+
 @keyframes ticker {
   to { transform: translateX(-50%); }
 }

@@ -26,6 +26,7 @@ export default function TransitionProvider({
     }
     if (reducedMotion) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActive(true);
     const timeout = setTimeout(() => setActive(false), HOLD_MS);
     return () => clearTimeout(timeout);
