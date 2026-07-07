@@ -116,7 +116,7 @@ function mapTrack(
 ): SpotifyActivity["nowPlaying"] {
   if (!track.name) return null;
 
-  const artworkUrl = track.album?.images?.[0]?.url ?? "";
+  const artworkUrl = track.album?.images?.[1]?.url ?? track.album?.images?.[0]?.url ?? "";
   const artists = track.artists?.map((artist) => artist.name).filter(Boolean) ?? [];
 
   return {
@@ -293,7 +293,7 @@ async function fetchTopData(accessToken: string): Promise<{ data: TopData; sourc
     topArtists = (payload.items ?? [])
       .map((artist) => ({
         name: artist.name,
-        artworkUrl: artist.images?.[0]?.url ?? "",
+        artworkUrl: artist.images?.[1]?.url ?? artist.images?.[0]?.url ?? "",
         artistUrl: artist.external_urls?.spotify ?? "",
       }))
       .slice(0, 5);

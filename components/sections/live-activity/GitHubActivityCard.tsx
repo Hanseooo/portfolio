@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, Lock } from "lucide-react";
+import { memo, useState } from "react";
+import { ArrowRight, Lock, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { ActivityResponse, GitHubActivity } from "@/lib/activity/types";
 import { clampText, formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
@@ -14,19 +14,32 @@ type GitHubActivityCardProps = {
 
 function LoadingState() {
   return (
-    <div className="space-y-4 animate-pulse">
-      <div className="h-4 w-44 bg-foreground/10" />
-      <div className="space-y-2">
-        <div className="h-3 w-full bg-foreground/10" />
-        <div className="h-3 w-11/12 bg-foreground/10" />
-        <div className="h-3 w-10/12 bg-foreground/10" />
+    <div className="space-y-5 animate-pulse">
+      <div className="grid grid-cols-1 gap-4 min-[500px]:grid-cols-2 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-border">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className={`py-2 lg:px-4 lg:py-0 ${i === 3 ? 'min-[500px]:col-span-2 lg:col-span-1 border-t lg:border-t-0 border-border' : ''}`}>
+            <div className="h-3 w-24 bg-foreground/10 mb-3" />
+            <div className="h-8 w-16 bg-foreground/10" />
+          </div>
+        ))}
       </div>
-      <div className="h-16 w-full bg-foreground/10" />
+      <div className="grid grid-cols-1 gap-4 min-[500px]:grid-cols-3 divide-y min-[500px]:divide-y-0 min-[500px]:divide-x divide-border mt-8">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="py-2 lg:px-4 lg:py-0">
+            <div className="h-3 w-20 bg-foreground/10 mb-3" />
+            <div className="h-7 w-12 bg-foreground/10" />
+          </div>
+        ))}
+      </div>
+      <div className="py-4 mt-2">
+        <div className="h-3 w-32 bg-foreground/10 mb-4" />
+        <div className="h-32 w-full bg-foreground/10 rounded-md" />
+      </div>
     </div>
   );
 }
 
-export default function GitHubActivityCard({
+function GitHubActivityCard({
   payload,
   loading = false,
 }: GitHubActivityCardProps) {
@@ -54,9 +67,10 @@ export default function GitHubActivityCard({
       {loading ? <LoadingState /> : null}
 
       {!loading && payload && !payload.ok ? (
-        <p className="text-sm text-foreground/75">
-          {payload.error?.message ?? "GitHub activity is temporarily unavailable."}
-        </p>
+        <div className="flex items-center gap-3 rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <p>{payload.error?.message ?? "GitHub activity is temporarily unavailable."}</p>
+        </div>
       ) : null}
 
       {!loading && payload?.ok && data ? (
@@ -224,3 +238,5 @@ export default function GitHubActivityCard({
     </article>
   );
 }
+
+export default memo(GitHubActivityCard);
