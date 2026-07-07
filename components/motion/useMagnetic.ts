@@ -2,13 +2,14 @@
 
 import { useEffect } from "react";
 import gsap from "gsap";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 export function useMagnetic(ref: React.RefObject<HTMLElement | null>) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!ref.current || "ontouchstart" in window || prefersReducedMotion) return;
+    if (!el || "ontouchstart" in window || prefersReducedMotion) return;
 
 
     const onMove = (e: MouseEvent) => {
@@ -41,5 +42,5 @@ export function useMagnetic(ref: React.RefObject<HTMLElement | null>) {
       el.removeEventListener("mouseleave", onLeave);
       gsap.killTweensOf(el);
     };
-  }, [ref]);
+  }, [ref, prefersReducedMotion]);
 }

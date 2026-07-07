@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 interface ScrollManagerOptions {
   lenis?: Lenis | null;
@@ -12,6 +13,7 @@ interface ScrollManagerOptions {
 
 export function useScrollManager({ lenis }: ScrollManagerOptions = {}) {
   const pathname = usePathname();
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
 
@@ -39,25 +41,25 @@ export function useScrollManager({ lenis }: ScrollManagerOptions = {}) {
       }
 
       if (!isProjectSlug && scrollTarget) {
-        scrollToElement(scrollTarget, lenis);
+        scrollToElement(scrollTarget, lenis, reducedMotion);
       }
 
       setTimeout(() => {
         ScrollTrigger.refresh();
       }, 60);
     });
-  }, [pathname, lenis]);
+  }, [pathname, lenis, reducedMotion]);
 }
 
-function scrollToElement(id: string, lenis?: Lenis | null) {
+function scrollToElement(id: string, lenis?: Lenis | null, reducedMotion = false) {
   const attemptScroll = (attempts = 0) => {
     const el = document.getElementById(id);
 
     if (el) {
       if (lenis) {
-        lenis.scrollTo(el, { duration: 1.2 });
+        lenis.scrollTo(el, { duration: reducedMotion ? 0 : 1.2 });
       } else {
-        el.scrollIntoView({ behavior: "smooth" });
+        el.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
       }
     } else if (attempts < 12) {
       requestAnimationFrame(() => attemptScroll(attempts + 1));

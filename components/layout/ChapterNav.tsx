@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollTrigger } from "@/lib/gsap";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 interface Chapter {
   id: string;
@@ -21,6 +22,7 @@ const chapters: Chapter[] = [
 
 export default function ChapterNav() {
   const [activeId, setActiveId] = useState<string>("identity");
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     let triggers: (ReturnType<typeof ScrollTrigger.create> | null)[] = [];
@@ -73,7 +75,7 @@ export default function ChapterNav() {
               width: activeId === chapter.id ? 24 : 0,
               opacity: activeId === chapter.id ? 1 : 0,
             }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.3 }}
             className="absolute -left-10 h-[1px] bg-primary group-hover:opacity-50"
           />
 
