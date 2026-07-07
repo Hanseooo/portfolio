@@ -26,7 +26,7 @@ const cardVariants = {
 };
 
 const mobileCardVariants = {
-  hidden: { opacity: 0, x: 30 },
+  hidden: { opacity: 0, x: -5},
   visible: {
     opacity: 1,
     x: 0,

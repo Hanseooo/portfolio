@@ -156,7 +156,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
           href="/projects"
           className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
         >
-          <span>View All</span>
+          <span>All Projects</span>
           <ArrowUpRight
             size={16}
             className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"

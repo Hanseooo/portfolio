@@ -88,7 +88,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
               href="/experience"
               className="group flex items-center gap-2 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
             >
-              <span>Full History</span>
+              <span>View All</span>
               <ArrowUpRight
                 size={16}
                 className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
@@ -135,7 +135,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
               Freelance
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Built a custom ordering form for a cookie seller with a dynamic form builder, analytics, ocr for extracting reference numbers from receipts, and automated email notifications. The client was able to process orders 50% faster compared to using google forms where visuals were limited.
+              Built a custom ordering form for a cookie seller with a dynamic form builder, analytics, ocr for extracting reference numbers from receipts, and automated email notifications. The client was able to process orders 80% faster compared to using google forms where visuals were limited and workflows were inefficient.
             </p>
           </div>
         </div>
