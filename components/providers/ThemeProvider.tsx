@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 
-const THEME_COLORS = { light: "#e10600", dark: "#00E5FF" } as const;
+const THEME_COLORS = { light: "#FFFFFF", dark: "#00E5FF" } as const;
 
 // ponytail: syncs the meta theme-color tag to the in-app toggle (next-themes'
 // .dark class), not OS prefers-color-scheme — the two are independent here.

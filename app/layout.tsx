@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 const siteUrl = SITE_URL;
 
 export const viewport: Viewport = {
-  themeColor: "#e10600",
+  themeColor: "#FFFFFF",
 };
 
 export const metadata: Metadata = {
