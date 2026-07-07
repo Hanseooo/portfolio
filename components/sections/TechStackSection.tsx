@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { motionTokens, clipReveal, fadeUpReveal } from "@/lib/motion";
@@ -10,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Scrollbar from "@/components/ui/Scrollbar";
 
 const categories = [
   {
@@ -43,6 +45,7 @@ function StackBadge({ item }: { item: string }) {
 
 export default function TechStackSection({ id }: { id: string }) {
   const reducedMotion = usePrefersReducedMotion();
+  const stackScrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <section id={id} className="relative py-24 overflow-hidden border-y border-border">
@@ -65,7 +68,8 @@ export default function TechStackSection({ id }: { id: string }) {
             <DialogHeader>
               <DialogTitle className="font-black tracking-tighter text-xl">Stack</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col gap-6 mt-2 overflow-y-auto max-h-[60vh] pr-1">
+            <div className="relative mt-2 max-h-[60vh]">
+            <div ref={stackScrollRef} data-lenis-prevent className="flex h-full flex-col gap-6 overflow-y-auto pr-1">
               {categories.map((cat) => (
                 <div key={cat.label}>
                   <p className="mb-2 font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60">
@@ -79,6 +83,8 @@ export default function TechStackSection({ id }: { id: string }) {
                   </ul>
                 </div>
               ))}
+            </div>
+            <Scrollbar containerRef={stackScrollRef} />
             </div>
           </DialogContent>
         </Dialog>
