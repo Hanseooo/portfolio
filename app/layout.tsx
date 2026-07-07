@@ -2,7 +2,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import AppProviders from "@/components/providers/AppProviders";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -22,6 +22,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const siteUrl = SITE_URL;
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#e10600" },
+    { media: "(prefers-color-scheme: dark)", color: "#00E5FF" },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
