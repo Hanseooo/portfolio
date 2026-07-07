@@ -6,6 +6,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import AppProviders from "@/components/providers/AppProviders";
 import CustomCursor from "@/components/ui/CustomCursor";
+import Scrollbar from "@/components/ui/Scrollbar";
 import Preloader from "@/components/ui/Preloader";
 import JsonLd from "@/components/seo/JsonLd";
 import { GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/components/utils/externalLinks";
@@ -107,6 +108,7 @@ export default function RootLayout({
         <JsonLd data={personLd} />
         <JsonLd data={websiteLd} />
         <CustomCursor />
+        <Scrollbar />
         <AppProviders>
           <Preloader />
           <Navbar />
