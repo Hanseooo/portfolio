@@ -36,12 +36,17 @@ import clarift3 from "@/app/assets/projects/clarift/3.webp";
 import clarift4 from "@/app/assets/projects/clarift/4.webp";
 import clarift5 from "@/app/assets/projects/clarift/5.webp";
 
-import leDouxHero from "@/app/assets/projects/leDoux/hero.png";
+import leDouxHero from "@/app/assets/projects/leDoux/hero.webp";
 import leDoux1 from "@/app/assets/projects/leDoux/1.webp";
 import leDoux2 from "@/app/assets/projects/leDoux/2.webp";
 import leDoux3 from "@/app/assets/projects/leDoux/3.webp";
 import leDoux4 from "@/app/assets/projects/leDoux/4.webp";
 import leDoux5 from "@/app/assets/projects/leDoux/5.webp";
+import leDoux6 from "@/app/assets/projects/leDoux/6.webp";
+import leDoux7 from "@/app/assets/projects/leDoux/7.webp";
+import leDoux8 from "@/app/assets/projects/leDoux/8.webp";
+import leDoux9 from "@/app/assets/projects/leDoux/9.webp";
+import leDoux10 from "@/app/assets/projects/leDoux/10.webp";
 
 import { StaticImageData } from "next/image";
 
@@ -80,6 +85,7 @@ const hcdcLFMSImages  : StaticImageData[] = [
 ]
 
 const clariftImages : StaticImageData[] = [
+  clariftHero,
   clarift1,
   clarift2,
   clarift3,
@@ -88,11 +94,17 @@ const clariftImages : StaticImageData[] = [
 ]
 
 const leDouxImages : StaticImageData[] = [
+  leDouxHero,
   leDoux1,
   leDoux2,
   leDoux3,
   leDoux4,
   leDoux5,
+  leDoux6,
+  leDoux7,
+  leDoux8,
+  leDoux9,
+  leDoux10,
 ]
 
 
@@ -101,6 +113,7 @@ export type Project = {
     title: string;
     subtitle: string;
     heroImage: StaticImageData;
+    ogImageSrc: string;
     year: string;
     problem: string;
     technicalDecisions: string[];
@@ -123,9 +136,10 @@ export const projects: Project[] = [
     subtitle:
       "Artisanal cookie ordering platform with a public order form and comprehensive admin dashboard for managing orders, products, payments, and analytics",
     heroImage: leDouxHero,
+    ogImageSrc: "app/assets/projects/leDoux/hero.webp",
     year: "2026",
     problem:
-      "A cookie seller relied on Instagram for discovery and Google Forms for order intake. Manual payment screenshot review, no order tracking, no CRM data, and no analytics made operations slow and error-prone.",
+      "A cookie seller relied on Instagram for discovery and Google Forms for order intake. Manual payment screenshot review, no order tracking, no CRM data, and no analytics made operations slow and error-prone. There was no structured product catalog, no automated confirmations, and no way to manage orders at scale.",
     technicalDecisions: [
       "Next.js full-stack App Router: Server Components, Server Actions, Route Handlers, and Middleware in a single deployment — no separate backend needed for this scope.",
       "Supabase for database, auth, and storage: PostgreSQL with RLS handles multi-tenant data isolation, Supabase Auth manages admin sessions, and Storage handles payment proofs and menu images without custom upload logic.",
@@ -135,25 +149,28 @@ export const projects: Project[] = [
       "Dynamic form builder with draft/publish workflow: admins configure the public order form through a visual block editor stored as JSONB, with publish validation ensuring no orphaned categories or empty product lists.",
     ],
     overview:
-      "Le Doux is a full-stack cookie ordering platform built for an artisanal cookie business in Davao. It replaces a Google Forms-based workflow with a branded, multi-step order wizard and a comprehensive admin dashboard. The system handles structured product ordering across multiple template types (cookies, boxes, tubs, bento cakes), GCash payment verification with client-side OCR, confirmation emails via Brevo, and a full admin suite covering orders, menu management, form building, customer CRM, and analytics.",
+      "Le Doux is a full-stack cookie ordering platform built for an artisanal cookie business in Davao. It replaces a Google Forms-based workflow with a branded, multi-step order wizard and a comprehensive admin dashboard. The system handles structured product ordering across multiple template types (cookies, boxes, tubs, bento cakes), GCash payment verification with client-side OCR, and a full admin suite covering orders, menu management, form building, customer CRM, and analytics.",
     features: [
-      "Multi-step order wizard with admin-configurable form blocks",
-      "Structured product catalog with template-based UIs (cookie, box, tub, bento cake)",
-      "Exact-quantity flavor distribution for cookie boxes",
-      "Customizable tub selector (3 flavors + 1 sauce)",
-      "GCash payment with QR display and client-side OCR for reference extraction",
-      "Server-side price recalculation to prevent tampering",
-      "Order snapshot strategy for historical accuracy",
-      "Admin dashboard with at-a-glance stats",
-      "Orders management with status filters, CSV export, and activity logs",
-      "Payment verification with screenshot lightbox review",
-      "Email workflow with branded confirmation templates and preview",
-      "Full menu CRUD with template types and sold-out toggles",
-      "Dynamic form builder with draft/publish workflow",
-      "Content management for welcome messages, reminders, and email templates",
-      "Pickup slot management with capacity controls",
-      "Customer CRM with auto-created records and order history",
-      "Analytics with revenue charts, top products, and customer insights",
+      "Multi-step order wizard with step navigation and per-step validation",
+      "Dynamic form rendering with admin-configurable blocks (text, images, product categories, customer info, fulfillment, payment, review)",
+      "Product catalog with category grouping, sold-out indicators, and image support",
+      "Flexible product types — Cookie (simple qty), Box (exact-quantity flavor distribution), Tub (3 flavors + 1 sauce), Bento Cake (dedication + add-ons)",
+      "Fulfillment options — self-pickup with slot selection or Maxim delivery with address input",
+      "GCash payment with QR display, screenshot upload, and client-side OCR for auto-extracting reference numbers",
+      "Order confirmation with summary, social links, and scannable QR code for quick admin lookup",
+      "Menu Guide bottom sheet with product information and guides",
+      "Admin dashboard with at-a-glance stats (new orders, pending payments, today's orders, estimated revenue)",
+      "Orders management — paginated list with status/search filters, CSV export, item breakdown, activity log, and internal notes",
+      "Payment verification with screenshot lightbox review and reject-with-reason flow",
+      "Manual confirmation with receipt generation — downloadable PNG receipts and copy-text summaries for Instagram/Facebook DMs",
+      "Menu management — full CRUD for categories, products, option groups, and option values with template-based pre-creation, reordering, and sold-out toggles",
+      "Form builder — drag/reorder form blocks, toggle visibility, exclude products, preview draft, publish with validation",
+      "Content management for welcome messages, reminders, and GCash instructions",
+      "Settings — pickup slot CRUD with reorder and capacity, payment method toggles with account info and QR upload",
+      "Customer CRM — auto-created customer records, searchable list with order stats, customer detail with notes and order history",
+      "Analytics — period-filtered charts for revenue over time, status/payment/fulfillment breakdowns, new vs repeat customers, top products and flavors",
+      "Staff management with add staff, change password, and forgot password flow",
+      "Automated cleanup — weekly pg_cron job deletes orphaned storage files, purges stale logs",
     ],
     role: "Sole Full Stack Developer",
     stack: [
@@ -166,10 +183,13 @@ export const projects: Project[] = [
       "Lucide React",
       "Recharts",
       "Tesseract.js",
-      "Brevo",
+      "Framer Motion",
+      "qrcode.react",
+      "html-to-image",
     ],
-    integrations: ["Supabase", "Brevo", "Vercel"],
+    integrations: ["Supabase", "Netlify"],
     gallery: leDouxImages,
+    live: "https://le-doux.netlify.app/order",
     client: "Le Doux",
     clientConsent: true,
   },
@@ -179,6 +199,7 @@ export const projects: Project[] = [
     subtitle:
       "AI-powered study engine for Filipino students — transforms uploaded materials into summaries, quizzes, and targeted practice",
     heroImage: clariftHero,
+    ogImageSrc: "app/assets/projects/clarift/hero.webp",
     year: "2026",
     problem:
       "Filipino students and review center learners waste hours reformatting raw study material into usable review content. Existing tools either ignore uploaded notes or generate content from general knowledge rather than the student's own materials.",
@@ -241,6 +262,7 @@ export const projects: Project[] = [
     subtitle:
       "An AI-Powered Learning Productivity Web Application with Note Summarization and Quiz Generation capabilities",
     heroImage: simplyNoteHero,
+    ogImageSrc: "app/assets/projects/simplyNote/hero.webp",
     year: "2025",
     problem:
       "Students studying with raw notes had no fast way to turn them into structured study material. Existing tools either required manual reformatting or didn't work with your own content.",
@@ -287,6 +309,7 @@ export const projects: Project[] = [
     subtitle:
       "A Seminar Tracking Platform with automated Certifications and Attendance System",
     heroImage: ThePodiumHero,
+    ogImageSrc: "app/assets/projects/ThePodium/hero.webp",
     year: "2024",
     problem:
       "HCDC's VPAA managed seminar attendance and certificate distribution manually, spreadsheets, printed sign-in sheets, and emailed certificates sent one by one.",
@@ -329,6 +352,7 @@ export const projects: Project[] = [
     subtitle:
       "A centralized Lost and Found Management System with reporting, claims, notifications, and admin moderation",
     heroImage: hcdcLFMSHero,
+    ogImageSrc: "app/assets/projects/hcdcLFMS/hero.webp",
     year: "2023",
     problem:
       "Lost and found items at HCDC were reported informally, word of mouth, group chats, bulletin boards. No central record meant items went unclaimed and disputes had no audit trail.",
