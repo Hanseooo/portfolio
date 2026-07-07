@@ -1,3 +1,5 @@
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hanseo.tech"
+
 export const LINKEDIN_URL = "https://www.linkedin.com/in/hanseooo"
 
 export const GITHUB_URL = "https://github.com/Hanseooo"

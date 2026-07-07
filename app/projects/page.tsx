@@ -3,6 +3,16 @@ import { projects } from "@/lib/projects";
 import Image from "next/image";
 import Link from "next/link";
 import BackButton from "@/components/utils/BackButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Selected full-stack and AI product engineering projects by Hans Amoguis, including Le Doux, Clarift, and SimplyNote.",
+  alternates: {
+    canonical: "/projects",
+  },
+};
 
 export default function ProjectsPage() {
   return (
