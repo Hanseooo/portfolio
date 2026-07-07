@@ -152,14 +152,14 @@ export default function About() {
           id: "about-horizontal",
           trigger: sectionRef.current,
           pin: true,
-          scrub: getIsShortHeight() ? 1.55 : 1.18,
+          scrub: getIsShortHeight() ? 1.1 : 0.9,
           invalidateOnRefresh: true,
           anticipatePin: isDesktop ? 1.2 : 0,
           snap: getIsShortHeight()
             ? undefined
             : {
                 snapTo: 1 / (panels.length - 1),
-                duration: { min: 0.18, max: 0.42 },
+                duration: { min: 0.35, max: 0.65 },
                 delay: 0.05,
                 ease: "power2.inOut",
                 directional: true,

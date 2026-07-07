@@ -72,7 +72,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
           id: "projects-horizontal",
           trigger: sectionRef.current,
           pin: true,
-          scrub: 1.2,
+          scrub: 0.9,
           invalidateOnRefresh: true,
           anticipatePin: 1,
           start: "top top",
@@ -81,7 +81,7 @@ export default function FeaturedProjectsSection({ id }: { id: string }) {
           snap: useSnap
             ? {
                 snapTo: 1 / (FEATURED.length - 1),
-                duration: { min: 0.18, max: 0.42 },
+                duration: { min: 0.35, max: 0.65 },
                 delay: 0.05,
                 ease: "power2.inOut",
               }
