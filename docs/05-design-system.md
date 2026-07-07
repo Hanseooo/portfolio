@@ -11,9 +11,9 @@ We utilize a highly restricted, high-contrast palette.
   - `text-white`: `#FFFFFF` (Primary headers, high emphasis)
   - `text-zinc-400`: `#A1A1AA` (Body text, secondary information)
   - `text-zinc-600`: `#52525B` (Muted text, metadata, borders)
-- **Accents (Ice Blue):**
-  - `accent-primary`: `#00E5FF` (or a similar hex like `#40E0D0`). Used for active navigation states, primary buttons, and key hover highlights.
-  - `accent-glow`: `rgba(0, 229, 255, 0.15)` (For subtle box-shadows).
+- **Accents (Ice Blue / Red):**
+  - `accent-primary`: `#00E5FF` in Dark Mode, `#e10600` in Light Mode. Used for active navigation states, primary buttons, and key hover highlights.
+  - `accent-glow`: Contextual subtle box-shadows based on the active accent color.
 
 ## Typography Scale
 - **Font Families:**
@@ -41,5 +41,8 @@ We utilize a highly restricted, high-contrast palette.
 ### Icon Style
 - Sharp, un-rounded icons. Phosphor Icons (Thin/Light variants) or Lucide (stroke-width 1.5).
 
-### Dark Mode Rules
-- This site is **Dark Mode Only**. The black + ice blue aesthetic relies on the deep contrast. Light mode is intentionally unsupported to maintain the cinematic cyber-editorial vibe.
+### Theme & Modes
+- This site supports both **Light Mode** and **Dark Mode**. 
+- **Light Mode:** White background with Red accents (`#e10600`).
+- **Dark Mode:** Deep black background with Ice Blue accents (`#00E5FF`).
+- The dual-theme setup maintains the cinematic cyber-editorial vibe across both viewing preferences.
