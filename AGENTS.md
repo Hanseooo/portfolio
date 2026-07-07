@@ -12,7 +12,7 @@
 
 ## Project Context
 - Stack: `Next.js 16 + React 19 + TypeScript + Tailwind CSS v4 + Framer Motion + GSAP + Radix UI + shadcn/ui`
-- Architecture: Single-page portfolio (`app/` router) with chapter-based storytelling sections. Components live in `components/sections/`, `components/layout/`, `components/ui/`, `components/motion/`, `components/transitions/`, and `components/dialogs/`. Animation utilities in `lib/animation.ts`. No backend — static site with Vercel deployment target.
+- Architecture: Single-page portfolio (`app/` router) with chapter-based storytelling sections. Components live in `components/sections/`, `components/layout/`, `components/ui/`, `components/motion/`, `components/transitions/`, and `components/dialogs/`. Animation utilities in `lib/motion.ts` and `lib/gsap.ts`. No backend — static site with Vercel deployment target.
 - Critical paths: None (no auth/billing/infra). Animation smoothness and scroll behavior are the highest-risk areas for regressions.
 
 ## Documentation Context Map
@@ -39,7 +39,7 @@
 - No test runner configured. Verify visually via `npm run dev` and browser inspection.
 
 ## Critical Paths & Extra Review Triggers
-- Scroll/animation code (`lib/animation.ts`, `components/transitions/PageOverlay.tsx`, `components/motion/`) — jank or layout shift breaks the cinematic feel
+- Scroll/animation code (`lib/gsap.ts`, `lib/motion.ts`, `components/transitions/PageOverlay.tsx`, `components/motion/`) — jank or layout shift breaks the cinematic feel
 - `app/layout.tsx` — root layout; changes here affect all pages
 - `components/layout/ChapterNav.tsx` — global nav; test across all scroll positions
 
