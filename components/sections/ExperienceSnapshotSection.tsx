@@ -135,7 +135,7 @@ export default function ExperienceSnapshotSection({ id }: { id: string }) {
               Freelance
             </p>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Built a custom ordering form for a cookie seller with a dynamic form builder, analytics, ocr for extracting reference numbers from receipts, and automated email notifications. The client was able to process orders 80% faster compared to using google forms where visuals were limited and workflows were inefficient.
+              Built a custom ordering form for a cookie seller with a dynamic form builder, analytics, ocr for extracting reference numbers from receipts, and CRM. The client was able to process orders 75% faster compared to using google forms where visuals were limited and inneficient workflows for order management and verification.
             </p>
           </div>
         </div>
