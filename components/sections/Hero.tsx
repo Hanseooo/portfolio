@@ -76,6 +76,20 @@ export default function Hero() {
       const start = "top top";
       const end = "bottom top";
 
+      const parallaxTargets = [
+        firstNameRef.current,
+        lastNameRef.current,
+        roleRef.current,
+        buttonsRef.current,
+        scrollHintRef.current,
+      ].filter((el): el is HTMLElement => el !== null);
+
+      const setParallaxWillChange = (value: string) => {
+        parallaxTargets.forEach((el) => {
+          el.style.willChange = value;
+        });
+      };
+
       // First name — slow
       gsap.to(firstNameRef.current, {
         yPercent: -90,
@@ -84,6 +98,10 @@ export default function Hero() {
           start,
           end,
           scrub: true,
+          onEnter: () => setParallaxWillChange("transform"),
+          onEnterBack: () => setParallaxWillChange("transform"),
+          onLeave: () => setParallaxWillChange("auto"),
+          onLeaveBack: () => setParallaxWillChange("auto"),
         },
       });
 
@@ -145,7 +163,7 @@ export default function Hero() {
         ease: motionTokens.framerEase.enter,
         delay: reducedMotion ? 0 : 1.5,
       }}
-      className={`relative flex flex-col items-center justify-center overflow-hidden text-center will-change-transform ${
+      className={`relative flex flex-col items-center justify-center overflow-hidden text-center ${
         isMobile
           ? isShortViewport
             ? "min-h-[74svh] px-4 pb-8 pt-20 sm:min-h-[80svh] sm:px-6 sm:pt-24"
@@ -155,7 +173,7 @@ export default function Hero() {
     >
       {/* NAME */}
       <h1
-        className={`tracking-tight text-primary will-change-transform ${
+        className={`tracking-tight text-primary ${
           isMobile
             ? "leading-[0.95] text-[clamp(2rem,11.5vw,3.7rem)]"
             : "leading-[0.9] text-[clamp(2.75rem,10vw,9rem)]"

@@ -32,7 +32,8 @@ export default function PageOverlay({ active }: { active: boolean }) {
         return;
       }
 
-      gsap.timeline()
+      overlay.style.willChange = "transform";
+      gsap.timeline({ onComplete: () => { overlay.style.willChange = "auto"; } })
         .to(overlay, { y: "0%", duration: 0.75, ease: "power4.out" })
         .to(scan, { y: "100vh", duration: 0.5, ease: "power3.out" }, "-=0.4")
         .to(letters, {
@@ -54,7 +55,8 @@ export default function PageOverlay({ active }: { active: boolean }) {
         return;
       }
 
-      gsap.timeline()
+      overlay.style.willChange = "transform";
+      gsap.timeline({ onComplete: () => { overlay.style.willChange = "auto"; } })
         .to(letters, {
           clipPath: "inset(0 0 100% 0)",
           duration: 0.3,
@@ -70,7 +72,7 @@ export default function PageOverlay({ active }: { active: boolean }) {
       ref={overlayRef}
       // ponytail: CSS initial hide prevents flash before JS runs
       style={{ transform: "translateY(-100%)" }}
-      className="pointer-events-none will-change-transform fixed inset-0 z-200 flex items-center justify-center bg-background overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-200 flex items-center justify-center bg-background overflow-hidden"
     >
       <div
         ref={scanRef}

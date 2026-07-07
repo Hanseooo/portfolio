@@ -165,6 +165,18 @@ export default function About() {
                 directional: true,
               },
           end: () => `+=${horizontalDistance()}`,
+          onEnter: () => {
+            if (trackRef.current) trackRef.current.style.willChange = "transform";
+          },
+          onEnterBack: () => {
+            if (trackRef.current) trackRef.current.style.willChange = "transform";
+          },
+          onLeave: () => {
+            if (trackRef.current) trackRef.current.style.willChange = "auto";
+          },
+          onLeaveBack: () => {
+            if (trackRef.current) trackRef.current.style.willChange = "auto";
+          },
         },
       });
     }, sectionRef);
@@ -215,7 +227,7 @@ export default function About() {
           <div
             ref={trackRef}
             {...dragBind}
-            className={`flex h-screen w-max will-change-transform ${
+            className={`flex h-screen w-max ${
               isDesktop && dragEnabled
                 ? "cursor-grab active:cursor-grabbing select-none"
                 : "cursor-default"

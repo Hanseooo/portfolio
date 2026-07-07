@@ -27,19 +27,27 @@ export default function ProjectGallery({
   return (
     <section className="mx-auto max-w-5xl px-6 py-24 space-y-16">
       <h2 className="text-2xl font-black tracking-tight uppercase">Screenshots</h2>
-      {images.map((img, i) => (
+      {images.map((img, i) => {
+        let itemEl: HTMLDivElement | null = null;
+        return (
         <motion.div
           key={i}
+          ref={(el) => { itemEl = el; }}
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
+          onViewportEnter={() => {
+            if (itemEl) itemEl.style.willChange = "transform, opacity";
+          }}
+          onAnimationComplete={() => {
+            if (itemEl) itemEl.style.willChange = "auto";
+          }}
           className="
             relative overflow-hidden rounded-md
             border border-foreground/10
             transition-colors duration-300
             hover:border-primary
-            will-change-transform
           "
         >
           {/* Aspect ratio lock = no flashing */}
@@ -54,7 +62,8 @@ export default function ProjectGallery({
             />
           </div>
         </motion.div>
-      ))}
+        );
+      })}
     </section>
   );
 }
