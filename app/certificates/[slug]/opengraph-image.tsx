@@ -3,6 +3,7 @@ import { certificates } from "@/lib/certificates";
 
 export const runtime = "nodejs";
 export { size, contentType };
+export const alt = "Share card for a certificate from Hans Amoguis' portfolio";
 
 export async function generateStaticParams() {
   return certificates.map((certificate) => ({ slug: certificate.slug }));
