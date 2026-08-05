@@ -1,312 +1,250 @@
 "use client";
 
-import { memo, useRef, useState } from "react";
+import { memo, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import Scrollbar from "@/components/ui/Scrollbar";
 import type { ActivityResponse, SpotifyActivity } from "@/lib/activity/types";
 import { formatClockTime, formatRelativeTime } from "@/lib/activity/formatters";
-import { ArrowRight, AlertTriangle } from "lucide-react";
-import { useClientReady } from "@/components/utils/useClientReady";
-import { getRuntimeEnv } from "@/components/utils/browserInfo";
 
 type SpotifyActivityCardProps = {
   payload: ActivityResponse<SpotifyActivity> | null;
   loading?: boolean;
 };
 
-function LoadingState() {
-  return (
-    <div className="space-y-4 animate-pulse py-2">
-      <div className="flex items-center gap-4">
-        <div className="h-16 w-16 shrink-0 bg-foreground/10" />
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="h-4 w-3/4 bg-foreground/10" />
-          <div className="h-3 w-1/2 bg-foreground/10" />
-          <div className="h-3 w-1/4 bg-foreground/10 mt-2" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-type RailProps = {
-  title: string;
-  children: React.ReactNode;
-};
-
-function HorizontalRail({ title, children }: RailProps) {
-  return (
-    <section>
-      <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">{title}</p>
-      <div className="scrollbar-live snap-x snap-mandatory overflow-x-auto pb-2">
-        <div className="flex min-w-max gap-4">{children}</div>
-      </div>
-    </section>
-  );
-}
-
 function SpotifyActivityCard({
   payload,
   loading = false,
 }: SpotifyActivityCardProps) {
+  const data = payload?.data;
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [recentLoading, setRecentLoading] = useState(false);
   const [topLoading, setTopLoading] = useState(false);
   const [recentPayload, setRecentPayload] = useState<ActivityResponse<SpotifyActivity> | null>(null);
   const [topPayload, setTopPayload] = useState<ActivityResponse<SpotifyActivity> | null>(null);
-  const data = payload?.data;
-  const isClient = useClientReady();
-  const isMobile = isClient ? getRuntimeEnv().isMobile : false;
-  const detailsData = {
-    recentTracks: recentPayload?.data?.recentTracks ?? data?.recentTracks ?? [],
-    topTracks: topPayload?.data?.topTracks ?? data?.topTracks ?? [],
-    topArtists: topPayload?.data?.topArtists ?? data?.topArtists ?? [],
-  };
-
-  const topStorageKey = "live-activity:spotify-top";
-  const topStorageTtlMs = 6 * 60 * 60 * 1000;
-
-  const readTopFromStorage = () => {
-    try {
-      const raw = window.localStorage.getItem(topStorageKey);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as {
-        expiresAt: number;
-        payload: ActivityResponse<SpotifyActivity>;
-      };
-      if (!parsed.expiresAt || Date.now() > parsed.expiresAt) {
-        window.localStorage.removeItem(topStorageKey);
-        return null;
-      }
-      return parsed.payload;
-    } catch {
-      return null;
-    }
-  };
-
-  const writeTopToStorage = (nextPayload: ActivityResponse<SpotifyActivity>) => {
-    try {
-      window.localStorage.setItem(
-        topStorageKey,
-        JSON.stringify({
-          expiresAt: Date.now() + topStorageTtlMs,
-          payload: nextPayload,
-        })
-      );
-    } catch {
-      // Ignore storage quota/runtime errors.
-    }
-  };
 
   const fetchRecentDetails = async () => {
-    if (recentLoading) return;
-    setRecentLoading(true);
-
     try {
-      const response = await fetch("/api/activity/spotify?details=recent", { cache: "no-store" });
-      if (!response.ok) throw new Error("recent_failed");
-      const nextPayload = (await response.json()) as ActivityResponse<SpotifyActivity>;
-      setRecentPayload(nextPayload);
+      setRecentLoading(true);
+      const res = await fetch("/api/activity/spotify?details=recent");
+      if (res.ok) {
+        const json = (await res.json()) as ActivityResponse<SpotifyActivity>;
+        setRecentPayload(json);
+      }
     } catch {
-      setRecentPayload((current) =>
-        current ?? {
-          ok: false,
-          source: "fallback",
-          updatedAt: new Date().toISOString(),
-          data: null,
-          error: {
-            code: "provider_unavailable",
-            message: "Spotify details are temporarily unavailable.",
-          },
-        }
-      );
+      // fallback silently
     } finally {
       setRecentLoading(false);
     }
   };
 
   const fetchTopDetails = async () => {
-    if (topLoading) return;
-    setTopLoading(true);
-
     try {
-      const cached = readTopFromStorage();
-      if (cached) {
-        setTopPayload(cached);
-        return;
+      setTopLoading(true);
+      const res = await fetch("/api/activity/spotify?details=top");
+      if (res.ok) {
+        const json = (await res.json()) as ActivityResponse<SpotifyActivity>;
+        setTopPayload(json);
       }
-
-      const response = await fetch("/api/activity/spotify?details=top", { cache: "no-store" });
-      if (!response.ok) throw new Error("top_failed");
-      const nextPayload = (await response.json()) as ActivityResponse<SpotifyActivity>;
-      setTopPayload(nextPayload);
-      writeTopToStorage(nextPayload);
     } catch {
-      setTopPayload((current) =>
-        current ?? {
-          ok: false,
-          source: "fallback",
-          updatedAt: new Date().toISOString(),
-          data: null,
-          error: {
-            code: "provider_unavailable",
-            message: "Spotify top data is temporarily unavailable.",
-          },
-        }
-      );
+      // fallback silently
     } finally {
       setTopLoading(false);
     }
   };
 
+  const detailsData = {
+    recentTracks: recentPayload?.data?.recentTracks ?? data?.recentTracks ?? [],
+    topTracks: topPayload?.data?.topTracks ?? data?.topTracks ?? [],
+    topArtists: topPayload?.data?.topArtists ?? data?.topArtists ?? [],
+  };
+
+  if (loading) {
+    return (
+      <div className="py-3">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+          Loading Spotify activity…
+        </p>
+      </div>
+    );
+  }
+
+  if (payload && !payload.ok) {
+    return (
+      <div className="py-3">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-error)]">
+          {payload.error?.message ?? "Spotify activity temporarily unavailable."}
+        </p>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
   return (
-    <article className="border-t border-white/10 bg-transparent py-6">
-      <div className="mb-6 flex items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <h3 className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
-            Now Playing
-          </h3>
-        </div>
-        <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-white/5 dark:bg-black/20 backdrop-blur-sm isolate">
+      {/* Editorial Header */}
+      <div className="flex items-center justify-between gap-2 bg-[color:var(--cs-signal)] dark:bg-zinc-800 px-4 py-3 text-white">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/90">
+          LIVE SPOTIFY FEED
+        </p>
+        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/60">
           {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
         </span>
       </div>
 
-      {loading ? <LoadingState /> : null}
-
-      {!loading && payload && !payload.ok ? (
-        <div className="flex items-center gap-3 rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          <p>{payload.error?.message ?? "Spotify activity is temporarily unavailable."}</p>
-        </div>
-      ) : null}
-
-      {!loading && payload?.ok && data ? (
-        <div className="space-y-4">
-          {data.nowPlaying ? (
-            <a
-              href={data.nowPlaying.trackUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block group py-2"
-            >
-              <div className="flex items-center gap-4">
-                {data.nowPlaying.artworkUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={data.nowPlaying.artworkUrl}
-                    alt={`${data.nowPlaying.album} cover`}
-                    loading="lazy"
-                    decoding="async"
-                    className={`h-16 w-16 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
-                  />
-                ) : (
-                  <div className="h-16 w-16 shrink-0 border border-border bg-background/60" />
-                )}
-                <div className="min-w-0">
-                  <p className="line-clamp-1 text-sm font-bold text-foreground/90 transition-colors group-hover:text-primary">
-                    {data.nowPlaying.title}
-                  </p>
-                  <p className="line-clamp-1 text-xs text-foreground/75 mt-1">{data.nowPlaying.artist}</p>
-                  <p className="mt-2 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                    {data.nowPlaying.isPlaying ? "Playing" : "Recently played"}
-                  </p>
-                </div>
-              </div>
-            </a>
-          ) : (
-            <div className="py-2">
-              <p className="text-sm text-foreground/80 font-bold uppercase tracking-[0.2em]">Not playing right now.</p>
-            </div>
-          )}
-
-          <div className="flex items-center justify-end pt-4">
-          <Dialog
-            open={detailsOpen}
-            onOpenChange={(open) => {
-              setDetailsOpen(open);
-              if (open) {
-                if (!recentPayload) void fetchRecentDetails();
-                if (!topPayload) void fetchTopDetails();
-              }
-            }}
+      <div className="p-4 md:p-6 flex flex-col gap-8">
+        {/* Now playing (Macro Typography) */}
+        {data.nowPlaying ? (
+          <a
+            href={data.nowPlaying.trackUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col sm:flex-row sm:items-end gap-4 md:gap-6"
           >
-              <DialogTrigger asChild>
-                <button
-                  type="button"
-                  className="group inline-flex items-center gap-2 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground transition hover:text-primary focus-visible:outline-none"
-                >
-                  View details
-                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-              </DialogTrigger>
-            <DialogContent className="flex h-[min(82vh,44rem)] w-[min(92vw,48rem)] max-w-3xl flex-col overflow-hidden p-0">
-              <DialogHeader>
-                <DialogTitle className="px-6 pb-4 pt-8 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                  Spotify Activity Details
-                </DialogTitle>
-              </DialogHeader>
+            {data.nowPlaying.artworkUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={data.nowPlaying.artworkUrl}
+                alt={`${data.nowPlaying.album} cover`}
+                loading="lazy"
+                decoding="async"
+                className="h-24 w-24 md:h-32 md:w-32 shrink-0 object-cover border border-white/20 shadow-xl grayscale opacity-80 mix-blend-luminosity transition-all duration-500 group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:opacity-100"
+              />
+            ) : (
+              <div className="h-24 w-24 md:h-32 md:w-32 shrink-0 border border-[color:var(--cs-structural-line)] bg-black/10" />
+            )}
+            <div className="min-w-0 flex flex-col justify-end">
+              <p className="mb-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-signal-text)]">
+                {data.nowPlaying.isPlaying ? "STATUS // NOW PLAYING" : "STATUS // RECENTLY PLAYED"}
+              </p>
+              <p className="line-clamp-2 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-[0.9] tracking-tight text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">
+                {data.nowPlaying.title}
+              </p>
+              <p className="mt-2 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+                {data.nowPlaying.artist}
+              </p>
+            </div>
+          </a>
+        ) : (
+          <p className="text-sm font-[family-name:var(--font-mono)] uppercase text-[color:var(--cs-text-secondary)]">NO ACTIVE SIGNAL.</p>
+        )}
 
-              <div className="relative min-h-0 flex-1">
-              <div ref={scrollRef} data-lenis-prevent className="no-native-scrollbar h-full space-y-8 overflow-y-auto px-6 pb-6 pt-1">
-                <section>
-                  <p className="mb-4 font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                    Recent Tracks
-                  </p>
-                  {recentLoading ? (
-                    <ul className="space-y-4 animate-pulse">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <li key={i} className="min-w-0 pl-0">
-                          <div className="block py-1">
-                            <div className="h-4 w-2/3 bg-foreground/10 mb-2" />
-                            <div className="h-3 w-1/3 bg-foreground/10" />
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : detailsData?.recentTracks.length ? (
-                    <ul className="space-y-4">
-                      {detailsData.recentTracks.slice(0, 5).map((track) => (
-                        <li key={`${track.trackUrl}-${track.playedAt}`} className="min-w-0 pl-0">
-                          <a
-                            href={track.trackUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block group"
-                          >
-                            <p className="line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{track.title}</p>
-                            <p className="line-clamp-1 text-xs text-foreground/70 mt-1">
-                              {track.artist} · {formatRelativeTime(track.playedAt)}
-                            </p>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">No recent tracks found.</p>
-                  )}
-                </section>
+        {/* Recent tracks (Micro Typography) */}
+        {data.recentTracks && data.recentTracks.length > 0 && (
+          <div className="border-t border-[color:var(--cs-structural-line)] pt-6 mt-2">
+            <p className="mb-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+              Historical Data // Recent
+            </p>
+            <ul className="flex flex-col gap-4">
+              {data.recentTracks.slice(0, 2).map((track) => (
+                <li key={`${track.trackUrl}-${track.playedAt}`}>
+                  <a
+                    href={track.trackUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col gap-1 border-l-2 border-[color:var(--cs-structural-line)] pl-3 transition-colors hover:border-[color:var(--cs-signal)]"
+                  >
+                    <p className="line-clamp-1 text-sm font-bold text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">
+                      {track.title}
+                    </p>
+                    <p className="line-clamp-1 font-[family-name:var(--font-mono)] text-[10px] uppercase text-[color:var(--cs-text-secondary)]">
+                      {track.artist} · {formatRelativeTime(track.playedAt)}
+                    </p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
-                <HorizontalRail title="Top Tracks">
-                  {topLoading ? (
-                    <>
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="w-36 shrink-0 snap-start animate-pulse">
-                          <div className="h-36 w-full border border-border bg-foreground/10 mb-3" />
-                          <div className="h-4 w-3/4 bg-foreground/10 mb-2" />
-                          <div className="h-3 w-1/2 bg-foreground/10" />
-                        </div>
-                      ))}
-                    </>
-                  ) : detailsData?.topTracks.length ? (
-                    detailsData.topTracks.slice(0, 5).map((track) => (
+      {/* View Details Button & Dialog Modal */}
+      <div className="flex w-full mt-auto">
+        <Dialog
+          open={detailsOpen}
+          onOpenChange={(open) => {
+            setDetailsOpen(open);
+            if (open) {
+              if (!recentPayload) void fetchRecentDetails();
+              if (!topPayload) void fetchTopDetails();
+            }
+          }}
+        >
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              className="group flex w-full items-center justify-between border-t border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 py-4 transition-colors hover:bg-[color:var(--cs-signal)] hover:text-white focus-visible:outline-none"
+            >
+              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-primary)] group-hover:text-white transition-colors">
+                Extract Full Telemetry
+              </span>
+              <ArrowRight size={14} className="text-[color:var(--cs-text-primary)] transition-transform duration-300 group-hover:translate-x-2 group-hover:text-white" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="flex max-h-[85vh] w-[90vw] max-w-2xl flex-col overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-card-bg,var(--background))] p-0 text-[color:var(--cs-text-primary)]">
+            <DialogHeader className="border-b border-[color:var(--cs-structural-line)] px-6 py-4">
+              <DialogTitle className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+                Spotify Activity Details
+              </DialogTitle>
+            </DialogHeader>
+
+            <div data-lenis-prevent className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {/* Recent Tracks */}
+              <section>
+                <p className="mb-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+                  Recent Tracks
+                </p>
+                {recentLoading ? (
+                  <div className="space-y-3 animate-pulse">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="h-10 w-full rounded bg-[color:var(--cs-structural-line)]/40" />
+                    ))}
+                  </div>
+                ) : detailsData.recentTracks.length > 0 ? (
+                  <ul className="space-y-3">
+                    {detailsData.recentTracks.slice(0, 8).map((track) => (
+                      <li key={`${track.trackUrl}-${track.playedAt}`}>
+                        <a
+                          href={track.trackUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group block"
+                        >
+                          <p className="line-clamp-1 text-sm font-medium text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">
+                            {track.title}
+                          </p>
+                          <p className="line-clamp-1 text-xs text-[color:var(--cs-text-secondary)] mt-0.5">
+                            {track.artist} · {formatRelativeTime(track.playedAt)}
+                          </p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-[color:var(--cs-text-secondary)]">No recent tracks found.</p>
+                )}
+              </section>
+
+              {/* Top Tracks */}
+              <section>
+                <p className="mb-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+                  Top Tracks
+                </p>
+                {topLoading ? (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 animate-pulse">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="h-32 w-full rounded bg-[color:var(--cs-structural-line)]/40" />
+                    ))}
+                  </div>
+                ) : detailsData.topTracks.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {detailsData.topTracks.slice(0, 4).map((track) => (
                       <a
                         key={`${track.trackUrl}-${track.title}`}
                         href={track.trackUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-36 shrink-0 snap-start group"
+                        className="group block border border-[color:var(--cs-structural-line)] p-2 transition-colors hover:border-[color:var(--cs-signal)]"
                       >
                         {track.artworkUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -315,38 +253,45 @@ function SpotifyActivityCard({
                             alt={`${track.album} cover`}
                             loading="lazy"
                             decoding="async"
-                            className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
+                            className="aspect-square w-full object-cover"
                           />
                         ) : (
-                          <div className="h-36 w-full border border-border bg-background/60" />
+                          <div className="aspect-square w-full bg-[color:var(--cs-structural-line)]" />
                         )}
-                        <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{track.title}</p>
-                        <p className="line-clamp-1 text-xs text-foreground/70 mt-1">{track.artist}</p>
+                        <p className="mt-2 line-clamp-1 text-xs font-medium text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">
+                          {track.title}
+                        </p>
+                        <p className="line-clamp-1 text-[10px] text-[color:var(--cs-text-secondary)] mt-0.5">
+                          {track.artist}
+                        </p>
                       </a>
-                    ))
-                  ) : (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Top tracks unavailable.</p>
-                  )}
-                </HorizontalRail>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-[color:var(--cs-text-secondary)]">Top tracks unavailable.</p>
+                )}
+              </section>
 
-                <HorizontalRail title="Top Artists">
-                  {topLoading ? (
-                    <>
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="w-36 shrink-0 snap-start animate-pulse">
-                          <div className="h-36 w-full border border-border bg-foreground/10 mb-3" />
-                          <div className="h-4 w-3/4 bg-foreground/10" />
-                        </div>
-                      ))}
-                    </>
-                  ) : detailsData?.topArtists.length ? (
-                    detailsData.topArtists.slice(0, 5).map((artist) => (
+              {/* Top Artists */}
+              <section>
+                <p className="mb-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+                  Top Artists
+                </p>
+                {topLoading ? (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 animate-pulse">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="h-32 w-full rounded bg-[color:var(--cs-structural-line)]/40" />
+                    ))}
+                  </div>
+                ) : detailsData.topArtists.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {detailsData.topArtists.slice(0, 4).map((artist) => (
                       <a
                         key={artist.name}
                         href={artist.artistUrl || undefined}
                         target={artist.artistUrl ? "_blank" : undefined}
                         rel={artist.artistUrl ? "noopener noreferrer" : undefined}
-                        className="w-36 shrink-0 snap-start group"
+                        className="group block border border-[color:var(--cs-structural-line)] p-2 transition-colors hover:border-[color:var(--cs-signal)]"
                       >
                         {artist.artworkUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -355,26 +300,25 @@ function SpotifyActivityCard({
                             alt={`${artist.name} artwork`}
                             loading="lazy"
                             decoding="async"
-                            className={`h-36 w-full object-cover transition-all duration-500${!isMobile ? " grayscale group-hover:grayscale-0" : ""}`}
+                            className="aspect-square w-full object-cover"
                           />
                         ) : (
-                          <div className="h-36 w-full border border-border bg-background/60" />
+                          <div className="aspect-square w-full bg-[color:var(--cs-structural-line)]" />
                         )}
-                        <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground/85 transition-colors group-hover:text-primary">{artist.name}</p>
+                        <p className="mt-2 line-clamp-1 text-xs font-medium text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">
+                          {artist.name}
+                        </p>
                       </a>
-                    ))
-                  ) : (
-                    <p className="text-sm text-foreground/75 font-bold uppercase tracking-[0.2em]">Top artists unavailable.</p>
-                  )}
-                </HorizontalRail>
-              </div>
-              <Scrollbar containerRef={scrollRef} />
-              </div>
-            </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-      ) : null}
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-[color:var(--cs-text-secondary)]">Top artists unavailable.</p>
+                )}
+              </section>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     </article>
   );
 }

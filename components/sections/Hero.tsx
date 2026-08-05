@@ -194,72 +194,76 @@ export default function Hero() {
             : ""
         }
       >
-        {/* ROLE */}
-        <motion.p
-          ref={roleRef}
-          initial={subtleEnter}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ ...enterTransition, delay: 0.12 }}
-          className={`uppercase ${
-            isMobile
-              ? "text-xs tracking-[0.24em] text-foreground/82"
-              : "text-xs tracking-[0.34em] text-foreground/75"
-          }`}
-        >
-          Full-Stack Engineer
-        </motion.p>
-
-        {/* BUTTONS */}
-        <motion.div
-          ref={buttonsRef}
-          initial={accentEnter}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ ...enterTransition, delay: 0.2 }}
-          className={
-            isMobile
-              ? `${isShortViewport ? "mt-4" : "mt-5"} grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2`
-              : "mt-7 flex items-center justify-center gap-4"
-          }
-        >
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex min-h-11 items-center justify-center gap-2 border px-5 py-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+        {/* ROLE — outer div is the GSAP parallax target; FM handles entry only on inner node */}
+        <div ref={roleRef}>
+          <motion.p
+            initial={subtleEnter}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ ...enterTransition, delay: 0.12 }}
+            className={`uppercase ${
               isMobile
-                ? "w-full rounded-md border-foreground/20 bg-background/70 font-sans hover:border-primary hover:text-primary"
-                : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
+                ? "text-xs tracking-[0.24em] text-foreground/82"
+                : "text-xs tracking-[0.34em] text-foreground/75"
             }`}
           >
-            <Github size={16} />
-            GitHub
-          </a>
+            Full-Stack Engineer
+          </motion.p>
+        </div>
 
-          <ContactDialogTrigger
-            email={EMAIL_ADDRESS}
-            linkedinUrl={LINKEDIN_URL}
-            phone={PHONE_NUMBER}
+        {/* BUTTONS — outer div is the GSAP parallax target; FM handles entry only on inner node */}
+        <div ref={buttonsRef}>
+          <motion.div
+            initial={accentEnter}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ ...enterTransition, delay: 0.2 }}
             className={
               isMobile
-                ? "w-full justify-center border-foreground/20 bg-background/70 text-primary"
-                : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em]"
+                ? `${isShortViewport ? "mt-4" : "mt-5"} grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2`
+                : "mt-7 flex items-center justify-center gap-4"
             }
-          />
-        </motion.div>
+          >
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex min-h-11 items-center justify-center gap-2 border px-5 py-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                isMobile
+                  ? "w-full rounded-md border-foreground/20 bg-background/70 font-sans hover:border-primary hover:text-primary"
+                  : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em] hover:border-primary hover:text-primary"
+              }`}
+            >
+              <Github size={16} />
+              GitHub
+            </a>
+
+            <ContactDialogTrigger
+              email={EMAIL_ADDRESS}
+              linkedinUrl={LINKEDIN_URL}
+              phone={PHONE_NUMBER}
+              className={
+                isMobile
+                  ? "w-full justify-center border-foreground/20 bg-background/70 text-primary"
+                  : "rounded-none border-foreground/30 bg-background/65 font-sans uppercase tracking-[0.14em]"
+              }
+            />
+          </motion.div>
+        </div>
       </div>
 
       {/* SCROLL INDICATOR */}
       {showScrollHint && (
-        <motion.div
-          ref={scrollHintRef}
-          initial={subtleEnter}
-          animate={{ y: 0, opacity: 0.6 }}
-          transition={{ ...enterTransition, delay: 0.3 }}
-          className="absolute bottom-10 flex flex-col items-center gap-2 text-xs"
-        >
-          <span>Scroll</span>
-          <ArrowDown size={16} />
-        </motion.div>
+        <div ref={scrollHintRef} className="absolute bottom-10">
+          {/* GSAP parallax target wrapper; FM entry only on inner node */}
+          <motion.div
+            initial={subtleEnter}
+            animate={{ y: 0, opacity: 0.6 }}
+            transition={{ ...enterTransition, delay: 0.3 }}
+            className="flex flex-col items-center gap-2 text-xs"
+          >
+            <span>Scroll</span>
+            <ArrowDown size={16} />
+          </motion.div>
+        </div>
       )}
     </motion.section>
   );

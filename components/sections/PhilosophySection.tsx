@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { useClientReady } from "@/components/utils/useClientReady";
 import { getRuntimeEnv } from "@/components/utils/browserInfo";
@@ -14,71 +12,19 @@ export default function PhilosophySection({ id }: { id: string }) {
   const runtimeEnv = isClient ? getRuntimeEnv() : { isMobile: false, isWebView: false };
   const isMobile = runtimeEnv.isMobile;
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const principle01Ref = useRef<HTMLDivElement>(null);
-  const dividerRef = useRef<HTMLDivElement>(null);
-  const principle02Ref = useRef<HTMLDivElement>(null);
-  const divider02Ref = useRef<HTMLDivElement>(null);
-  const principle03Ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (reducedMotion) return;
-    if (window.innerWidth < 1024) return;
-    if (
-      !sectionRef.current ||
-      !principle01Ref.current ||
-      !dividerRef.current ||
-      !principle02Ref.current ||
-      !divider02Ref.current ||
-      !principle03Ref.current
-    )
-      return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          pin: true,
-          start: "top top",
-          end: "+=450vh",
-          scrub: true,
-        },
-      });
-
-      tl.fromTo(
-        principle01Ref.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.35 },
-        0
-      );
-      tl.fromTo(
-        dividerRef.current,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 0.2 },
-        0.35
-      );
-      tl.fromTo(
-        principle02Ref.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.35 },
-        0.55
-      );
-      tl.fromTo(
-        divider02Ref.current,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 0.2 },
-        0.75
-      );
-      tl.fromTo(
-        principle03Ref.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.35 },
-        0.90
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, [reducedMotion]);
+  const principleEntry = (delayIndex: number) =>
+    reducedMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 32 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true as const, amount: 0.3 },
+          transition: {
+            duration: motionTokens.duration.feature,
+            ease: motionTokens.framerEase.enter,
+            delay: delayIndex * 0.14,
+          },
+        };
 
   // Mobile FM entry props — only applied when isMobile and not reducedMotion
   const mobileEntry = (delayIndex: number) =>
@@ -86,7 +32,7 @@ export default function PhilosophySection({ id }: { id: string }) {
       ? {
           initial: { opacity: 0, y: 24 },
           whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true },
+          viewport: { once: true as const },
           transition: {
             duration: motionTokens.duration.base,
             ease: motionTokens.framerEase.enter,
@@ -95,9 +41,11 @@ export default function PhilosophySection({ id }: { id: string }) {
         }
       : {};
 
+  const entryProps = (delayIndex: number) =>
+    isMobile ? mobileEntry(delayIndex) : principleEntry(delayIndex);
+
   return (
     <section
-      ref={sectionRef}
       id={id}
       className="relative flex min-h-screen items-center px-6 py-32"
     >
@@ -114,7 +62,7 @@ export default function PhilosophySection({ id }: { id: string }) {
           </div>
 
           <div className="flex flex-col justify-center space-y-12 lg:col-span-6 lg:col-start-7">
-            <motion.div ref={principle01Ref} {...mobileEntry(0)}>
+            <motion.div {...entryProps(0)}>
               <h3 className="mb-4 font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
                 <span className="font-mono mr-2">01 /</span>Architecture
               </h3>
@@ -124,13 +72,19 @@ export default function PhilosophySection({ id }: { id: string }) {
             </motion.div>
 
             <motion.div
-              ref={dividerRef}
               className="h-px w-full bg-border"
               style={{ transformOrigin: "left" }}
-              {...mobileEntry(1)}
+              {...(reducedMotion
+                ? {}
+                : {
+                    initial: { scaleX: 0 },
+                    whileInView: { scaleX: 1 },
+                    viewport: { once: true as const, amount: 0.5 },
+                    transition: { duration: 0.5, ease: motionTokens.framerEase.enter, delay: 0.1 },
+                  })}
             />
 
-            <motion.div ref={principle02Ref} {...mobileEntry(2)}>
+            <motion.div {...entryProps(2)}>
               <h3 className="mb-4 font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
                 <span className="font-mono mr-2">02 /</span>Execution
               </h3>
@@ -140,13 +94,19 @@ export default function PhilosophySection({ id }: { id: string }) {
             </motion.div>
 
             <motion.div
-              ref={divider02Ref}
               className="h-px w-full bg-border"
               style={{ transformOrigin: "left" }}
-              {...mobileEntry(3)}
+              {...(reducedMotion
+                ? {}
+                : {
+                    initial: { scaleX: 0 },
+                    whileInView: { scaleX: 1 },
+                    viewport: { once: true as const, amount: 0.5 },
+                    transition: { duration: 0.5, ease: motionTokens.framerEase.enter, delay: 0.1 },
+                  })}
             />
 
-            <motion.div ref={principle03Ref} {...mobileEntry(4)}>
+            <motion.div {...entryProps(4)}>
               <h3 className="mb-4 font-bold text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
                 <span className="font-mono mr-2">03 /</span>Workflows
               </h3>
