@@ -1,31 +1,27 @@
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import AppProviders from "@/components/providers/AppProviders";
-import CustomCursor from "@/components/ui/CustomCursor";
-import Scrollbar from "@/components/ui/Scrollbar";
-import Preloader from "@/components/ui/Preloader";
+import { fontVariableClasses } from "./fonts";
+import PortfolioProviders from "@/components/providers/PortfolioProviders";
+import { PortfolioFrame } from "@/components/shell";
 import JsonLd from "@/components/seo/JsonLd";
-import { GITHUB_URL, LINKEDIN_URL, SITE_URL } from "@/components/utils/externalLinks";
+import {
+  EMAIL_ADDRESS,
+  GITHUB_URL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
+  SITE_URL,
+  X_URL,
+} from "@/components/utils/externalLinks";
 import hansPortrait from "@/app/assets/myImages/hans.webp";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-});
 
 const siteUrl = SITE_URL;
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F3F0E9" },
+    { media: "(prefers-color-scheme: dark)", color: "#080909" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -47,9 +43,10 @@ export const metadata: Metadata = {
     "TypeScript",
     "web developer portfolio",
   ],
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
+  authors: [{ name: "Hans Amoguis", url: siteUrl }],
+  creator: "Hans Amoguis",
+  publisher: "Hans Amoguis",
   robots: {
     index: true,
     follow: true,
@@ -72,6 +69,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@hansamoguis",
+    creator: "@hansamoguis",
     title: "Hans Amoguis | Full-Stack Engineer focused on AI Product Engineering",
     description:
       "Portfolio of Hans Amoguis, building production-minded full-stack and AI-enabled products with Next.js, LangChain, and FastAPI.",
@@ -84,9 +83,28 @@ const personLd = {
   name: "Hans Amoguis",
   alternateName: "Hanseo",
   jobTitle: "Full-Stack Engineer",
+  description:
+    "Portfolio of Hans Amoguis, a full-stack engineer focused on AI product engineering with Next.js, TypeScript, LangChain, and FastAPI.",
   url: siteUrl,
   image: new URL(hansPortrait.src, siteUrl).toString(),
-  sameAs: [GITHUB_URL, LINKEDIN_URL],
+  email: EMAIL_ADDRESS,
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "PH",
+  },
+  knowsAbout: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "FastAPI",
+    "Python",
+    "LangChain",
+    "PostgreSQL",
+    "Supabase",
+    "retrieval-augmented generation",
+  ],
+  sameAs: [GITHUB_URL, LINKEDIN_URL, X_URL, INSTAGRAM_URL],
 };
 
 const websiteLd = {
@@ -97,24 +115,21 @@ const websiteLd = {
   author: personLd,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} font-sans`} suppressHydrationWarning>
-      <body className="bg-background text-foreground antialiased min-h-screen cursor-none">
+    <html
+      lang="en"
+      className={`${fontVariableClasses} font-sans`}
+      suppressHydrationWarning
+    >
+      <body className="bg-[color:var(--cs-foundation)] text-[color:var(--cs-text-primary)] antialiased min-h-screen">
         <JsonLd data={personLd} />
         <JsonLd data={websiteLd} />
-        <CustomCursor />
-        <Scrollbar />
-        <AppProviders>
-          <Preloader />
-          <Navbar />
-          {children}
-          <Footer />
-        </AppProviders>
+        <PortfolioProviders>
+          <PortfolioFrame>
+            {children}
+          </PortfolioFrame>
+        </PortfolioProviders>
       </body>
     </html>
   );

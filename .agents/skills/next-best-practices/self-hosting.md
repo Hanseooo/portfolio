@@ -35,14 +35,14 @@ FROM node:20-alpine AS base
 FROM base AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Build
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN pnpm build
 
 # Production
 FROM base AS runner
@@ -109,7 +109,7 @@ module.exports = {
 ```
 
 ```bash
-npm run build
+pnpm build
 pm2 start ecosystem.config.js
 ```
 
@@ -342,7 +342,7 @@ export async function GET() {
 
 ## Pre-Deployment Checklist
 
-1. **Build locally first**: `npm run build` - catch errors before deploy
+1. **Build locally first**: `pnpm build` - catch errors before deploy
 2. **Test standalone output**: `node .next/standalone/server.js`
 3. **Set `output: 'standalone'`** for Docker
 4. **Configure cache handler** for multi-instance ISR

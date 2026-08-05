@@ -158,13 +158,13 @@ export function usePanelAnimation(elementRef: Ref<HTMLElement | null>) {
 
 ```bash
 # Run animation tests
-npm test -- --grep "Animation"
+pnpm test -- --grep "Animation"
 
 # Check for memory leaks
-npm run test:memory
+pnpm test:memory
 
 # Verify 60fps performance
-npm run test:performance
+pnpm test:performance
 ```
 
 ## 3. Technology Stack & Versions
@@ -660,7 +660,7 @@ gsap.to(element, { scaleX: 2, scaleY: 1 })
 
 ### Phase 3: Before Committing
 
-- [ ] All tests pass (npm test -- --grep "Animation")
+- [ ] All tests pass (pnpm test -- --grep "Animation")
 - [ ] All animations cleaned up on unmount
 - [ ] Reduced motion preference respected
 - [ ] No memory leaks (check with DevTools)

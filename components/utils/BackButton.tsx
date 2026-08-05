@@ -2,7 +2,6 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 
 interface BackButtonProps {
   text?: string,
@@ -29,19 +28,17 @@ export default function BackButton({text = "Back to Home", sectionId = "home"} :
 
   return (
     <div className="flex justify-center py-32 border-t border-foreground/10">
-      <MagneticButton>
-        <button
-          onClick={handleClick}
-          className="group flex flex-col items-center gap-4 transition-colors hover:text-primary"
-        >
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-foreground/20 transition-transform duration-500 group-hover:scale-110 group-hover:border-primary">
-            <ArrowLeft className="h-8 w-8 transition-transform group-hover:-translate-x-2" />
-          </div>
-          <span className="text-lg font-bold uppercase tracking-widest">
-            {text}
-          </span>
-        </button>
-      </MagneticButton>
+      <button
+        onClick={handleClick}
+        className="group flex flex-col items-center gap-4 transition-colors hover:text-primary"
+      >
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-foreground/20 transition-transform duration-500 group-hover:scale-110 group-hover:border-primary">
+          <ArrowLeft className="h-8 w-8 transition-transform group-hover:-translate-x-2" />
+        </div>
+        <span className="text-lg font-bold uppercase tracking-widest">
+          {text}
+        </span>
+      </button>
     </div>
   );
 }

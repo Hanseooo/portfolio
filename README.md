@@ -49,8 +49,8 @@ I design and build maintainable, UX-focused web systems with a strong emphasis o
 ## Running Locally
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## Live Activity Environment Variables
