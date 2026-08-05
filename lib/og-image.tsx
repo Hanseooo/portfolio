@@ -18,6 +18,7 @@ export async function renderOgImage(opts: {
     const absolutePath = path.join(process.cwd(), opts.imagePath);
     const raw = await readFile(absolutePath);
     const png = await sharp(raw)
+      .toColorspace("srgb")
       .resize(760, 630, { fit: "cover" })
       .png()
       .toBuffer();
