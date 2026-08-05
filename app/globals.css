@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-display), var(--font-inter), sans-serif;
   
   --color-accent-primary: #00E5FF;
   --color-accent-glow: rgba(0, 229, 255, 0.15);
@@ -28,6 +29,19 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  --color-cs-foundation: var(--cs-foundation);
+  --color-cs-reading-surface: var(--cs-reading-surface);
+  --color-cs-text-primary: var(--cs-text-primary);
+  --color-cs-text-secondary: var(--cs-text-secondary);
+  --color-cs-structural-line: var(--cs-structural-line);
+  --color-cs-structural-line-strong: var(--cs-structural-line-strong);
+  --color-cs-signal: var(--cs-signal);
+  --color-cs-signal-text: var(--cs-signal-text);
+  --color-cs-signal-inverse: var(--cs-signal-inverse);
+  --color-cs-raised-neutral: var(--cs-raised-neutral);
+  --color-cs-focus-ring: var(--cs-focus-ring);
+  --color-cs-error: var(--cs-error);
 }
 
 :root {
@@ -52,15 +66,33 @@
   --ring: #e10600;
 }
 
+/* Constructed Signal — semantic roles (light/default) */
+:root {
+  --cs-foundation: #F3F0E9;
+  --cs-reading-surface: #FBFAF7;
+  --cs-text-primary: #151515;
+  --cs-text-secondary: #52524E;
+  --cs-structural-line: rgba(21, 21, 21, 0.15);
+  --cs-structural-line-strong: rgba(21, 21, 21, 0.4);
+  --cs-signal: #E10600;
+  --cs-signal-text: #E10600;
+  --cs-signal-inverse: #FFFFFF;
+  --cs-raised-neutral: #EDE9E3;
+  --cs-focus-ring: #E10600;
+  --cs-error: #DC2626;
+  --cs-gutter-portfolio: clamp(20px, 4vw, 48px);
+  --nav-height: 64px;
+}
+
 .dark {
-  --background: #000000;
+  --background: #080909;
   --foreground: #FAFAFA;
-  --card: #09090B;
+  --card: #111111;
   --card-foreground: #FAFAFA;
-  --popover: #09090B;
+  --popover: #111111;
   --popover-foreground: #FAFAFA;
   --primary: #00E5FF;
-  --primary-foreground: #000000;
+  --primary-foreground: #080909;
   --primary-glow: rgba(0, 229, 255, 0.8);
   --secondary: #18181B;
   --secondary-foreground: #FAFAFA;
@@ -72,9 +104,37 @@
   --border: #27272A;
   --input: #27272A;
   --ring: #00E5FF;
+
+  /* Constructed Signal — semantic roles (dark) */
+  --cs-foundation: #080909;
+  --cs-reading-surface: #111111;
+  --cs-text-primary: #FAFAFA;
+  --cs-text-secondary: #A1A1AA;
+  --cs-structural-line: rgba(250, 250, 250, 0.1);
+  --cs-structural-line-strong: rgba(250, 250, 250, 0.25);
+  --cs-signal: #00E5FF;
+  --cs-signal-text: #00E5FF;
+  --cs-signal-inverse: #080909;
+  --cs-raised-neutral: #18181B;
+  --cs-focus-ring: #00E5FF;
+  --cs-error: #EF4444;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-height: 80px;
+  }
 }
 
 @layer base {
+  /* Motion seam targets: always visible at CSS baseline.
+     Plan 5 may temporarily alter these via JS after capability check. */
+  [data-motion-target] {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -93,6 +153,200 @@
 
   .meta-heading {
     @apply text-xs uppercase tracking-widest text-zinc-600;
+  }
+
+  /* Skip-to-main-content link — visible only on keyboard focus */
+  .skip-link {
+    position: fixed;
+    top: -9999px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    padding: 12px 24px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--cs-signal-inverse);
+    background: var(--cs-signal);
+    border-radius: 2px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .skip-link:focus {
+    top: 16px;
+    outline: 2px solid var(--cs-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Focus-visible ring — uses semantic token */
+  :focus-visible {
+    outline: 2px solid var(--cs-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Screen-reader-only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Anchor target offset for persistent navigation */
+  [id] {
+    scroll-margin-top: var(--nav-height, 80px);
+  }
+
+  /* Theme surface transition — brief, preserves layout */
+  body {
+    transition: background-color 0.2s ease, color 0.15s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body {
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  /* Homepage 12/8/4 responsive grid */
+  .hp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding-inline: var(--cs-gutter-portfolio);
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .hp-grid {
+      grid-template-columns: repeat(8, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hp-grid {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
+
+  /* Signal field — broad red in light, black depth in dark */
+  .hp-signal-field {
+    background-color: var(--cs-signal);
+    color: var(--cs-signal-inverse);
+  }
+
+  .dark .hp-signal-field {
+    background-color: var(--cs-foundation);
+    color: var(--cs-text-primary);
+  }
+
+  /* Hero signal-field variant that preserves text readability */
+  .hp-signal-field-hero {
+    background-color: var(--cs-signal);
+  }
+
+  .dark .hp-signal-field-hero {
+    background-color: var(--cs-foundation);
+  }
+
+  /* Secondary route utilities */
+
+  /* Ruled evidence band — full-width with top border */
+  .ruled-band {
+    border-top: 1px solid var(--cs-structural-line);
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .ruled-band {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  /* Evidence section spacing */
+  .evidence-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .evidence-section {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  /* Readable measure constraint */
+  .readable-measure {
+    max-width: 68ch;
+  }
+
+  /* Metadata measure constraint */
+  .meta-measure {
+    max-width: 45ch;
+  }
+
+  /* Section anchor offset for persistent nav */
+  .scroll-target {
+    scroll-margin-top: var(--nav-height, 80px);
+  }
+
+  /* Grid canvas guide lines overlay aligned with hp-grid */
+  .hp-grid-guides {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    height: 100%;
+  }
+
+  .hp-grid-guide-col {
+    grid-column: span 1;
+    border-right: 1px solid var(--cs-structural-line);
+    opacity: 0.4;
+    height: 100%;
+  }
+
+  /* Telemetry credibility strip */
+  .credibility-strip {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    border-top: 1px solid var(--cs-structural-line);
+    border-bottom: 1px solid var(--cs-structural-line);
+    background: var(--cs-reading-surface);
+  }
+
+  @media (min-width: 640px) {
+    .credibility-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .credibility-cell {
+    min-height: 90px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--cs-structural-line);
+  }
+
+  @media (min-width: 640px) {
+    .credibility-cell {
+      border-bottom: 0;
+      border-right: 1px solid var(--cs-structural-line);
+    }
+    .credibility-cell:last-child {
+      border-right: 0;
+    }
   }
 }
 
@@ -122,50 +376,6 @@
   background-clip: content-box;
 }
 
-.no-native-scrollbar {
-  scrollbar-width: none;
-}
-
-.no-native-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-track {
-  position: absolute;
-  top: 0;
-  right: 2px;
-  bottom: 0;
-  width: 8px;
-  z-index: 20;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.scrollbar-track--page {
-  position: fixed;
-  z-index: 90;
-}
-
-.scrollbar-thumb {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 8px;
-  border-radius: 9999px;
-  background: var(--border);
-  cursor: grab;
-  touch-action: none;
-}
-
-.scrollbar-thumb:hover,
-.scrollbar-thumb.is-dragging {
-  background: var(--muted-foreground);
-}
-
-.scrollbar-thumb.is-dragging {
-  cursor: grabbing;
-}
 
 @keyframes ticker {
   to { transform: translateX(-50%); }
@@ -205,3 +415,26 @@
     animation-play-state: paused;
   }
 }
+
+/* Prototype Blueprint Grid & Geometric Utilities */
+.hp-shape-asymmetric {
+  border-radius: 48% 48% 12% 12%;
+  border: 1px solid var(--cs-structural-line-strong);
+}
+
+.hp-shape-circle {
+  border-radius: 50%;
+  border: 1px solid var(--cs-structural-line-strong);
+}
+
+.hp-card-offset {
+  border: 3px solid var(--cs-text-primary);
+  box-shadow: 10px 10px 0 var(--cs-text-primary);
+}
+
+.hp-portrait-orb {
+  border-radius: 50%;
+  background: var(--cs-signal);
+  box-shadow: 0 140px 0 -10px var(--cs-signal);
+}
+
