@@ -1,3 +1,6 @@
+export { MOTION_BUDGET, TIMING_BUDGET, EASING_BUDGET, DISTANCE_BUDGET, DENSITY_BUDGET } from "./motion-budget";
+export type { MotionTier, MotionFamily, DistanceToken, MotionBudget } from "./motion-budget";
+
 export const motionTokens = {
   duration: {
     fast: 0.22,

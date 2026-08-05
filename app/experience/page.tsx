@@ -1,44 +1,47 @@
-import PageTransition from "@/components/layout/PageTransition";
-import { experience } from "@/lib/experience";
-import BackButton from "@/components/utils/BackButton";
+// app/experience/page.tsx
 import type { Metadata } from "next";
+import { getExperienceLedger } from "@/lib/content/collection-projections";
+import { PageFamilyFrame, CompactMasthead } from "@/components/frames";
+import { RecordContinuation } from "@/components/evidence";
+import ExperienceCareerRecord from "@/components/routes/ExperienceCareerRecord";
 
 export const metadata: Metadata = {
   title: "Experience",
   description:
     "Professional experience of Hans Amoguis — AI Solutions Development Intern at Eskwelabs and freelance full-stack development work.",
-  alternates: {
-    canonical: "/experience",
-  },
+  alternates: { canonical: "/experience" },
 };
 
 export default function ExperiencePage() {
+  const { totalCount, records } = getExperienceLedger();
+
   return (
-    <PageTransition>
-      <main className="min-h-screen pt-40 px-6 pb-24">
-        <div className="mx-auto max-w-[1000px]">
-          <h1 className="mb-12 text-4xl font-black uppercase tracking-tighter md:text-6xl text-foreground">
-            <span className="text-primary">Experience</span>
-          </h1>
-          <div className="space-y-16">
-            {experience.map((item, idx) => (
-              <div key={idx} className="group relative border-l border-border pl-8 transition-colors hover:border-primary">
-                <span className="absolute -left-[5px] top-2 h-2 w-2 rounded-full bg-border transition-colors group-hover:bg-primary" />
-                <h3 className="mb-2 text-3xl font-bold text-foreground">{item.role}</h3>
-                <p className="mb-6 font-mono text-sm uppercase tracking-widest text-primary">
-                  {item.company} {"//"} {item.period}
-                </p>
-                <ul className="list-disc space-y-3 pl-5 text-muted-foreground">
-                  {item.points.map((point, i) => (
-                    <li key={i} className="text-lg leading-relaxed">{point}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-      <BackButton text="Back to Home" />
-    </PageTransition>
+    <PageFamilyFrame
+      masthead={
+        <CompactMasthead
+          parentLabel="Home"
+          parentHref="/"
+          title="Experience"
+          subtitle="Complete professional history."
+          metadata={
+            <span>{totalCount} roles</span>
+          }
+        />
+      }
+      continuation={
+        <RecordContinuation
+          parent={{ label: "← Home", href: "/" }}
+        />
+      }
+    >
+      <div data-motion-target="career-ledger">
+        {records.map((record) => (
+          <ExperienceCareerRecord
+            key={`${record.company}-${record.role}`}
+            record={record}
+          />
+        ))}
+      </div>
+    </PageFamilyFrame>
   );
 }

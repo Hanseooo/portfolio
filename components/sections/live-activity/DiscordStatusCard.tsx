@@ -1,61 +1,28 @@
 "use client";
 
 import { memo } from "react";
-import { Activity, Gamepad2, Headphones, PlayCircle, AlertTriangle } from "lucide-react";
+import { Activity, Gamepad2, Headphones, PlayCircle } from "lucide-react";
 import type { ActivityResponse, DiscordActivity } from "@/lib/activity/types";
 import { formatClockTime } from "@/lib/activity/formatters";
-import { useClientReady } from "@/components/utils/useClientReady";
-import { getRuntimeEnv } from "@/components/utils/browserInfo";
 
 type DiscordStatusCardProps = {
   payload: ActivityResponse<DiscordActivity> | null;
   loading?: boolean;
 };
 
-const statusClassMap: Record<DiscordActivity["status"], string> = {
+const STATUS_DOT: Record<DiscordActivity["status"], string> = {
   online: "bg-emerald-500",
   idle: "bg-amber-400",
   dnd: "bg-red-500",
   offline: "bg-gray-500",
 };
 
-function LoadingState() {
-  return (
-    <div className="space-y-6 pt-2 animate-pulse">
-      <div className="flex items-center gap-4">
-        <div className="h-14 w-14 shrink-0 bg-foreground/10" />
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="h-4 w-1/2 bg-foreground/10" />
-          <div className="h-3 w-1/3 bg-foreground/10" />
-          <div className="h-3 w-1/4 bg-foreground/10 mt-3" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ActivityFallbackIcon({
-  kind,
-  type,
-}: {
-  kind: "spotify" | "activity";
-  type?: number;
-}) {
-  const iconClass = "h-5 w-5 text-primary/75";
-
-  if (kind === "spotify") {
-    return <Headphones className={iconClass} aria-hidden="true" />;
-  }
-
-  if (type === 0) {
-    return <Gamepad2 className={iconClass} aria-hidden="true" />;
-  }
-
-  if (type === 3) {
-    return <PlayCircle className={iconClass} aria-hidden="true" />;
-  }
-
-  return <Activity className={iconClass} aria-hidden="true" />;
+function ActivityIcon({ kind, type }: { kind: "spotify" | "activity"; type?: number }) {
+  const cls = "h-4 w-4 text-[color:var(--cs-signal-text)]";
+  if (kind === "spotify") return <Headphones className={cls} aria-hidden="true" />;
+  if (type === 0) return <Gamepad2 className={cls} aria-hidden="true" />;
+  if (type === 3) return <PlayCircle className={cls} aria-hidden="true" />;
+  return <Activity className={cls} aria-hidden="true" />;
 }
 
 function DiscordStatusCard({
@@ -63,185 +30,177 @@ function DiscordStatusCard({
   loading = false,
 }: DiscordStatusCardProps) {
   const data = payload?.data;
-  const spotifyHasLink = Boolean(data?.live.spotify?.trackUrl);
-  const isClient = useClientReady();
-  const isMobile = isClient ? getRuntimeEnv().isMobile : false;
+
+  if (loading) {
+    return (
+      <div className="py-3">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+          Loading Discord presence…
+        </p>
+      </div>
+    );
+  }
+
+  if (payload && !payload.ok) {
+    return (
+      <div className="py-3">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-error)]">
+          {payload.error?.message ?? "Discord presence temporarily unavailable."}
+        </p>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  const spotifyHasLink = Boolean(data.live.spotify?.trackUrl);
 
   return (
-    <article className="border-t border-white/10 bg-transparent py-6">
-      <div className="mb-6 flex items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <h3 className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
-            Discord Presence
-          </h3>
-        </div>
-        <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-white/5 dark:bg-black/20 backdrop-blur-sm isolate">
+      {/* Editorial Header */}
+      <div className="flex items-center justify-between gap-2 bg-[color:var(--cs-signal)] dark:bg-zinc-800 px-4 py-3 text-white">
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/90">
+          LIVE DISCORD STATUS
+        </p>
+        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/60">
           {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
         </span>
       </div>
 
-      {loading ? <LoadingState /> : null}
-
-      {!loading && payload && !payload.ok ? (
-        <div className="flex items-center gap-3 rounded-md border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          <p>{payload.error?.message ?? "Discord presence is temporarily unavailable."}</p>
-        </div>
-      ) : null}
-
-      {!loading && payload?.ok && data ? (
-        <div className="space-y-6 pt-2">
-          <div className="flex items-center gap-4">
-            {data.user.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={data.user.avatarUrl}
-                alt={`${data.user.displayName ?? data.user.username} avatar`}
-                loading="lazy"
-                decoding="async"
-                className={`h-14 w-14 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
-              />
-            ) : (
-              <div className="h-14 w-14 shrink-0 border border-border bg-background/60" />
-            )}
-
-            <div className="min-w-0">
-              <p className="line-clamp-1 text-sm font-bold text-foreground/90">
-                {data.user.displayName ?? data.user.username}
-              </p>
-              <p className="line-clamp-1 text-xs text-foreground/70 mt-1">@{data.user.username}</p>
-              <div className="mt-3 inline-flex items-center gap-2 font-bold text-[10px] uppercase tracking-[0.2em] text-foreground/75">
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${statusClassMap[data.status]}`}
-                  aria-hidden="true"
-                />
-                <span>{data.status}</span>
-              </div>
+      <div className="p-4 md:p-6 flex flex-col gap-6">
+        {/* User (Macro Typography) */}
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4 md:gap-6 border-b border-[color:var(--cs-structural-line)] pb-6">
+          {data.user.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={data.user.avatarUrl}
+              alt={`${data.user.displayName ?? data.user.username} avatar`}
+              loading="lazy"
+              decoding="async"
+              className="h-20 w-20 md:h-24 md:w-24 shrink-0 object-cover border border-white/20 shadow-xl grayscale opacity-80 mix-blend-luminosity transition-all duration-500 hover:grayscale-0 hover:mix-blend-normal hover:opacity-100"
+            />
+          ) : (
+            <div className="h-20 w-20 md:h-24 md:w-24 shrink-0 border border-[color:var(--cs-structural-line)] bg-black/10" />
+          )}
+          <div className="min-w-0 flex flex-col justify-end">
+            <div className="mb-2 flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-signal-text)]">
+              <span className={`h-2 w-2 rounded-full ${STATUS_DOT[data.status]} shadow-[0_0_8px_currentColor]`} aria-hidden="true" />
+              <span>STATUS // {data.status}</span>
             </div>
+            <p className="line-clamp-1 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase tracking-tight text-[color:var(--cs-text-primary)]">
+              {data.user.displayName ?? data.user.username}
+            </p>
           </div>
-
-          {data.live.spotify ? (
-            <div className="pt-2">
-              <div className="flex items-center gap-4">
-                {data.live.spotify.albumArtUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={data.live.spotify.albumArtUrl}
-                    alt={`${data.live.spotify.album} cover`}
-                    loading="lazy"
-                    decoding="async"
-                    className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
-                  />
-                ) : (
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">
-                    <ActivityFallbackIcon kind="spotify" />
-                  </div>
-                )}
-
-                <div className="min-w-0">
-                  <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                    Spotify on Discord
-                  </p>
-                  {spotifyHasLink ? (
-                    <a
-                      href={data.live.spotify.trackUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 block line-clamp-1 text-sm font-bold text-foreground/85 hover:text-primary transition-colors"
-                    >
-                      {data.live.spotify.title}
-                    </a>
-                  ) : (
-                    <p className="mt-2 line-clamp-1 text-sm font-bold text-foreground/85">{data.live.spotify.title}</p>
-                  )}
-                  <p className="line-clamp-1 text-xs text-foreground/70 mt-1">
-                    {data.live.spotify.artist} · {data.live.spotify.album}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          {data.live.gaming ? (
-            <div className="pt-2">
-              <div className="flex items-center gap-4">
-                {data.live.gaming.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={data.live.gaming.imageUrl}
-                    alt={`${data.live.gaming.name} cover`}
-                    loading="lazy"
-                    decoding="async"
-                    className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
-                  />
-                ) : (
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">
-                    <ActivityFallbackIcon kind="activity" type={0} />
-                  </div>
-                )}
-
-                <div className="min-w-0">
-                  <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">Playing</p>
-                  <p className="mt-2 line-clamp-1 text-sm font-bold text-foreground/85">{data.live.gaming.name}</p>
-                  {data.live.gaming.details ? (
-                    <p className="line-clamp-1 text-xs text-foreground/70 mt-1">{data.live.gaming.details}</p>
-                  ) : null}
-                  {data.live.gaming.state ? (
-                    <p className="line-clamp-1 text-xs text-foreground/70">{data.live.gaming.state}</p>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          {data.live.otherActivities.length > 0 ? (
-            <div className="space-y-6 pt-2">
-              <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">Other Activities</p>
-              {data.live.otherActivities.map((activity) => (
-                <div
-                  key={`${activity.type}-${activity.name}-${activity.startedAt ?? "na"}`}
-                  className="pt-2"
-                >
-                  <div className="flex items-center gap-4">
-                    {activity.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={activity.imageUrl}
-                        alt={`${activity.name} artwork`}
-                        loading="lazy"
-                        decoding="async"
-                        className={`h-12 w-12 shrink-0 object-cover transition-all duration-500${!isMobile ? " grayscale hover:grayscale-0" : ""}`}
-                      />
-                    ) : (
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-background/60">
-                        <ActivityFallbackIcon kind="activity" type={activity.type} />
-                      </div>
-                    )}
-
-                    <div className="min-w-0">
-                      <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">
-                        {activity.typeLabel}
-                      </p>
-                      <p className="mt-2 line-clamp-1 text-sm font-bold text-foreground/85">{activity.name}</p>
-                      {activity.details ? (
-                        <p className="line-clamp-1 text-xs text-foreground/70 mt-1">{activity.details}</p>
-                      ) : null}
-                      {activity.state ? (
-                        <p className="line-clamp-1 text-xs text-foreground/70">{activity.state}</p>
-                      ) : null}
-                      {activity.platform ? (
-                        <p className="line-clamp-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/65 mt-1">
-                          {activity.platform}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : null}
         </div>
-      ) : null}
+
+        <div className="grid grid-cols-1 gap-6">
+          {/* Spotify on Discord */}
+          {data.live.spotify && (
+            <div className="flex items-center gap-4">
+              {data.live.spotify.albumArtUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={data.live.spotify.albumArtUrl}
+                  alt={`${data.live.spotify.album} cover`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                />
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
+                  <ActivityIcon kind="spotify" />
+                </div>
+              )}
+              <div className="min-w-0 flex flex-col">
+                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
+                  Spotify Activity
+                </p>
+                {spotifyHasLink ? (
+                  <a
+                    href={data.live.spotify.trackUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)] transition-colors hover:text-[color:var(--cs-signal)]"
+                  >
+                    {data.live.spotify.title}
+                  </a>
+                ) : (
+                  <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
+                    {data.live.spotify.title}
+                  </p>
+                )}
+                <p className="line-clamp-1 text-xs text-[color:var(--cs-text-secondary)] font-medium">
+                  {data.live.spotify.artist}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Gaming activity */}
+          {data.live.gaming && (
+            <div className="flex items-center gap-4">
+              {data.live.gaming.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={data.live.gaming.imageUrl}
+                  alt={`${data.live.gaming.name} cover`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                />
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
+                  <ActivityIcon kind="activity" type={0} />
+                </div>
+              )}
+              <div className="min-w-0 flex flex-col">
+                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
+                  Current Game
+                </p>
+                <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
+                  {data.live.gaming.name}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Other activities */}
+          {data.live.otherActivities.map((activity) => (
+            <div
+              key={`${activity.type}-${activity.name}-${activity.startedAt ?? "na"}`}
+              className="flex items-center gap-4"
+            >
+              {activity.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={activity.imageUrl}
+                  alt={`${activity.name} artwork`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                />
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
+                  <ActivityIcon kind="activity" type={activity.type} />
+                </div>
+              )}
+              <div className="min-w-0 flex flex-col">
+                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
+                  {activity.typeLabel}
+                </p>
+                <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
+                  {activity.name}
+                </p>
+                {activity.platform && (
+                  <p className="line-clamp-1 text-xs text-[color:var(--cs-text-secondary)] font-medium">
+                    {activity.platform}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </article>
   );
 }

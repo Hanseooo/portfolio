@@ -1,34 +1,49 @@
-import PageTransition from "@/components/layout/PageTransition";
-import { projects } from "@/lib/projects";
-import BackButton from "@/components/utils/BackButton";
-import ProjectCard from "@/components/cards/ProjectCard";
+// app/projects/page.tsx
 import type { Metadata } from "next";
+import { getProjectCollection } from "@/lib/content/collection-projections";
+import { PageFamilyFrame, CompactMasthead } from "@/components/frames";
+import { RecordContinuation } from "@/components/evidence";
+import ProjectCatalogueRecord from "@/components/routes/ProjectCatalogueRecord";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
     "Selected full-stack and AI product engineering projects by Hans Amoguis, including Le Doux, Clarift, and SimplyNote.",
-  alternates: {
-    canonical: "/projects",
-  },
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {
+  const { totalCount, records } = getProjectCollection();
+
   return (
-    <PageTransition>
-      <main className="min-h-screen pt-40 px-6 pb-24">
-        <div className="mx-auto max-w-[1400px]">
-          <h1 className="mb-12 text-4xl font-black uppercase tracking-tighter md:text-6xl text-foreground">
-            <span className="text-primary">Projects</span>
-          </h1>
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, idx) => (
-              <ProjectCard key={project.slug} project={project} idx={idx} />
-            ))}
-          </div>
-        </div>
-      </main>
-      <BackButton text="Back to Home" />
-    </PageTransition>
+    <PageFamilyFrame
+      masthead={
+        <CompactMasthead
+          parentLabel="Home"
+          parentHref="/"
+          title="Projects"
+          subtitle={`${totalCount} selected projects — full-stack and AI product engineering.`}
+          metadata={
+            <span>{totalCount} projects</span>
+          }
+        />
+      }
+      continuation={
+        <RecordContinuation
+          parent={{ label: "← Home", href: "/" }}
+        />
+      }
+    >
+      {/* Equal-rank ruled bands — source order, no card grid */}
+      <div data-motion-target="catalogue-list">
+        {records.map((record, idx) => (
+          <ProjectCatalogueRecord
+            key={record.slug}
+            record={record}
+            isAlternate={idx % 2 !== 0}
+          />
+        ))}
+      </div>
+    </PageFamilyFrame>
   );
 }

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { motionTokens } from "@/lib/motion";
 import type { Certificate } from "@/lib/certificates";
 
@@ -56,18 +55,16 @@ export default function CertificateHero({ cert }: { cert: Certificate }) {
 
           {cert.credentialUrl && (
             <div className="mt-8 flex">
-              <MagneticButton>
-                <Button asChild className="font-semibold">
-                  <Link
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    View Credential
-                  </Link>
-                </Button>
-              </MagneticButton>
+              <Button asChild className="font-semibold">
+                <Link
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  View Credential
+                </Link>
+              </Button>
             </div>
           )}
         </div>

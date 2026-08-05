@@ -3,6 +3,7 @@ import { projects } from "@/lib/projects";
 
 export const runtime = "nodejs";
 export { size, contentType };
+export const alt = "Share card for a project from Hans Amoguis' portfolio";
 
 export async function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
