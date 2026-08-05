@@ -11,11 +11,11 @@
 ## Global Constraints
 
 - Package manager is `npm` — no new dependencies are added in this plan (verified: `sharp` already in `node_modules`, `next/og` is a Next 16 built-in).
-- No test runner is configured in this repo. Verification per task uses `npx tsc --noEmit`, `npm run lint`, `npm run build` (route-type check), and `curl` against a running `next dev` server to inspect real output (PNG bytes, `<head>` tags). No unit-test framework is introduced.
+- No test runner is configured in this repo. Verification per task uses `npx tsc --noEmit`, `pnpm lint`, `pnpm build` (route-type check), and `curl` against a running `next dev` server to inspect real output (PNG bytes, `<head>` tags). No unit-test framework is introduced.
 - Confirmed brand tokens (`app/globals.css`): light `--background:#FFFFFF` / `--primary:#e10600` (red); dark `--background:#000000` / `--primary:#00E5FF` (ice blue). The OG image card is a single static asset generated once per route at build time — it is **not** theme-reactive (no viewer preference exists at build time), so it always uses the dark tokens (`#000000` bg, `#00E5FF` accent) per the spec's Section 1 design. This matches the spec verbatim; no change needed there.
 - **Single source of truth for the production URL:** `SITE_URL`, exported from `components/utils/externalLinks.ts`, reads `process.env.NEXT_PUBLIC_SITE_URL` with a fallback to the literal `"https://hanseo.tech"` (Task 2). Every file that needs the absolute site origin (`app/layout.tsx`, `app/sitemap.ts`, `app/projects/[slug]/layout.tsx`, `app/certificates/[slug]/layout.tsx`) imports `SITE_URL` instead of hardcoding its own copy of the string. This is a correctness fix, not a speculative abstraction: those 4 files already each hardcode the same literal today, and 3 of them are already being edited by this plan.
 - `localhost` must never appear in committed source (`app/**`, `lib/**`, `components/**`) — only in this plan's own dev-server verification commands, which are shell instructions, not shipped code. Task 12 includes a repo grep to confirm this.
-- Every new/edited file must keep `npm run lint && npm run build` exiting 0 (per project `CLAUDE.md` PR requirements).
+- Every new/edited file must keep `pnpm lint && pnpm build` exiting 0 (per project `CLAUDE.md` PR requirements).
 - No visible UI change is expected anywhere in this plan (metadata/head/asset-only) — the final task includes a visual sanity check for that.
 
 ---
@@ -439,7 +439,7 @@ export default async function Image() {
 
 - [ ] **Step 5: Verify each route renders a real PNG**
 
-Run in one terminal: `npm run dev` (leave running — this dev server is local-only tooling for this verification step, not something shipped in source)
+Run in one terminal: `pnpm dev` (leave running — this dev server is local-only tooling for this verification step, not something shipped in source)
 
 Run in another:
 ```bash
@@ -549,7 +549,7 @@ export default async function Image({
 
 - [ ] **Step 3: Verify with 2 sample slugs each**
 
-With `npm run dev` still running:
+With `pnpm dev` still running:
 ```bash
 curl -s -o /tmp/og-le-doux.png -w "%{http_code} %{content_type}\n" http://localhost:3000/projects/le-doux/opengraph-image
 curl -s -o /tmp/og-clarift.png -w "%{http_code} %{content_type}\n" http://localhost:3000/projects/clarift/opengraph-image
@@ -686,7 +686,7 @@ Expected: exits 0.
 
 - [ ] **Step 4: Verify JSON-LD renders in the actual HTML**
 
-With `npm run dev` running:
+With `pnpm dev` running:
 ```bash
 curl -s http://localhost:3000/ | grep -o '<script type="application/ld+json">[^<]*</script>'
 ```
@@ -826,7 +826,7 @@ Expected: exits 0.
 
 - [ ] **Step 3: Verify JSON-LD renders for a real project page**
 
-With `npm run dev` running:
+With `pnpm dev` running:
 ```bash
 curl -s http://localhost:3000/projects/le-doux | grep -o '<script type="application/ld+json">[^<]*</script>'
 ```
@@ -964,7 +964,7 @@ Expected: exits 0.
 
 - [ ] **Step 3: Verify JSON-LD renders for a real certificate page**
 
-With `npm run dev` running:
+With `pnpm dev` running:
 ```bash
 curl -s http://localhost:3000/certificates/python-essentials-1 | grep -o '<script type="application/ld+json">[^<]*</script>'
 ```
@@ -1046,7 +1046,7 @@ Expected: exits 0.
 
 - [ ] **Step 5: Verify distinct titles/canonicals via view-source**
 
-With `npm run dev` running:
+With `pnpm dev` running:
 ```bash
 curl -s http://localhost:3000/projects | grep -o '<title>[^<]*</title>\|rel="canonical" href="[^"]*"'
 curl -s http://localhost:3000/certificates | grep -o '<title>[^<]*</title>\|rel="canonical" href="[^"]*"'
@@ -1140,7 +1140,7 @@ export default function manifest(): MetadataRoute.Manifest {
 
 - [ ] **Step 5: Verify favicon and manifest are linked in `<head>`**
 
-With `npm run dev` running (restart it if it was already running, so the new file-convention icons are picked up):
+With `pnpm dev` running (restart it if it was already running, so the new file-convention icons are picked up):
 ```bash
 curl -s http://localhost:3000/ | grep -o '<link rel="[^"]*icon[^"]*"[^>]*>\|<link rel="manifest"[^>]*>'
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/manifest.webmanifest
@@ -1223,7 +1223,7 @@ Expected: exits 0.
 
 - [ ] **Step 4: Verify sitemap output**
 
-With `npm run dev` running:
+With `pnpm dev` running:
 ```bash
 curl -s http://localhost:3000/sitemap.xml | grep -o '<loc>[^<]*</loc>'
 ```
@@ -1244,17 +1244,17 @@ git commit -m "feat: add projects/certificates/experience index routes to sitema
 
 - [ ] **Step 1: Lint**
 
-Run: `npm run lint`
+Run: `pnpm lint`
 Expected: exits 0.
 
 - [ ] **Step 2: Build**
 
-Run: `npm run build`
+Run: `pnpm build`
 Expected: exits 0.
 
 - [ ] **Step 3: Confirm static generation of dynamic routes**
 
-Inspect the build output route table (printed by `npm run build`) for these rows:
+Inspect the build output route table (printed by `pnpm build`) for these rows:
 ```
 app/projects/[slug]
 app/certificates/[slug]
@@ -1273,9 +1273,9 @@ Expected: the first command returns only `components/utils/externalLinks.ts` (th
 
 - [ ] **Step 5: Validate JSON-LD with a schema validator**
 
-Start `npm run start` (production server) after the build, then fetch and check each page type has valid, parseable JSON-LD:
+Start `pnpm start` (production server) after the build, then fetch and check each page type has valid, parseable JSON-LD:
 ```bash
-npm run start &
+pnpm start &
 sleep 2
 curl -s http://localhost:3000/ | grep -oP '(?<=application/ld\+json">)[^<]*' | node -e "process.stdin.on('data', d => JSON.parse(d.toString()))"
 curl -s http://localhost:3000/projects/le-doux | grep -oP '(?<=application/ld\+json">)[^<]*' | while read -r line; do echo "$line" | node -e "process.stdin.on('data', d => JSON.parse(d.toString()))"; done
@@ -1303,7 +1303,7 @@ kill %1 2>/dev/null || true
 ```bash
 git status
 ```
-If clean (all prior task commits already cover everything), no further commit needed. If `npm run lint`/`build` required fixes not yet committed, commit them:
+If clean (all prior task commits already cover everything), no further commit needed. If `pnpm lint`/`build` required fixes not yet committed, commit them:
 ```bash
 git add -A
 git commit -m "fix: address lint/build issues found in SEO enhancements verification pass"

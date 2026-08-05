@@ -105,7 +105,7 @@ Add `verification: { google: "<VERIFICATION_CODE>" }` to the root `metadata` exp
 - [ ] `app/icon.svg` is replaced; new favicon files are under 50KB combined; `app/manifest.ts` exists and is linked (verify via browser devtools Application tab or view-source `<link rel="manifest">`).
 - [ ] `sitemap.xml` includes `/`, `/projects`, `/certificates`, `/experience`, and every project/certificate detail route.
 - [ ] `verification.google` field present in root metadata (placeholder acceptable if user hasn't obtained the real code yet; task isn't blocked on it).
-- [ ] `npm run lint && npm run build` both exit 0.
+- [ ] `pnpm lint && pnpm build` both exit 0.
 - [ ] Manual verification in browser: homepage and at least one project/certificate page visually unaffected (this is a metadata/head-only change; no visible UI should change).
 
 ## Out of scope (flagged, not built)
