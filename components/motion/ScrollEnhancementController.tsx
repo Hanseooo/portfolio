@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
   useCallback,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -106,13 +107,10 @@ export function ScrollEnhancementProvider({ children }: { children: ReactNode })
     lenisRef.current?.start();
   }, []);
 
-  const api: ScrollEnhancementAPI = {
-    isReady,
-    scrollToFragment,
-    scrollToPosition,
-    stop,
-    resume,
-  };
+  const api = useMemo<ScrollEnhancementAPI>(
+    () => ({ isReady, scrollToFragment, scrollToPosition, stop, resume }),
+    [isReady, scrollToFragment, scrollToPosition, stop, resume]
+  );
 
   return (
     <ScrollEnhancementContext.Provider value={api}>

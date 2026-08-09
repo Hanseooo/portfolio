@@ -5,6 +5,7 @@ import {
   useContext,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -151,11 +152,10 @@ export function RouteHandoffProvider({ children }: { children: ReactNode }) {
     [pathname, routeHandoff, tier, router, schedule, cleanup, suspendScroll, setHandoffPhase]
   );
 
-  const api: RouteHandoffAPI = {
-    navigate,
-    phase,
-    isActive: phase !== "idle",
-  };
+  const api = useMemo<RouteHandoffAPI>(
+    () => ({ navigate, phase, isActive: phase !== "idle" }),
+    [navigate, phase]
+  );
 
   return (
     <RouteHandoffContext.Provider value={api}>
