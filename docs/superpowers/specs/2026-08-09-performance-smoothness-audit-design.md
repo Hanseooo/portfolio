@@ -13,10 +13,28 @@
 | 1 — free wins | **done** | `bf17c5e` |
 | 2 — deletion | **done** | `e811842` `d5bbb2b` `1d09d37` `a9e5940` `15ca291` `0dc52cc` `4a8df3e` |
 | 3 — frame rate | **done** | `61dd989` |
-| 4 — load | not started | L1 dropped (falsified) |
-| 5 — correctness | not started | |
+| 4 — load | **done** (L5 deferred) | `2cd42cb` — L1 dropped (falsified), L3 already resolved by §2 |
+| 5 — correctness | **done** | `c1eccc7` — S5, H4, H2 changed; S4 and H3 investigated, no change warranted |
 
-Result so far: 71 files / 5,935 lines deleted, 0 unreachable files remaining. Chunks 1,296,577 → 1,253,628 bytes.
+Result: 73 files / ~6,030 lines deleted, 0 unreachable files remaining. Chunks 1,296,577 → 1,242,231 bytes (−4.2%).
+
+**Deferred by the user (2026-08-09):** L5 image deletion. Six confirmed-unimported
+files totalling 4,190 KB stay in the tree for now, as does the `hans.webp`
+re-encode. Nothing else in the audit depends on them.
+
+**Still open, awaiting a decision:** S8 — `components/motion/SplitText.tsx`
+(untracked) and the `maskReveal` / `peelReveal` additions in `lib/motion.ts`
+(uncommitted) have had zero consumers since `4a8df3e`.
+
+**Findings closed without a code change**
+
+- **S4** — `CapabilityProvider` passes `children` through as a prop, so its
+  post-hydration re-render re-uses the same element reference and React skips
+  the subtree; only context consumers re-render, which is already minimal. The
+  proposed `useState` lazy initializer would trade that for a hydration mismatch.
+- **H3** — the universal base rule only sets `border-color` and `outline-color`.
+  Modern engines match `*` cheaply, and removing it would drop every bare
+  `border` utility back to `currentColor` site-wide. Real risk, no measurable win.
 
 ---
 
@@ -218,7 +236,7 @@ Sequenced so that measurement is possible and each phase lands on a smaller surf
 
 **Phase 4 — load.** ~~L1~~ (dropped — falsified), L5 (image cleanup), L4 (`SceneIdentity` → server), L3 (projection props), L6 (gate polling). Re-measure LCP/TBT. Note L3 mostly resolved itself: six of its eight files died in Phase 2, leaving only the live `app/projects/[slug]` path to check.
 
-**Phase 5 — correctness follow-ups.** S4, S5, H4, then H2/H3 once §2 makes the token question answerable.
+**Phase 5 — correctness follow-ups.** S4, S5, H4, then H2/H3 once §2 makes the token question answerable. *Executed: S5, H4 and H2 changed; S4 and H3 closed with no change — see §Status for why.*
 
 **Decide separately, before merge:** S8 — the uncommitted `maskReveal` / `peelReveal` / `SplitText` work. None of it has an importer yet, so it costs nothing today and it is cheaper to reshape now than to optimize after it is wired into sections.
 
