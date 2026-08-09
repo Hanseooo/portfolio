@@ -66,7 +66,7 @@ export default function HomepageChapterNav() {
             </span>
 
             <span
-              className={`hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest transition-opacity xl:inline ${
+              className={`hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest transition-opacity lg:inline ${
                 isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               }`}
             >
