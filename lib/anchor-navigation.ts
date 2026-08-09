@@ -20,7 +20,9 @@ import {
   getDestinationHref,
   isRouteChange,
 } from "./destinations";
-import { NAV_ANCHOR_OFFSET } from "./design-tokens/patterns";
+
+/** Mirrors --nav-height in globals.css, which owns the responsive value. */
+const NAV_ANCHOR_OFFSET_DESKTOP = 80;
 
 /** Stable section IDs for homepage scenes — used as fragment targets */
 export const SECTION_IDS = {
@@ -71,7 +73,7 @@ export function buildAnchorRequest(
   const { updateFragment = true, transferFocus = true } = options;
 
   // ponytail: desktop offset as safe minimum; CSS handles actual responsive value
-  const offsetPx = NAV_ANCHOR_OFFSET.desktop;
+  const offsetPx = NAV_ANCHOR_OFFSET_DESKTOP;
 
   return {
     fragment: dest.fragment,

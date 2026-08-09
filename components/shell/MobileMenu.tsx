@@ -40,26 +40,58 @@ interface MobileMenuProps {
  */
 export default function MobileMenu({ open, close, id, currentPathname }: MobileMenuProps) {
   const firstFocusRef = useRef<HTMLAnchorElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
   const { tier } = useCapability();
   const { navigate: handoffNavigate } = useRouteHandoff();
   const reducedMotion = tier === "reduced-motion";
 
-  // Focus first link when opened
+  // Focus first link when opened; restore the invoker on close
   useEffect(() => {
-    if (open) {
-      // Small delay to allow Framer to mount
-      const raf = requestAnimationFrame(() => {
-        firstFocusRef.current?.focus();
-      });
-      return () => cancelAnimationFrame(raf);
-    }
+    if (!open) return;
+    restoreFocusRef.current = document.activeElement as HTMLElement | null;
+    // Small delay to allow Framer to mount
+    const raf = requestAnimationFrame(() => {
+      firstFocusRef.current?.focus();
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      restoreFocusRef.current?.focus();
+    };
   }, [open]);
 
-  // Escape handler
+  // Escape closes; Tab stays inside the dialog
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      // ponytail: every focusable in this dialog is a link or a button —
+      // no need for the full tabbable-selector list.
+      const focusables = dialog.querySelectorAll<HTMLElement>(
+        "a[href], button:not([disabled])"
+      );
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey) {
+        if (active === first || !dialog.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !dialog.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -105,6 +137,7 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={dialogRef}
           id={id}
           role="dialog"
           aria-modal="true"

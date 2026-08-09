@@ -35,15 +35,37 @@ export function CapabilityProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const resolve = () => {
-      const facts = resolveCapabilityFacts();
-      setValue({ ...getCapabilityDecisions(facts), initialized: true });
+      const next: CapabilityContextValue = {
+        ...getCapabilityDecisions(resolveCapabilityFacts()),
+        initialized: true,
+      };
+      // ponytail: shallow compare instead of debouncing resize — resolve() is
+      // cheap, and a tier flip is rare, so most resize frames bail out here
+      // and never re-render a consumer.
+      setValue((prev) =>
+        (Object.keys(next) as (keyof CapabilityContextValue)[]).every(
+          (key) => prev[key] === next[key]
+        )
+          ? prev
+          : next
+      );
     };
     resolve();
 
-    // Listen for reduced-motion changes
+    // Tier depends on reduced-motion, pointer type, and viewport height — all
+    // three can change mid-session (rotate, split-screen, external monitor).
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const pointer = window.matchMedia("(pointer: coarse)");
     mq.addEventListener("change", resolve);
-    return () => mq.removeEventListener("change", resolve);
+    pointer.addEventListener("change", resolve);
+    window.addEventListener("resize", resolve);
+    window.addEventListener("orientationchange", resolve);
+    return () => {
+      mq.removeEventListener("change", resolve);
+      pointer.removeEventListener("change", resolve);
+      window.removeEventListener("resize", resolve);
+      window.removeEventListener("orientationchange", resolve);
+    };
   }, []);
 
   return (
