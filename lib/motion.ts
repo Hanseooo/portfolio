@@ -104,3 +104,31 @@ export function fadeUpReveal(reducedMotion: boolean, delay = 0) {
     },
   };
 }
+
+export function maskReveal(reducedMotion: boolean, delay = 0) {
+  if (reducedMotion) return {};
+  return {
+    initial: { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" },
+    whileInView: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
+    viewport: { once: true as const, amount: 0.1 },
+    transition: {
+      duration: 0.7,
+      ease: [0.16, 1, 0.3, 1] as const,
+      ...(delay ? { delay } : {}),
+    },
+  };
+}
+
+export function peelReveal(reducedMotion: boolean, delay = 0) {
+  if (reducedMotion) return {};
+  return {
+    initial: { opacity: 0, y: 40, rotateX: 15, scale: 0.95 },
+    whileInView: { opacity: 1, y: 0, rotateX: 0, scale: 1 },
+    viewport: { once: true as const, amount: 0.1 },
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1] as const,
+      ...(delay ? { delay } : {}),
+    },
+  };
+}
