@@ -2,11 +2,12 @@
 
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
-import { fadeUpReveal, clipReveal } from "@/lib/motion";
+import { fadeUpReveal, clipReveal, peelReveal } from "@/lib/motion";
+import SplitText from "@/components/motion/SplitText";
 
 const buildItems = [
   "React", "Next.js", "Langchain",
-  "LangGraph", "LangSmith", "Redis",
+  "LangGraph", "Redis",
   "FastAPI", "PostgreSQL", "Tailwind CSS",
   "Zustand", "Tanstack Query", "Tanstack Router",
 ];
@@ -65,21 +66,20 @@ export default function TechStackSection({ id }: { id: string }) {
 
         {/* Section Title */}
         <div className="mb-16 relative z-10">
-          <motion.h2
-            {...clipReveal(reducedMotion)}
-            className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground uppercase"
-          >
-            Capabilities
-          </motion.h2>
+          <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground uppercase perspective-1000">
+            <SplitText text="Capabilities" />
+          </h2>
         </div>
 
         {/* Asymmetric Bento Grid */}
-        <motion.div 
-          {...fadeUpReveal(reducedMotion, 0.1)}
+        <div 
           className="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-border bg-background relative z-10"
         >
           {/* Cell 1: BUILD (Large Left Column) */}
-          <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-border p-8 lg:p-12 xl:p-16 flex flex-col relative overflow-hidden isolate">
+          <motion.div 
+            {...fadeUpReveal(reducedMotion, 0.1)}
+            className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-border p-8 lg:p-12 xl:p-16 flex flex-col relative overflow-hidden isolate"
+          >
             {/* Architectural Grid and Asymmetrical Routing Lines */}
             <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] dark:opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)', backgroundSize: '24px 24px' }} aria-hidden="true" />
             
@@ -94,7 +94,10 @@ export default function TechStackSection({ id }: { id: string }) {
             <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary mb-12 relative z-10">
               01 / Build
             </p>
-            <div className="flex flex-col gap-2 mt-auto relative z-10">
+            <motion.div 
+              {...clipReveal(reducedMotion)}
+              className="flex flex-col gap-2 mt-auto relative z-10"
+            >
               {buildItems.map((item, idx) => (
                 <span 
                   key={idx} 
@@ -103,13 +106,16 @@ export default function TechStackSection({ id }: { id: string }) {
                   {item}
                 </span>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right Side Container */}
-          <div className="lg:col-span-7 flex flex-col">
+          <div className="lg:col-span-7 flex flex-col perspective-1000">
             {/* Cell 2: TOOLS (Dark/Terminal) */}
-            <div className="border-b border-border p-8 lg:p-12 xl:p-16 bg-zinc-900 dark:bg-zinc-800 text-white flex-auto flex flex-col relative overflow-hidden isolate">
+            <motion.div 
+              {...peelReveal(reducedMotion, 0.2)}
+              className="border-b border-border p-8 lg:p-12 xl:p-16 bg-zinc-900 dark:bg-zinc-800 text-white flex-auto flex flex-col relative overflow-hidden isolate transform-style-3d origin-bottom"
+            >
               {/* Asymmetrical Measurement Marks / Engineering Scales */}
               <div className="absolute top-0 right-1/3 w-[1px] h-4 bg-white/20 pointer-events-none" aria-hidden="true" />
               <div className="absolute top-0 right-[35%] w-[1px] h-2 bg-white/20 pointer-events-none" aria-hidden="true" />
@@ -136,16 +142,23 @@ export default function TechStackSection({ id }: { id: string }) {
               </p>
               <ul className="grid grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4 font-mono text-sm lg:text-base tracking-tight mt-auto relative z-10">
                 {toolsItems.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 sm:gap-3">
+                  <motion.li 
+                    key={idx} 
+                    {...fadeUpReveal(reducedMotion, 0.4 + (idx * 0.05))}
+                    className="flex items-center gap-2 sm:gap-3"
+                  >
                     <span className="text-primary dark:text-zinc-400 shrink-0" aria-hidden="true">{`>`}</span>
                     <span className="opacity-90 truncate">{item}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
             
             {/* Cell 3: DEPLOY (Data-dense List) */}
-            <div className="p-8 lg:p-12 xl:p-16 flex-auto flex flex-col bg-muted/10 relative overflow-hidden isolate">
+            <motion.div 
+              {...peelReveal(reducedMotion, 0.3)}
+              className="p-8 lg:p-12 xl:p-16 flex-auto flex flex-col bg-muted/10 relative overflow-hidden isolate transform-style-3d origin-bottom"
+            >
               {/* Architectural layout lines */}
               <div className="absolute top-[40%] left-[-10%] w-[120%] h-[1px] bg-border pointer-events-none opacity-60" aria-hidden="true" />
               <div className="absolute top-[-10%] right-[25%] w-[1px] h-[120%] bg-border pointer-events-none opacity-60" aria-hidden="true" />
@@ -158,17 +171,21 @@ export default function TechStackSection({ id }: { id: string }) {
               </p>
               <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-4 mt-auto relative z-10">
                 {deployItems.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 group">
+                  <motion.li 
+                    key={idx} 
+                    {...fadeUpReveal(reducedMotion, 0.6 + (idx * 0.05))}
+                    className="flex items-center gap-2 group"
+                  >
                     <span className="w-1.5 h-1.5 bg-muted-foreground/30 group-hover:bg-primary transition-colors shrink-0" aria-hidden="true" />
                     <span className="text-sm font-medium tracking-tight uppercase text-foreground/80 group-hover:text-foreground transition-colors truncate">
                       {item}
                     </span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Bottom Tilted Marquee (Option 2) */}
