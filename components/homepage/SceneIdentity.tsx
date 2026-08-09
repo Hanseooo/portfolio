@@ -37,20 +37,26 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
       className="relative min-h-[max(680px,90vh)] overflow-hidden pb-16 pt-8 md:pb-24 md:pt-12 lg:pb-32 lg:pt-16 border-b border-[color:var(--cs-structural-line)]"
     >
       {/* Shadcn-style Grid Background (Subtle, masked) */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none opacity-[0.15] dark:opacity-[0.07]"
+      {/* Parallax rides the unmasked wrapper — a mask on the moving element
+          itself forces the compositor to re-rasterize it every scroll frame. */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
         aria-hidden="true"
         data-parallax-speed="0.45"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, currentColor 1px, transparent 1px),
-            linear-gradient(to bottom, currentColor 1px, transparent 1px)
-          `,
-          backgroundSize: '128px 128px',
-          maskImage: 'radial-gradient(circle at 50% 30%, black 30%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(circle at 50% 30%, black 30%, transparent 80%)'
-        }}
-      />
+      >
+        <div
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.07]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, currentColor 1px, transparent 1px),
+              linear-gradient(to bottom, currentColor 1px, transparent 1px)
+            `,
+            backgroundSize: '128px 128px',
+            maskImage: 'radial-gradient(circle at 50% 30%, black 30%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(circle at 50% 30%, black 30%, transparent 80%)'
+          }}
+        />
+      </div>
 
       {/* Signal Ribbon backdrop field (gray in dark mode as requested by user) */}
       <div className="absolute top-0 right-0 w-full md:w-[45%] h-full bg-[color:var(--cs-signal)] dark:bg-zinc-800/80 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
@@ -80,13 +86,13 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
           >
             <span
               className="block text-[color:var(--cs-text-primary)]"
-              data-parallax-speed="1"
+              data-parallax-speed="1.5"
             >
               Hans
             </span>
             <span
               className="block text-[color:var(--cs-text-primary)] lg:ml-[7%]"
-              data-parallax-speed="0.55"
+              data-parallax-speed="0.8"
             >
               Amoguis
             </span>
@@ -107,7 +113,7 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
         <div 
           className="col-span-4 md:col-span-4 lg:col-span-4 lg:col-start-8 lg:row-start-2 lg:row-end-4 self-end mt-16 lg:mt-0 lg:-mb-16 relative z-10 mx-auto w-full max-w-sm lg:max-w-none"
           data-motion-target="hero-portrait"
-          data-parallax-speed="-0.6"
+          data-parallax-speed="-1.2"
         >
           {/* Geometric lines and orbs matching the editorial prototype */}
           <div
@@ -133,12 +139,12 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
 
           <div className="relative z-10 border-4 md:border-[8px] border-[#F3F0E9] bg-[color:var(--cs-reading-surface)] overflow-hidden shadow-2xl h-[404px]">
             {/* Oversized so the image can drift inside the fixed frame without exposing an edge */}
-            <div className="absolute inset-x-0 -top-[18%] h-[140%]" data-parallax-speed="-0.4">
+            <div className="absolute inset-x-0 -top-[18%] h-[140%]" data-parallax-speed="-0.8">
               <Image
                 src={data.portrait}
                 alt="Hans Amoguis — Full-stack engineer"
                 priority
-                className="h-full w-full object-cover opacity-95 transition-transform duration-700 hover:scale-105"
+                className="h-full w-full object-cover opacity-95"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 35vw, 400px"
               />
             </div>
@@ -149,17 +155,17 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
         <div className="col-span-4 md:col-span-8 lg:col-span-3 lg:col-start-2 lg:row-start-4 flex flex-col sm:flex-row lg:flex-col gap-3 mt-12 lg:mt-0 z-30 lg:self-end">
           <a
             href={getDestinationHref(flagshipsDest)}
-            className="inline-flex h-12 w-full sm:w-auto items-center justify-between border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform hover:-translate-x-1 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+            className="group inline-flex h-12 w-full sm:w-auto items-center justify-between border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform hover:-translate-x-1 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
             See selected work
-            <ArrowUpRight size={14} aria-hidden="true" />
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </a>
           <a
             href={getDestinationHref(contactDest)}
-            className="inline-flex h-12 w-full sm:w-auto items-center justify-between border border-[color:var(--cs-text-primary)] bg-transparent px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-1 hover:-translate-y-1 hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+            className="group inline-flex h-12 w-full sm:w-auto items-center justify-between border border-[color:var(--cs-text-primary)] bg-transparent px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-1 hover:-translate-y-1 hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
             Start a conversation
-            <ArrowUpRight size={14} aria-hidden="true" />
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </a>
         </div>
 

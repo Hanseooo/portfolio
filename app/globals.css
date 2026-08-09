@@ -400,6 +400,10 @@
 }
 
 .ticker-fade {
+  /* Skip rendering (and the infinite marquee animation) while offscreen.
+     `auto` intrinsic size reuses the last rendered height, so no shift. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -410,9 +414,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* `none`, not `paused` — a paused animation still keeps the compositor
+     layer alive for the life of the page. */
   .ticker-track,
   .ticker-track-reverse {
-    animation-play-state: paused;
+    animation: none;
   }
 }
 

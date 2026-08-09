@@ -55,26 +55,27 @@ export function createHeroParallax(targets: HeroParallaxTargets): GSAPEffectClea
     containerEl.querySelectorAll<HTMLElement>(PARALLAX_LAYER_SELECTOR),
   );
 
-  const tweens = layers.map((el) => {
+  // One ScrollTrigger for the whole scene: every layer shares the same
+  // trigger/start/end, so N triggers would mean N identical measurement and
+  // scrub passes per frame. Layers ride a single timeline at position 0.
+  const timeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: containerEl,
+      start: "top top",
+      end: "bottom top",
+      scrub: 0.8,
+    },
+  });
+
+  layers.forEach((el) => {
     const speed = Number(el.dataset.parallaxSpeed) || 0;
-    return gsap.to(el, {
-      y: distance * speed,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerEl,
-        start: "top top",
-        end: "bottom top",
-        scrub: 0.8,
-      },
-    });
+    timeline.to(el, { y: distance * speed, ease: "none" }, 0);
   });
 
   return {
     destroy: () => {
-      tweens.forEach((tween) => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      });
+      timeline.scrollTrigger?.kill();
+      timeline.kill();
       if (layers.length) gsap.set(layers, { y: 0 });
     },
   };
