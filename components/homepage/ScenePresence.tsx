@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import EvidenceDepthEffect from "@/components/motion/EvidenceDepthEffect";
@@ -80,27 +83,48 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
           </div>
 
           {/* About Me — Schematic Diagram Layout */}
-          <div className="col-span-4 mt-12 md:col-span-4 md:mt-8 lg:col-span-5 lg:col-start-7 lg:mt-12 relative flex flex-col gap-6 md:gap-12">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="col-span-4 mt-12 md:col-span-4 md:mt-8 lg:col-span-5 lg:col-start-7 lg:mt-12 relative flex flex-col gap-6 md:gap-12 perspective-1000"
+          >
             
             {/* The Circuit Connection Line (structural routing from Node 1 to Node 2) */}
-            <div 
+            <motion.div 
+              variants={{
+                hidden: { clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
+                visible: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", transition: { duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] } }
+              }}
               className="absolute top-[40%] bottom-[40%] left-6 md:left-8 w-6 md:w-12 border-l border-b border-[color:var(--cs-structural-line-strong)] z-0 hidden md:block" 
               style={{ borderBottomLeftRadius: '12px' }}
               aria-hidden="true" 
             />
 
             {/* Node 1: The Core (Solid structural block) */}
-            <div className="relative z-10 bg-[#E10600] dark:bg-[color:var(--cs-foundation)] border border-transparent dark:border-[color:var(--cs-structural-line-strong)] p-6 md:p-8 shadow-xl">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 40, rotateX: 15, scale: 0.95 },
+                visible: { opacity: 1, y: 0, rotateX: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="relative z-10 bg-[#E10600] dark:bg-[color:var(--cs-foundation)] border border-transparent dark:border-[color:var(--cs-structural-line-strong)] p-6 md:p-8 shadow-xl transform-style-3d origin-bottom"
+            >
               <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/90 dark:text-[color:var(--cs-signal-text)] mb-3 block">
                 01 / About me
               </span>
               <p className="text-[15px] md:text-base leading-relaxed text-white dark:text-[color:var(--cs-text-primary)] font-medium">
                 {data.aboutPrimary}
               </p>
-            </div>
+            </motion.div>
 
             {/* Node 2: The Extension (Asymmetrical wireframe, indented) */}
-            <div className="relative z-10 md:ml-16 lg:ml-20 border-l-[3px] border-[color:var(--cs-signal)] pl-6 py-2">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="relative z-10 md:ml-16 lg:ml-20 border-l-[3px] border-[color:var(--cs-signal)] pl-6 py-2"
+            >
               {/* Asymmetrical geometric accents */}
               <div className="absolute -left-[3px] top-0 w-3 h-[2px] bg-[color:var(--cs-signal)]" aria-hidden="true" />
               <div className="absolute -left-[3px] bottom-0 w-3 h-[2px] bg-[color:var(--cs-signal)]" aria-hidden="true" />
@@ -111,9 +135,9 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
               <p className="text-[14px] md:text-[15px] leading-relaxed text-[color:var(--cs-text-secondary)]">
                 {data.aboutSecondary}
               </p>
-            </div>
+            </motion.div>
 
-          </div>
+          </motion.div>
         </div>
       </StructuredReveal>
 

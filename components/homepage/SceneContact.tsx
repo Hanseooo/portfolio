@@ -1,6 +1,10 @@
+"use client";
+
 import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 
@@ -54,14 +58,30 @@ export default function SceneContact({ data }: SceneContactProps) {
 
             <h2
               id={`${SECTION_IDS.contact}-heading`}
-              className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)]"
+              className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
             >
-              {data.closeStatement}
+              <SplitText text={data.closeStatement as string} />
             </h2>
 
-            <ul className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" role="list">
+            <motion.ul 
+              className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
+              role="list"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.1, delayChildren: 0.5 } },
+                hidden: {}
+              }}
+            >
               {data.channels.map((channel) => (
-                <li key={channel.type}>
+                <motion.li 
+                  key={channel.type}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                  }}
+                >
                   <a
                     href={channel.href}
                     target={channel.type !== "email" ? "_blank" : undefined}
@@ -75,9 +95,9 @@ export default function SceneContact({ data }: SceneContactProps) {
                       aria-hidden="true"
                     />
                   </a>
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
           </div>
         </StructuredReveal>
       </div>

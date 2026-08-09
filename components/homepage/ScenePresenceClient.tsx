@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import LiveProviderRegionComponent from "@/components/evidence/LiveProviderRegion";
 import GitHubActivityCard from "@/components/sections/live-activity/GitHubActivityCard";
 import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
@@ -115,25 +116,24 @@ function resolveProviderState(
 
 export default function ScenePresenceClient() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "200px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const inView = useInView(sectionRef, { margin: "200px" });
 
   const github = usePolledActivity<GitHubActivity>("/api/activity/github", 5 * 60 * 1000, inView);
   const spotify = usePolledActivity<SpotifyActivity>("/api/activity/spotify", 20 * 1000, inView);
   const discord = usePolledActivity<DiscordActivity>("/api/activity/discord", 20 * 1000, inView);
 
   return (
-    <div ref={sectionRef} className="hp-grid relative isolate">
+    <motion.div 
+      ref={sectionRef} 
+      className="hp-grid relative isolate"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={{
+        visible: { transition: { staggerChildren: 0.15 } },
+        hidden: {}
+      }}
+    >
       {/* Background Architectural Scaffolding (Connecting the columns) */}
       <div className="absolute top-[30%] left-[-2rem] lg:left-[-5rem] w-[80%] h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
       <div className="absolute top-[-2rem] bottom-[-4rem] left-[66.66%] w-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
@@ -143,10 +143,28 @@ export default function ScenePresenceClient() {
       <div className="absolute top-[30%] left-[66.66%] w-8 h-8 border border-[color:var(--cs-structural-line-strong)] rounded-full -translate-x-1/2 -translate-y-1/2 z-0 hidden lg:block" aria-hidden="true" />
 
       {/* GitHub — primary evidence rail */}
-      <div className="col-span-4 md:col-span-5 lg:col-span-8 relative z-10">
+      <motion.div 
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+        }}
+        className="col-span-4 md:col-span-5 lg:col-span-8 relative z-10"
+      >
         {/* GitHub Targeting Brackets (Framing the primary system window) */}
-        <div className="absolute top-0 left-0 w-8 md:w-12 h-8 md:h-12 border-t-2 border-l-2 border-[color:var(--cs-signal)] z-20 pointer-events-none -translate-x-[2px] -translate-y-[2px]" aria-hidden="true" />
-        <div className="absolute bottom-0 right-0 w-8 md:w-12 h-8 md:h-12 border-b-2 border-r-2 border-[color:var(--cs-signal)] z-20 pointer-events-none translate-x-[2px] translate-y-[2px]" aria-hidden="true" />
+        <motion.div 
+          variants={{
+            hidden: { opacity: 0, scale: 0.5, x: 10, y: 10 },
+            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+          }}
+          className="absolute top-0 left-0 w-8 md:w-12 h-8 md:h-12 border-t-2 border-l-2 border-[color:var(--cs-signal)] z-20 pointer-events-none -translate-x-[2px] -translate-y-[2px] origin-top-left" aria-hidden="true" 
+        />
+        <motion.div 
+          variants={{
+            hidden: { opacity: 0, scale: 0.5, x: -10, y: -10 },
+            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+          }}
+          className="absolute bottom-0 right-0 w-8 md:w-12 h-8 md:h-12 border-b-2 border-r-2 border-[color:var(--cs-signal)] z-20 pointer-events-none translate-x-[2px] translate-y-[2px] origin-bottom-right" aria-hidden="true" 
+        />
         
         <LiveProviderRegionComponent
           providerId="github"
@@ -156,28 +174,42 @@ export default function ScenePresenceClient() {
         >
           <GitHubActivityCard payload={github.payload} loading={github.loading} />
         </LiveProviderRegionComponent>
-      </div>
+      </motion.div>
 
       {/* Spotify + Discord — subordinate region */}
       <div className="col-span-4 mt-8 flex flex-col gap-8 md:col-span-3 md:col-start-6 md:mt-0 lg:col-span-4 lg:col-start-9">
-        <LiveProviderRegionComponent
-          providerId="spotify"
-          state={resolveProviderState(spotify.loading, spotify.payload)}
-          label="Spotify activity"
-          minHeight="120px"
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, x: 30 },
+            visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+          }}
         >
-          <SpotifyActivityCard payload={spotify.payload} loading={spotify.loading} />
-        </LiveProviderRegionComponent>
+          <LiveProviderRegionComponent
+            providerId="spotify"
+            state={resolveProviderState(spotify.loading, spotify.payload)}
+            label="Spotify activity"
+            minHeight="120px"
+          >
+            <SpotifyActivityCard payload={spotify.payload} loading={spotify.loading} />
+          </LiveProviderRegionComponent>
+        </motion.div>
 
-        <LiveProviderRegionComponent
-          providerId="discord"
-          state={resolveProviderState(discord.loading, discord.payload)}
-          label="Discord status"
-          minHeight="100px"
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, x: 30 },
+            visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+          }}
         >
-          <DiscordStatusCard payload={discord.payload} loading={discord.loading} />
-        </LiveProviderRegionComponent>
+          <LiveProviderRegionComponent
+            providerId="discord"
+            state={resolveProviderState(discord.loading, discord.payload)}
+            label="Discord status"
+            minHeight="100px"
+          >
+            <DiscordStatusCard payload={discord.payload} loading={discord.loading} />
+          </LiveProviderRegionComponent>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
