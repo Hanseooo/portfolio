@@ -149,7 +149,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
                 <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/70 transition-colors group-hover:text-white">
                   Directory / 01
                 </span>
-                <span className="font-[family-name:var(--font-display)] text-3xl lg:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
+                <span className="font-[family-name:var(--font-display)] text-3xl lg:text-[clamp(1.5rem,2.5vw,2.25rem)] xl:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
                   Full<br />Experience
                 </span>
                 <div className="mt-2 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">
@@ -166,7 +166,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
                 <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/70 transition-colors group-hover:text-white">
                   Directory / 02
                 </span>
-                <span className="font-[family-name:var(--font-display)] text-3xl lg:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
+                <span className="font-[family-name:var(--font-display)] text-3xl lg:text-[clamp(1.5rem,2.5vw,2.25rem)] xl:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
                   All<br />Certificates
                 </span>
                 <div className="mt-2 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">
