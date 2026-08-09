@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LiveProviderRegionComponent from "@/components/evidence/LiveProviderRegion";
 import GitHubActivityCard from "@/components/sections/live-activity/GitHubActivityCard";
 import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
@@ -31,11 +31,24 @@ function buildClientErrorResponse<T>(
   };
 }
 
-function usePolledActivity<T>(url: string, intervalMs: number): ActivityState<T> {
+/**
+ * Polls `url` every `intervalMs`, but only while `active`. Scene 05 sits near
+ * the bottom of a six-scene page; without the gate a visible tab parked on the
+ * hero still fired two requests every 20s for the life of the session.
+ *
+ * One fetch always happens on mount so the first paint has data, and each
+ * re-entry into view refreshes it.
+ */
+function usePolledActivity<T>(
+  url: string,
+  intervalMs: number,
+  active: boolean
+): ActivityState<T> {
   const [state, setState] = useState<ActivityState<T>>({
     payload: null,
     loading: true,
   });
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +69,17 @@ function usePolledActivity<T>(url: string, intervalMs: number): ActivityState<T>
       }
     };
 
-    void update();
+    if (!fetchedRef.current || active) {
+      fetchedRef.current = true;
+      void update();
+    }
+
+    // ponytail: offscreen means no interval and no listener at all
+    if (!active) {
+      return () => {
+        cancelled = true;
+      };
+    }
 
     const intervalId = window.setInterval(() => {
       if (document.visibilityState !== "visible") return;
@@ -74,7 +97,7 @@ function usePolledActivity<T>(url: string, intervalMs: number): ActivityState<T>
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [intervalMs, url]);
+  }, [intervalMs, url, active]);
 
   return state;
 }
@@ -91,12 +114,26 @@ function resolveProviderState(
 }
 
 export default function ScenePresenceClient() {
-  const github = usePolledActivity<GitHubActivity>("/api/activity/github", 5 * 60 * 1000);
-  const spotify = usePolledActivity<SpotifyActivity>("/api/activity/spotify", 20 * 1000);
-  const discord = usePolledActivity<DiscordActivity>("/api/activity/discord", 20 * 1000);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const github = usePolledActivity<GitHubActivity>("/api/activity/github", 5 * 60 * 1000, inView);
+  const spotify = usePolledActivity<SpotifyActivity>("/api/activity/spotify", 20 * 1000, inView);
+  const discord = usePolledActivity<DiscordActivity>("/api/activity/discord", 20 * 1000, inView);
 
   return (
-    <div className="hp-grid relative isolate">
+    <div ref={sectionRef} className="hp-grid relative isolate">
       {/* Background Architectural Scaffolding (Connecting the columns) */}
       <div className="absolute top-[30%] left-[-2rem] lg:left-[-5rem] w-[80%] h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
       <div className="absolute top-[-2rem] bottom-[-4rem] left-[66.66%] w-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />

@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
@@ -8,16 +6,7 @@ import HeroDepthEffect from "@/components/motion/HeroDepthEffect";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import type { HomepageIdentityProjection } from "@/lib/content/homepage-projections";
-import { motion, type Variants } from "framer-motion";
-
-const staggerItem: Variants = {
-  initial: { opacity: 0, y: 16 },
-  animate: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } 
-  }
-};
+import HeroProofCards from "@/components/homepage/HeroProofCards";
 
 interface SceneIdentityProps {
   data: HomepageIdentityProjection;
@@ -175,27 +164,7 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
       <div className="hp-grid relative z-10 mt-20 lg:mt-32 border-t border-[color:var(--cs-structural-line)] bg-zinc-900">
         <div className="col-span-4 md:col-span-8 lg:col-span-12">
           <StructuredReveal recipe="hero-proof" revealId="hero-proof">
-            <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[color:var(--cs-structural-line)]">
-              {data.immediateProof.map((proof, idx) => (
-                <motion.div 
-                  key={idx} 
-                  variants={staggerItem}
-                  className={`flex flex-col justify-start p-4 md:p-5 lg:p-6 min-h-[104px] border-zinc-800 ${
-                    idx === 0 ? 'border-b md:border-b-0 md:border-r' : ''
-                  }`}
-                >
-                  <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-zinc-400 mb-2">
-                    {proof.attribution}
-                  </span>
-                  <span className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold tracking-tight text-white leading-tight">
-                    {proof.value}
-                  </span>
-                  <span className="mt-2 text-xs text-zinc-400">
-                    {proof.label}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+            <HeroProofCards proof={data.immediateProof} />
           </StructuredReveal>
         </div>
       </div>
