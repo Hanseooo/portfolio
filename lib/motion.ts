@@ -82,7 +82,11 @@ export function prefersReducedMotion() {
 }
 
 export function clipReveal(reducedMotion: boolean) {
-  if (reducedMotion) return {};
+  if (reducedMotion) return {
+    initial: false as const,
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0 },
+  };
   return {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
@@ -92,7 +96,11 @@ export function clipReveal(reducedMotion: boolean) {
 }
 
 export function fadeUpReveal(reducedMotion: boolean, delay = 0) {
-  if (reducedMotion) return {};
+  if (reducedMotion) return {
+    initial: false as const,
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0 },
+  };
   return {
     initial: { opacity: 0, y: 10 },
     whileInView: { opacity: 1, y: 0 },
@@ -106,7 +114,11 @@ export function fadeUpReveal(reducedMotion: boolean, delay = 0) {
 }
 
 export function maskReveal(reducedMotion: boolean, delay = 0) {
-  if (reducedMotion) return {};
+  if (reducedMotion) return {
+    initial: false as const,
+    animate: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
+    transition: { duration: 0 },
+  };
   return {
     initial: { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" },
     whileInView: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
@@ -120,7 +132,11 @@ export function maskReveal(reducedMotion: boolean, delay = 0) {
 }
 
 export function peelReveal(reducedMotion: boolean, delay = 0) {
-  if (reducedMotion) return {};
+  if (reducedMotion) return {
+    initial: false as const,
+    animate: { opacity: 1, y: 0, rotateX: 0, scale: 1 },
+    transition: { duration: 0 },
+  };
   return {
     initial: { opacity: 0, y: 40, rotateX: 15, scale: 0.95 },
     whileInView: { opacity: 1, y: 0, rotateX: 0, scale: 1 },

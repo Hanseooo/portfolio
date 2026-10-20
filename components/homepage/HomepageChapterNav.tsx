@@ -38,50 +38,67 @@ export default function HomepageChapterNav() {
 
   if (isHidden) return null;
 
+  const activeIndex = Math.max(0, OBSERVED_IDS.findIndex((id) => id === activeId));
+  const activeDestination = DESTINATIONS[HOMEPAGE_CHAPTER_SEQUENCE[activeIndex]];
+
   return (
     <nav
       aria-label="Homepage sections"
-      className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 lg:flex lg:flex-col lg:gap-1"
+      className="hp-chapter-nav"
     >
-      {HOMEPAGE_CHAPTER_SEQUENCE.map((destId, index) => {
-        const dest = DESTINATIONS[destId];
-        const sectionId = OBSERVED_IDS[index];
-        const isActive = activeId === sectionId;
+      <button
+        type="button"
+        onClick={() => handleClick(HOMEPAGE_CHAPTER_SEQUENCE[activeIndex])}
+        aria-label={activeDestination.accessibleName}
+        aria-current="true"
+        className="hp-stage-marker h-11 items-center gap-2 text-xs text-[color:var(--cs-text-secondary)]"
+      >
+        <span className="font-[family-name:var(--font-mono)] text-[10px] text-[color:var(--cs-signal)]">
+          {CHAPTER_NUMBERS[activeIndex]}
+        </span>
+        {activeDestination.label.replace(/^\d+\s/, "")}
+      </button>
+      <div className="hp-chapter-rail">
+        {HOMEPAGE_CHAPTER_SEQUENCE.map((destId, index) => {
+          const dest = DESTINATIONS[destId];
+          const sectionId = OBSERVED_IDS[index];
+          const isActive = activeId === sectionId;
 
-        return (
-          <button
-            key={destId}
-            type="button"
-            onClick={() => handleClick(destId)}
-            className={`group flex h-9 items-center gap-2 rounded-[2px] px-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] ${
-              isActive
-                ? "text-[color:var(--cs-signal)]"
-                : "text-[color:var(--cs-text-secondary)] hover:text-[color:var(--cs-text-primary)]"
-            }`}
-            aria-label={dest.accessibleName}
-            aria-current={isActive ? "true" : undefined}
-          >
-            <span className="font-[family-name:var(--font-mono)] text-[10px] font-medium tracking-widest">
-              {CHAPTER_NUMBERS[index]}
-            </span>
-
-            <span
-              className={`hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest transition-opacity lg:inline ${
-                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          return (
+            <button
+              key={destId}
+              type="button"
+              onClick={() => handleClick(destId)}
+              className={`group flex h-9 items-center gap-2 rounded-[2px] px-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] ${
+                isActive
+                  ? "text-[color:var(--cs-signal)]"
+                  : "text-[color:var(--cs-text-secondary)] hover:text-[color:var(--cs-text-primary)]"
               }`}
+              aria-label={dest.accessibleName}
+              aria-current={isActive ? "true" : undefined}
             >
-              {dest.label.replace(/^\d+\s/, "")}
-            </span>
+              <span className="font-[family-name:var(--font-mono)] text-[10px] font-medium tracking-widest">
+                {CHAPTER_NUMBERS[index]}
+              </span>
 
-            {isActive && (
               <span
-                className="ml-1 h-px w-4 bg-[color:var(--cs-signal)]"
-                aria-hidden="true"
-              />
-            )}
-          </button>
-        );
-      })}
+                className={`hidden font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest transition-opacity lg:inline ${
+                  isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                }`}
+              >
+                {dest.label.replace(/^\d+\s/, "")}
+              </span>
+
+              {isActive && (
+                <span
+                  className="ml-1 h-px w-4 bg-[color:var(--cs-signal)]"
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }

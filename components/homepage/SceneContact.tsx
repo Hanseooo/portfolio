@@ -7,12 +7,15 @@ import StructuredReveal from "@/components/motion/StructuredReveal";
 import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
 }
 
 export default function SceneContact({ data }: SceneContactProps) {
+  const reducedMotion = usePrefersReducedMotion();
+
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.contact}
@@ -66,11 +69,12 @@ export default function SceneContact({ data }: SceneContactProps) {
             <motion.ul 
               className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
               role="list"
-              initial="hidden"
+              initial={reducedMotion ? false : "hidden"}
+              animate={reducedMotion ? "visible" : undefined}
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               variants={{
-                visible: { transition: { staggerChildren: 0.1, delayChildren: 0.5 } },
+                visible: { transition: reducedMotion ? { staggerChildren: 0, delayChildren: 0 } : { staggerChildren: 0.1, delayChildren: 0.5 } },
                 hidden: {}
               }}
             >
@@ -79,7 +83,7 @@ export default function SceneContact({ data }: SceneContactProps) {
                   key={channel.type}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                    visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
                   }}
                 >
                   <a

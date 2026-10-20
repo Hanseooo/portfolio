@@ -14,7 +14,7 @@ import GlobalNavClient from "./GlobalNavClient";
 export default function GlobalNav() {
   return (
     <header
-      className="fixed top-0 z-50 w-full"
+      className="site-header fixed top-0 z-50 w-full"
       role="banner"
     >
       <GlobalNavClient />

@@ -6,6 +6,7 @@ import LiveProviderRegionComponent from "@/components/evidence/LiveProviderRegio
 import GitHubActivityCard from "@/components/sections/live-activity/GitHubActivityCard";
 import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
 import DiscordStatusCard from "@/components/sections/live-activity/DiscordStatusCard";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import type {
   ActivityResponse,
   GitHubActivity,
@@ -115,6 +116,7 @@ function resolveProviderState(
 }
 
 export default function ScenePresenceClient() {
+  const reducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef, { margin: "200px" });
 
@@ -126,7 +128,8 @@ export default function ScenePresenceClient() {
     <motion.div 
       ref={sectionRef} 
       className="hp-grid relative isolate"
-      initial="hidden"
+      initial={reducedMotion ? false : "hidden"}
+      animate={reducedMotion ? "visible" : undefined}
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={{
@@ -146,7 +149,7 @@ export default function ScenePresenceClient() {
       <motion.div 
         variants={{
           hidden: { opacity: 0, y: 30 },
-          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+          visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
         }}
         className="col-span-4 md:col-span-5 lg:col-span-8 relative z-10"
       >
@@ -154,14 +157,14 @@ export default function ScenePresenceClient() {
         <motion.div 
           variants={{
             hidden: { opacity: 0, scale: 0.5, x: 10, y: 10 },
-            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.4, delay: 0.3, ease: "easeOut" } }
           }}
           className="absolute top-0 left-0 w-8 md:w-12 h-8 md:h-12 border-t-2 border-l-2 border-[color:var(--cs-signal)] z-20 pointer-events-none -translate-x-[2px] -translate-y-[2px] origin-top-left" aria-hidden="true" 
         />
         <motion.div 
           variants={{
             hidden: { opacity: 0, scale: 0.5, x: -10, y: -10 },
-            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.4, delay: 0.3, ease: "easeOut" } }
           }}
           className="absolute bottom-0 right-0 w-8 md:w-12 h-8 md:h-12 border-b-2 border-r-2 border-[color:var(--cs-signal)] z-20 pointer-events-none translate-x-[2px] translate-y-[2px] origin-bottom-right" aria-hidden="true" 
         />
@@ -181,7 +184,7 @@ export default function ScenePresenceClient() {
         <motion.div
           variants={{
             hidden: { opacity: 0, x: 30 },
-            visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+            visible: { opacity: 1, x: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
           }}
         >
           <LiveProviderRegionComponent
@@ -197,7 +200,7 @@ export default function ScenePresenceClient() {
         <motion.div
           variants={{
             hidden: { opacity: 0, x: 30 },
-            visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+            visible: { opacity: 1, x: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
           }}
         >
           <LiveProviderRegionComponent
