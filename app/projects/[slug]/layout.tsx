@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { projects } from "@/lib/projects";
 import JsonLd from "@/components/seo/JsonLd";
-import { SITE_URL } from "@/components/utils/externalLinks";
+import { PERSON_LD_ID, SITE_URL } from "@/components/utils/externalLinks";
 
 const baseUrl = SITE_URL;
 
@@ -85,12 +85,13 @@ export default async function ProjectSlugLayout({
 
   const creativeWorkLd = {
     "@context": "https://schema.org",
-    "@type": "CreativeWork",
+    "@type": project.github ? "SoftwareSourceCode" : "CreativeWork",
     name: project.title,
     description: project.subtitle,
     image: new URL(project.heroImage.src, baseUrl).toString(),
     url,
-    author: { "@type": "Person", name: "Hans Amoguis", url: baseUrl },
+    ...(project.github && { codeRepository: project.github }),
+    author: { "@type": "Person", "@id": PERSON_LD_ID, name: "Hans Amoguis", url: baseUrl },
     keywords: project.stack.join(", "),
   };
 

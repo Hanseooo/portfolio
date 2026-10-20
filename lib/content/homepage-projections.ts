@@ -11,7 +11,7 @@ import hansPortrait from "@/app/assets/myImages/hans.webp";
 import { projects } from "@/lib/projects";
 import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
-import { EMAIL_ADDRESS, LINKEDIN_URL, GITHUB_URL } from "@/components/utils/externalLinks";
+import { EMAIL_ADDRESS, LINKEDIN_URL, GITHUB_URL, RESUME_URL } from "@/components/utils/externalLinks";
 import type {
   ProofFigure,
   ProjectCardProjection,
@@ -30,30 +30,21 @@ const leDouxProof: ProofFigure = {
   source: { source: "lib/experience.ts", recordId: "freelance" },
 };
 
-const projectEditorial: Record<string, { summary: string; technicalEvidence?: string[] }> = {
+const projectEditorial: Record<string, { summary: string; tagline?: string; technicalEvidence?: string[] }> = {
   "story-buddy": {
     summary: "As the solo developer working with three researchers, I built StoryBuddy, a capstone that turns Grade 5–6 learners' stories into picture books. Its 11-node LangGraph pipeline connects story analysis, reference generation, consistency checks, and targeted scene regeneration using open-weight models.",
-    technicalEvidence: [
-      "11-node deterministic LangGraph pipeline",
-      "VLM-based consistency checks and targeted scene regeneration",
-      "Character-identity annotation with precision, recall, and F1 reporting",
-    ],
+    tagline: "AI picture books for young storytellers",
+    technicalEvidence: ["11-node LangGraph pipeline", "VLM consistency checks", "F1-scored evaluation"],
   },
   "clarift": {
     summary: "I built Clarift as an AI-powered study engine for Filipino students. It turns uploaded material into grounded summaries, quizzes, and targeted practice using a Next.js and FastAPI architecture with background jobs, Redis, and pgvector.",
-    technicalEvidence: [
-      "Split Next.js + FastAPI architecture for AI pipelines",
-      "ARQ worker with Redis for async document ingestion",
-      "pgvector RAG grounding all outputs in student materials",
-    ],
+    tagline: "An AI study engine for Filipino students",
+    technicalEvidence: ["Next.js + FastAPI", "Redis job queue", "pgvector RAG"],
   },
   "le-doux": {
     summary: "I built Le Doux for an artisanal cookie business in Davao, replacing its Google Forms workflow with a structured ordering platform and admin system. As the sole full-stack developer, I handled ordering, GCash verification, menu management, CRM, and analytics. The client reported processing orders 75% faster.",
-    technicalEvidence: [
-      "Next.js full-stack App Router with Server Actions",
-      "Server-side total recalculation, row-level security, and order snapshots",
-      "Client-side OCR for GCash reference extraction",
-    ],
+    tagline: "Ordering platform for a Davao cookie business",
+    technicalEvidence: ["Next.js Server Actions", "Row-level security", "GCash OCR"],
   },
   "simply-note": { summary: "An AI learning application that turns a learner's own notes and PDFs into summaries, roadmaps, and quizzes." },
   "the-podium": { summary: "A seminar platform for HCDC's VPAA with QR attendance, certificate generation, email notifications, and evaluation analytics." },
@@ -96,6 +87,7 @@ function projectCard(slug: string): ProjectCardProjection {
     year: project.year,
     role: project.role,
     editorialSummary: editorial.summary,
+    tagline: editorial.tagline,
     heroImage: project.heroImage,
     detailRoute: `/projects/${project.slug}`,
     source: { source: "lib/projects.ts", recordId: project.slug },
@@ -106,6 +98,12 @@ function projectCard(slug: string): ProjectCardProjection {
 }
 
 // ─── Scene 01: Identity & Immediate Proof ───────────────────────────
+
+/** Matches the resume. Feeds the hero role line, site title, OG/Twitter titles, and JSON-LD jobTitle. */
+export const SITE_HEADLINE = "AI Engineer · Full-Stack Developer";
+
+export const SITE_DESCRIPTION =
+  "Hans Amoguis builds applied AI products end to end, from LangGraph pipelines and RAG to the Next.js and FastAPI apps around them.";
 
 export interface HomepageIdentityProjection {
   name: "Hans Amoguis";
@@ -118,7 +116,7 @@ export interface HomepageIdentityProjection {
 export function getHomepageIdentity(): HomepageIdentityProjection {
   return {
     name: "Hans Amoguis",
-    roleStatement: "Full-stack engineer focused on AI product engineering.",
+    roleStatement: SITE_HEADLINE,
     introduction:
       "I build maintainable full-stack and AI products with clear architecture, clean implementation, and practical user experience.",
     immediateProof: [
@@ -256,6 +254,7 @@ export function getHomepageContact(): HomepageContactProjection {
       { type: "email", label: "Email", href: `mailto:${EMAIL_ADDRESS}` },
       { type: "linkedin", label: "LinkedIn", href: LINKEDIN_URL },
       { type: "github", label: "GitHub", href: GITHUB_URL },
+      { type: "resume", label: "Resume", href: RESUME_URL },
     ],
   };
 }

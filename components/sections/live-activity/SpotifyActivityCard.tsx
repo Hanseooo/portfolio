@@ -11,7 +11,7 @@ import { LIVE_LABEL, SKELETON_BAR } from "./labels";
 /** Same frame as a loaded card: now playing, two recent rows, history button (R2-5). */
 function SpotifyActivitySkeleton() {
   return (
-    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] motion-safe:animate-pulse">
+    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl motion-safe:animate-pulse">
       <LiveCardHeader label="Listening" />
       <span className="sr-only">Loading Spotify activity</span>
       <div aria-hidden="true" className="p-4 md:p-6 flex flex-col gap-8">
@@ -100,7 +100,7 @@ function SpotifyActivityCard({
 
   if (payload && !payload.ok) {
     return (
-      <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)]">
+      <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl">
         <LiveCardHeader label="Listening" />
         <p className="p-4 md:p-6 text-sm text-[color:var(--cs-text-secondary)]">
           Spotify activity is unavailable right now.
@@ -112,7 +112,7 @@ function SpotifyActivityCard({
   if (!data) return null;
 
   return (
-    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-white/5 dark:bg-black/20 backdrop-blur-sm isolate">
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl isolate">
       <LiveCardHeader label="Listening" updatedAt={payload?.updatedAt} />
 
       <div className="p-4 md:p-6 flex flex-col gap-8">

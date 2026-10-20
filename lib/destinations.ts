@@ -18,6 +18,7 @@ export type DestinationId =
   | "projects"
   | "experience"
   | "certificates"
+  | "resources"
   | "contact"
   | "scene-identity"
   | "scene-flagships"
@@ -59,6 +60,11 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     id: "certificates",
     pathname: "/certificates",
     label: "Certificates",
+  },
+  resources: {
+    id: "resources",
+    pathname: "/resources",
+    label: "Resources",
   },
   contact: {
     id: "contact",
@@ -135,6 +141,7 @@ export const GLOBAL_NAV_SEQUENCE: DestinationId[] = [
   "projects",
   "experience",
   "certificates",
+  "resources",
   "contact",
 ];
 

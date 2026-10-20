@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import {
   GLOBAL_NAV_SEQUENCE,
   HOMEPAGE_CHAPTER_SEQUENCE,
@@ -18,6 +18,7 @@ import {
 } from "@/lib/anchor-navigation";
 import { useCapability } from "@/components/providers/CapabilityProvider";
 import { useRouteHandoff } from "@/components/motion/RouteHandoffController";
+import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 
 interface MobileMenuProps {
   open: boolean;
@@ -193,6 +194,19 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
                   </li>
                 );
               })}
+              <li>
+                <a
+                  href={RESUME_URL}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={RESUME_LABEL}
+                  onClick={close}
+                  className="flex h-14 items-center gap-2 font-[family-name:var(--font-display)] text-2xl uppercase tracking-wider text-[color:var(--cs-text-primary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+                >
+                  Resume
+                  <ArrowUpRight size={20} aria-hidden="true" />
+                </a>
+              </li>
             </ul>
 
             {/* Homepage chapter anchors (only when on homepage) */}

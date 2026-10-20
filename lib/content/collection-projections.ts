@@ -13,6 +13,7 @@ import type { StaticImageData } from "next/image";
 import { projects } from "@/lib/projects";
 import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
+import { resourceGroups } from "@/lib/resources";
 import type { SourceIdentity } from "./types";
 
 // ─── Project Collection (/projects) ─────────────────────────────────
@@ -133,4 +134,10 @@ export function getExperienceLedger(): ExperienceLedgerProjection {
       },
     })),
   };
+}
+
+// ─── Resources (/resources) ──────────────────────────────────────────
+
+export function getResourceGroups() {
+  return resourceGroups;
 }

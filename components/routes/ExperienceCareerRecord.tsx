@@ -1,6 +1,7 @@
 // components/routes/ExperienceCareerRecord.tsx
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import ScreenshotFrame from "@/components/evidence/ScreenshotFrame";
+import { IndexMark } from "@/components/geometry";
 import type { ExperienceLedgerRecord } from "@/lib/content/collection-projections";
 
 interface ExperienceCareerRecordProps {
@@ -29,9 +30,7 @@ export default function ExperienceCareerRecord({
         {/* Metadata rail — 4 columns on desktop */}
         <div className="md:col-span-4">
           {/* Record index */}
-          <span className="mb-3 block font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            {String(record.position).padStart(2, "0")}
-          </span>
+          <IndexMark position={record.position} className="mb-4" />
 
           {/* Role */}
           <h2 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,3vw,2.25rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">

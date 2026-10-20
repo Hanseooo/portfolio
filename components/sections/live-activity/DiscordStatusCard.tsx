@@ -21,7 +21,7 @@ const STATUS: Record<DiscordActivity["status"], { dot: string; word: string }> =
 /** Same frame as a loaded card with no activity rows (R2-5). */
 function DiscordStatusSkeleton() {
   return (
-    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] motion-safe:animate-pulse">
+    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl motion-safe:animate-pulse">
       <LiveCardHeader label="Discord" />
       <span className="sr-only">Loading Discord status</span>
       <div aria-hidden="true" className="p-4 md:p-6 flex flex-col gap-6">
@@ -58,7 +58,7 @@ function DiscordStatusCard({
 
   if (payload && !payload.ok) {
     return (
-      <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)]">
+      <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl">
         <LiveCardHeader label="Discord" />
         <p className="p-4 md:p-6 text-sm text-[color:var(--cs-text-secondary)]">
           Discord status is unavailable right now.
@@ -72,7 +72,7 @@ function DiscordStatusCard({
   const spotifyHasLink = Boolean(data.live.spotify?.trackUrl);
 
   return (
-    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-white/5 dark:bg-black/20 backdrop-blur-sm isolate">
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl isolate">
       <LiveCardHeader label="Discord" updatedAt={payload?.updatedAt} />
 
       <div className="p-4 md:p-6 flex flex-col gap-6">

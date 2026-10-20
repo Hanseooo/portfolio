@@ -79,12 +79,16 @@ come last because they build on R3 tokens and R1 facts.
 - `C:\Users\Admin\package-lock.json` makes Next infer the wrong workspace root (R4 covers the
   in-repo fix; deleting the stray file is Hans's call).
 - Impeccable v4.7.0 is available (`npx impeccable update`).
+- `app/opengraph-image.png` is a hero screenshot that still shows the old "Full-stack engineer focused on AI product engineering" line. Recapture it after R6 ships.
+- Mobile menu fade (0.2s) takes 1.5–4s to reach opacity 1 in headless Chromium at 375px. Links are clickable while invisible. Not checked on a real device.
 - No test runner exists. R4 checks are scripted browser evals, not unit tests.
 
 ## Amendments
 
 - 2026-10-21: Hans authorized six confirmed fixes independently of the remaining DRAFT designs: shared reveal visibility, Contributions labeling, aligned compact heatmap, safe public provider errors, seven-chapter navigation, and detail-title duplication. R1/R2/R3 approval statuses remain unchanged.
 - 2026-10-21: R2 done. At Hans's request the heatmap became a full-width 53-week band (18 / 30 / 53 weeks at base / sm / lg), and the GitHub query now covers a rolling 365 days instead of the calendar year. See the R2 amendment.
+
+- 2026-10-21: R6 implemented at Hans's request. `lib/skills.ts` didn't exist (R3 not shipped), so the existing Tech Stack lists moved there verbatim and `knowsAbout` reads the Build list. No project has `updated` set yet, so each falls back to `CONTENT_UPDATED`. Blocker 1 closed later on 2026-10-21: the PDF was replaced with a copy that has no phone line. R6-3 still needs the manual Rich Results test. Check: `.playwright-cli/r6-resume-check.cjs`.
 
 ## Verification — confirmed fixes, 2026-10-21
 

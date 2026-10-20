@@ -3,6 +3,7 @@
 import Image from "next/image";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import { CropMarks, IndexMark } from "@/components/geometry";
 import type { ProjectCollectionRecord } from "@/lib/content/collection-projections";
 
 interface ProjectCatalogueRecordProps {
@@ -41,6 +42,8 @@ export default function ProjectCatalogueRecord({
         >
           {/* Hero Image — 7 columns on desktop */}
           <div className="md:col-span-7 md:[direction:ltr]">
+            <div className="relative">
+            <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
             <div className="relative aspect-[16/10] w-full overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-raised-neutral)]">
               <Image
                 src={record.heroImage}
@@ -50,14 +53,13 @@ export default function ProjectCatalogueRecord({
                 className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
             </div>
+            </div>
           </div>
 
           {/* Information — 5 columns on desktop */}
           <div className="flex flex-col gap-3 md:col-span-5 md:[direction:ltr]">
             {/* Record index */}
-            <span className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-              {String(record.position).padStart(2, "0")}
-            </span>
+            <IndexMark position={record.position} className="mb-1" />
 
             {/* Title */}
             <h2 className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,4vw,3rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)] transition-colors group-hover:text-[color:var(--cs-signal)]">

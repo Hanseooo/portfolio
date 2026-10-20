@@ -4,6 +4,12 @@ export const LINKEDIN_URL = "https://www.linkedin.com/in/hanseooo"
 
 export const GITHUB_URL = "https://github.com/Hanseooo"
 
+export const RESUME_URL = "/AMOGUIS_RESUME.pdf"
+
+export const RESUME_LABEL = "Resume (PDF, opens in new tab)"
+
+export const PERSON_LD_ID = `${SITE_URL}/#person`
+
 export const X_URL = "https://x.com/hansamoguis"
 
 export const INSTAGRAM_URL = "https://www.instagram.com/hanseooo"

@@ -31,10 +31,9 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
 
       <div className="hp-grid relative z-10">
         <div className="col-span-4 md:col-span-8 lg:col-span-12">
-          <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            06 · Personal & Live Presence
-          </p>
-          <div className="mt-4 h-0.5 w-16 bg-[color:var(--cs-signal)] dark:bg-zinc-700 md:w-24" aria-hidden="true" />
+          <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
+            About
+          </h3>
         </div>
       </div>
 
@@ -114,7 +113,7 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
               className="relative z-10 bg-[#E10600] dark:bg-[color:var(--cs-foundation)] border border-transparent dark:border-[color:var(--cs-structural-line-strong)] p-6 md:p-8 shadow-xl transform-style-3d origin-bottom"
             >
               <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/90 dark:text-[color:var(--cs-signal-text)] mb-3 block">
-                01 / About me
+                About me
               </span>
               <p className="text-[15px] md:text-base leading-relaxed text-white dark:text-[color:var(--cs-text-primary)] font-medium">
                 {data.aboutPrimary}
@@ -134,7 +133,7 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
               <div className="absolute -left-[3px] bottom-0 w-3 h-[2px] bg-[color:var(--cs-signal)]" aria-hidden="true" />
               
               <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-2 block">
-                02 / Outside of school or work
+                Outside of school or work
               </span>
               <p className="text-[14px] md:text-[15px] leading-relaxed text-[color:var(--cs-text-secondary)]">
                 {data.aboutSecondary}

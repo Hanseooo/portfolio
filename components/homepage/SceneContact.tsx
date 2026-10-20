@@ -8,6 +8,7 @@ import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { RESUME_LABEL } from "@/components/utils/externalLinks";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
@@ -55,13 +56,9 @@ export default function SceneContact({ data }: SceneContactProps) {
             className="flex flex-col items-start"
             data-motion-target="contact-close"
           >
-            <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-              07 · CONTACT
-            </p>
-
             <h2
               id={`${SECTION_IDS.contact}-heading`}
-              className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
+              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
             >
               <SplitText text={data.closeStatement as string} />
             </h2>
@@ -90,6 +87,7 @@ export default function SceneContact({ data }: SceneContactProps) {
                     href={channel.href}
                     target={channel.type !== "email" ? "_blank" : undefined}
                     rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
+                    aria-label={channel.type === "resume" ? RESUME_LABEL : undefined}
                     className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[color:var(--cs-text-primary)] hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                   >
                     <span>{channel.label}</span>

@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
 import ScreenshotFrameComponent from "@/components/evidence/ScreenshotFrame";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import { CompassArc, CropMarks, IndexMark } from "@/components/geometry";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageMoreWorkProjection } from "@/lib/content/homepage-projections";
 import type { ProjectCardProjection } from "@/lib/content/types";
@@ -30,21 +31,24 @@ function SupportingRecord({
           position % 2 === 0 ? "lg:col-start-1" : "lg:col-start-2"
         }`}
       >
-        <ScreenshotFrameComponent
-          src={project.heroImage}
-          alt={`${project.title} — application screenshot`}
-          wide
-        />
+        <div className="relative">
+          <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
+          <ScreenshotFrameComponent
+            src={project.heroImage}
+            alt={`${project.title} — application screenshot`}
+            wide
+          />
+        </div>
       </div>
 
       {/* Text content */}
       <div className="col-span-4 md:col-span-5 lg:col-span-6 lg:col-start-7">
-        <p className="mb-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-          <span className="text-[color:var(--cs-signal-text)]">
-            {String(position).padStart(2, "0")}
+        <div className="mb-4 flex items-center gap-4">
+          <IndexMark position={position} />
+          <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+            {project.year} · {project.role}
           </span>
-          {" · "}{project.year} · {project.role}
-        </p>
+        </div>
 
         <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,3vw,2rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">
           {project.title}
@@ -92,10 +96,9 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
 
       <div className="hp-grid relative z-10">
         <div className="col-span-4 md:col-span-6 lg:col-span-8">
-          <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            05 · More Selected Work
-          </p>
-          <div className="mt-4 h-0.5 w-16 bg-[color:var(--cs-signal)] dark:bg-zinc-700 md:w-24" aria-hidden="true" />
+          <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
+            More work
+          </h3>
         </div>
       </div>
 
@@ -111,22 +114,19 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
       </div>
 
       {/* Explosive CTA Block */}
-      <div className="hp-grid mt-12 md:mt-24 mb-16 md:mb-24">
+      <div className="hp-grid mt-12 md:mt-20 mb-12 md:mb-20">
         <div className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
           
           {/* Geometric lines inside the block */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[70%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
-          <div className="absolute top-[20%] right-[-10%] w-[40%] aspect-square border border-white/10 pointer-events-none z-0 rotate-12" aria-hidden="true" />
+          <CompassArc className="absolute right-0 top-0 z-0 w-[24%] rotate-180 text-white/20" />
           <div className="absolute top-[50%] left-0 w-full h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
 
           <Link
             href={data.catalogueRoute}
-            className="group relative z-10 flex flex-col items-center justify-center py-20 md:py-32 px-4 text-center focus-visible:outline-none"
+            className="group relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-4 text-center focus-visible:outline-2 focus-visible:-outline-offset-8 focus-visible:outline-white"
           >
-            <p className="mb-6 font-[family-name:var(--font-mono)] text-xs md:text-sm uppercase tracking-[0.2em] text-white/70">
-              05 · Project Catalogue
-            </p>
-            <h3 className="font-[family-name:var(--font-display)] text-[clamp(3.5rem,8vw,8rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
+            <h3 className="font-[family-name:var(--font-display)] text-[clamp(3rem,6.5vw,6.5rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
               View All<br />Projects
             </h3>
             <div className="mt-8 md:mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">

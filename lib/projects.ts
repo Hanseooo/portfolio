@@ -50,7 +50,18 @@ import leDoux10 from "@/app/assets/projects/leDoux/10.webp";
 
 import { StaticImageData } from "next/image";
 import storyBuddyHero from "@/app/assets/projects/story-buddy/hero.webp";
-import storyBuddyResearch from "@/app/assets/projects/story-buddy/research.webp";
+import storyBuddyStoryEditor from "@/app/assets/projects/story-buddy/student-story-editor.webp";
+import storyBuddyCharacterCast from "@/app/assets/projects/story-buddy/student-character-cast.webp";
+import storyBuddyBookGallery from "@/app/assets/projects/story-buddy/student-book-gallery.webp";
+import storyBuddyClassroomDashboard from "@/app/assets/projects/story-buddy/teacher-classroom-dashboard.webp";
+import storyBuddyStudentRoster from "@/app/assets/projects/story-buddy/teacher-student-roster.webp";
+import storyBuddyReviewQueue from "@/app/assets/projects/story-buddy/teacher-review-queue.webp";
+import storyBuddyBookReview from "@/app/assets/projects/story-buddy/teacher-book-review.webp";
+import storyBuddyGenerationRuns from "@/app/assets/projects/story-buddy/research-generation-runs.webp";
+import storyBuddyPipelinePageSplitting from "@/app/assets/projects/story-buddy/research-pipeline-page-splitting.webp";
+import storyBuddyCharacterReferences from "@/app/assets/projects/story-buddy/research-character-references.webp";
+import storyBuddyConflictAdjudication from "@/app/assets/projects/story-buddy/research-conflict-adjudication.webp";
+import storyBuddyCharacterComparison from "@/app/assets/projects/story-buddy/research-character-comparison.webp";
 
 
 const simplyNoteImages : StaticImageData[] = [
@@ -129,6 +140,8 @@ export type Project = {
     live?: string;
     client?: string;
     clientConsent?: boolean;
+    /** ISO date of the last content change; sitemap falls back to CONTENT_UPDATED */
+    updated?: string;
 }
 
 export const projects: Project[] = [
@@ -169,7 +182,21 @@ export const projects: Project[] = [
       "Presidio",
     ],
     integrations: ["fal.ai"],
-    gallery: [storyBuddyHero, storyBuddyResearch],
+    gallery: [
+      storyBuddyStoryEditor,
+      storyBuddyCharacterCast,
+      storyBuddyBookGallery,
+      storyBuddyClassroomDashboard,
+      storyBuddyStudentRoster,
+      storyBuddyReviewQueue,
+      storyBuddyBookReview,
+      storyBuddyGenerationRuns,
+      storyBuddyPipelinePageSplitting,
+      storyBuddyCharacterReferences,
+      storyBuddyConflictAdjudication,
+      storyBuddyCharacterComparison,
+    ],
+    updated: "2026-10-21",
     github: "https://github.com/Hanseooo/story-buddy",
     live: "https://storybuddy.hanseo.tech",
   },

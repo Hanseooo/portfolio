@@ -4,34 +4,7 @@ import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { fadeUpReveal, clipReveal, peelReveal } from "@/lib/motion";
 import SplitText from "@/components/motion/SplitText";
-
-const buildItems = [
-  "React", "Next.js", "Langchain",
-  "LangGraph", "Redis",
-  "FastAPI", "PostgreSQL", "Tailwind CSS",
-  "Zustand", "Tanstack Query", "Tanstack Router",
-];
-
-const toolsItems = [
-  "Claude Code",
-  "Codex",
-  "Antigravity CLI",
-  "OpenCode",
-  "Playwright CLI",
-  "Github CLI",
-  "Docker",
-  "Langfuse",
-  "Langsmith",
-  "Sentry",
-  "Posthog",
-];
-
-// Brevo removed per previous project requirements
-const deployItems = [
-  "Vercel", "Supabase", "Firebase", "Cloudinary", 
-  "Neon", "Render", "Railway", "Upstash", 
-  "Cloudflare", "Clerk"
-];
+import { buildItems, toolsItems, deployItems } from "@/lib/skills";
 
 export default function TechStackSection({ id }: { id: string }) {
   const reducedMotion = usePrefersReducedMotion();
@@ -66,7 +39,6 @@ export default function TechStackSection({ id }: { id: string }) {
 
         {/* Section Title */}
         <div className="mb-16 relative z-10">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">03 · Tech Stack</p>
           <h2 id={`${id}-heading`} className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground uppercase perspective-1000">
             <SplitText text="Capabilities" />
           </h2>
@@ -87,13 +59,8 @@ export default function TechStackSection({ id }: { id: string }) {
             <div className="absolute top-[25%] right-[15%] w-[45%] h-[60%] border-t border-r border-border/80 z-0 hidden sm:block" aria-hidden="true" />
             <div className="absolute bottom-0 left-[20%] w-[1px] h-[40%] bg-primary/40 z-0 hidden sm:block" aria-hidden="true" />
             
-            {/* Engineering Marker */}
-            <div className="absolute top-[25%] right-[15%] -translate-y-1/2 translate-x-1/2 bg-background px-2 z-0 hidden sm:block" aria-hidden="true">
-              <span className="font-mono text-[8px] text-muted-foreground tracking-widest">FIG.1A</span>
-            </div>
-            
             <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary mb-12 relative z-10">
-              01 / Build
+              Build
             </p>
             <motion.div 
               {...clipReveal(reducedMotion)}
@@ -136,10 +103,8 @@ export default function TechStackSection({ id }: { id: string }) {
                 <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 border border-white/40 -translate-x-1/2 -translate-y-1/2 rounded-full" />
               </div>
 
-              <span className="absolute bottom-9 left-4 md:left-6 font-mono text-[8px] text-primary tracking-[0.2em] hidden sm:block" aria-hidden="true">EL.02</span>
-
               <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-8 relative z-10">
-                02 / Tools
+                Tools
               </p>
               <ul className="grid grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4 font-mono text-sm lg:text-base tracking-tight mt-auto relative z-10">
                 {toolsItems.map((item, idx) => (
@@ -168,7 +133,7 @@ export default function TechStackSection({ id }: { id: string }) {
               <div className="absolute bottom-6 right-6 w-16 h-16 border-b border-r border-foreground/30 pointer-events-none hidden sm:block" aria-hidden="true" />
 
               <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary mb-8 relative z-10 bg-background/80 px-2 -ml-2 inline-block w-fit backdrop-blur-sm">
-                03 / Deploy
+                Deploy
               </p>
               <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-4 mt-auto relative z-10">
                 {deployItems.map((item, idx) => (

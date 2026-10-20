@@ -7,6 +7,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import type { HomepageIdentityProjection } from "@/lib/content/homepage-projections";
 import HeroProofCards from "@/components/homepage/HeroProofCards";
+import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 
 interface SceneIdentityProps {
   data: HomepageIdentityProjection;
@@ -58,14 +59,6 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
       {/* ARTS & CHAOS 12-COLUMN LAYOUT */}
       <div className="hp-grid relative z-10 min-h-[60vh] isolate">
         
-        {/* Eyebrow / Chapter Mark */}
-        <div className="col-span-4 md:col-span-8 lg:col-span-2 lg:col-start-1 lg:row-start-1 pt-4 lg:pt-8">
-          <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)] dark:text-zinc-400">
-            01 / Identity<br className="hidden lg:block" />
-            <span className="hidden lg:inline"> Architecture</span>
-          </p>
-        </div>
-
         {/* Massive Title */}
         <div className="col-span-4 md:col-span-8 lg:col-span-11 lg:col-start-2 lg:row-start-2 mt-8 lg:mt-4 z-20">
           <h1
@@ -131,7 +124,7 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
             <div className="absolute inset-x-0 -top-[18%] h-[140%]" data-parallax-speed="-0.8">
               <Image
                 src={data.portrait}
-                alt="Hans Amoguis — Full-stack engineer"
+                alt={`Hans Amoguis — ${data.roleStatement}`}
                 priority
                 className="h-full w-full object-cover opacity-95"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 35vw, 400px"
@@ -143,17 +136,27 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
         {/* Actions */}
         <div className="col-span-4 md:col-span-8 lg:col-span-3 lg:col-start-2 lg:row-start-4 flex flex-col sm:flex-row lg:flex-col gap-3 mt-12 lg:mt-0 z-30 lg:self-end">
           <a
-            href={getDestinationHref(flagshipsDest)}
+            href={getDestinationHref(contactDest)}
             className="group inline-flex h-12 w-full sm:w-auto items-center justify-between border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform hover:-translate-x-1 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+          >
+            Start a conversation
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
+          <a
+            href={getDestinationHref(flagshipsDest)}
+            className="group inline-flex h-12 w-full sm:w-auto items-center justify-between border border-[color:var(--cs-text-primary)] bg-transparent px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-1 hover:-translate-y-1 hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
             See selected work
             <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </a>
           <a
-            href={getDestinationHref(contactDest)}
+            href={RESUME_URL}
+            target="_blank"
+            rel="noopener"
+            aria-label={RESUME_LABEL}
             className="group inline-flex h-12 w-full sm:w-auto items-center justify-between border border-[color:var(--cs-text-primary)] bg-transparent px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-1 hover:-translate-y-1 hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
-            Start a conversation
+            Resume
             <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </a>
         </div>

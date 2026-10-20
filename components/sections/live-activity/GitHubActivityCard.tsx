@@ -19,7 +19,7 @@ const STREAK_NUMBER = "font-[family-name:var(--font-display)] text-4xl md:text-5
 
 function BandFrame({ children, updatedAt }: { children: ReactNode; updatedAt?: string }) {
   return (
-    <section className="relative">
+    <section className="relative border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] p-6 shadow-xl md:p-10">
       <div className="mb-4 flex items-center justify-between gap-4">
         <p className={LIVE_LABEL}>
           <span className="text-[color:var(--cs-text-primary)]">GitHub</span> · last 12 months
@@ -116,7 +116,7 @@ const SKELETON_COUNTS = ["PRs opened", "PRs merged", "Issues"];
 /** Same frame and line heights as the loaded card, so the region doesn't shift (R2-5). */
 function GitHubActivitySkeleton() {
   return (
-    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] motion-safe:animate-pulse">
+    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl motion-safe:animate-pulse">
       <LiveCardHeader label="Recent work" />
       <span className="sr-only">Loading GitHub activity</span>
       <div aria-hidden="true" className="p-4 md:p-6 flex flex-col gap-8">
@@ -165,7 +165,7 @@ function GitHubActivityCard({ payload, loading = false }: GitHubActivityProps) {
   if (!payload?.ok || !data) return null;
 
   return (
-    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)]">
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl">
       <LiveCardHeader label="Recent work" />
 
       <div className="p-4 md:p-6 flex flex-col gap-8">
