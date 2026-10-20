@@ -11,7 +11,7 @@
 
 import type { StaticImageData } from "next/image";
 import { projects } from "@/lib/projects";
-import { experience } from "@/lib/experience";
+import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
 import type { SourceIdentity } from "./types";
 
@@ -97,12 +97,15 @@ export function getCertificateCollection(): CertificateCollectionProjection {
 // ─── Experience Ledger (/experience) ─────────────────────────────────
 
 export interface ExperienceLedgerRecord {
+  id: ExperienceRecord["id"];
   role: string;
   company: string;
   /** Empty string when period is unknown — never invent a date */
   period: string;
   /** Complete source bullets preserved */
   points: string[];
+  links?: ExperienceRecord["links"];
+  gallery?: ExperienceRecord["gallery"];
   position: number;
   source: SourceIdentity;
 }
@@ -116,14 +119,17 @@ export function getExperienceLedger(): ExperienceLedgerProjection {
   return {
     totalCount: experience.length,
     records: experience.map((e, i) => ({
+      id: e.id,
       role: e.role,
       company: e.company,
       period: e.period,
       points: e.points,
+      links: e.links,
+      gallery: e.gallery,
       position: i + 1,
       source: {
         source: "lib/experience.ts",
-        recordId: e.company.toLowerCase().replace(/\s+/g, "-"),
+        recordId: e.id,
       },
     })),
   };

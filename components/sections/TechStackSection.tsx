@@ -37,7 +37,7 @@ export default function TechStackSection({ id }: { id: string }) {
   const reducedMotion = usePrefersReducedMotion();
 
   return (
-    <section id={id} className="relative w-full overflow-hidden flex flex-col items-center">
+    <section id={id} aria-labelledby={`${id}-heading`} className="relative w-full overflow-hidden flex flex-col items-center">
       
       {/* Top Tilted Marquee (Option 2) */}
       <div className="w-full overflow-hidden ticker-fade border-y border-border py-4 bg-zinc-900 dark:bg-zinc-800 text-white transform -rotate-2 scale-[1.05] origin-center z-20 relative shadow-xl mt-8">
@@ -66,7 +66,8 @@ export default function TechStackSection({ id }: { id: string }) {
 
         {/* Section Title */}
         <div className="mb-16 relative z-10">
-          <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground uppercase perspective-1000">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">03 · Tech Stack</p>
+          <h2 id={`${id}-heading`} className="text-[clamp(2.5rem,5vw,4rem)] font-black leading-none tracking-tighter text-foreground uppercase perspective-1000">
             <SplitText text="Capabilities" />
           </h2>
         </div>

@@ -351,7 +351,7 @@ export async function getSpotifyActivity(
     if (error instanceof ActivityConfigError) {
       return buildErrorResponse(
         "missing_config",
-        `Spotify activity is not configured: ${error.key}`
+        "Spotify activity is unavailable right now."
       );
     }
 

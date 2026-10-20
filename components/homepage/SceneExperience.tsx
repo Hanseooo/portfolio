@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
 import ProofFigureComponent from "@/components/evidence/ProofFigure";
@@ -49,6 +50,12 @@ function ExperienceRecord({
           <ProofFigureComponent data={record.proof} size="compact" />
         </div>
       )}
+      {record.evidenceLink && (
+        <Link href={record.evidenceLink.href} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm text-[color:var(--cs-signal-text)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]">
+          {record.evidenceLink.label}
+          <ArrowUpRight size={12} aria-hidden="true" />
+        </Link>
+      )}
     </article>
   );
 }
@@ -60,7 +67,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.experience}
-      sceneNumber="03"
+      sceneNumber="04"
       heading="Experience"
       surface="foundation"
       className="border-t border-b border-[color:var(--cs-structural-line)] relative isolate"
@@ -69,7 +76,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
         {/* Left Side Kicker (Cols 1–3) */}
         <div className="col-span-4 md:col-span-8 lg:col-span-3 pr-4 py-4 md:py-6">
           <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-            03 · EXPERIENCE
+            04 · EXPERIENCE
           </p>
           <h3 className="mt-3 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
             History & Credentials
@@ -82,11 +89,14 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
 
         {/* Main Records Column (Cols 4–9) separated by vertical border line */}
         <div className="col-span-4 md:col-span-8 lg:col-span-6 lg:border-l lg:border-[color:var(--cs-structural-line-strong)] lg:pl-8 relative z-10">
+          {data.records.map((record, index) => (
+          <Fragment key={record.source.recordId}>
           <StructuredReveal recipe="experience-record">
-            <ExperienceRecord record={data.records[0]} isFirst={true} />
+            <ExperienceRecord record={record} isFirst={index === 0} />
           </StructuredReveal>
 
           {/* Eskwelabs credential — attached to Eskwelabs record */}
+          {record.source.recordId === "eskwelabs" && (
           <StructuredReveal recipe="credential-artifact">
           <div
             className="border-t border-[color:var(--cs-structural-line)] py-6 relative isolate"
@@ -127,10 +137,9 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
             </div>
           </div>
           </StructuredReveal>
-
-          <StructuredReveal recipe="experience-record">
-            <ExperienceRecord record={data.records[1]} isFirst={false} />
-          </StructuredReveal>
+          )}
+          </Fragment>
+          ))}
         </div>
 
         {/* Route cues sidebar (Cols 10–12) - Option 2: Architectural Pillar */}
@@ -177,7 +186,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
             
             <div className="mt-12">
               <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/40">
-                End of Section 03
+                End of Section 04
               </span>
             </div>
           </div>

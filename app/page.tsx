@@ -16,6 +16,7 @@ import {
   HomepageChapterNav,
 } from "@/components/homepage";
 import TechStackSection from "@/components/sections/TechStackSection";
+import { SECTION_IDS } from "@/lib/anchor-navigation";
 
 export default function Home() {
   const identity = getHomepageIdentity();
@@ -30,7 +31,7 @@ export default function Home() {
       <HomepageChapterNav />
       <SceneIdentity data={identity} />
       <SceneFlagships data={flagships} />
-      <TechStackSection id="stack" />
+      <TechStackSection id={SECTION_IDS.stack} />
       <SceneExperience data={experience} />
       <SceneMoreWork data={moreWork} />
       <ScenePresence data={personal} />

@@ -214,7 +214,7 @@ export async function getDiscordActivity(): Promise<ActivityResponse<DiscordActi
     if (error instanceof ActivityConfigError) {
       return buildErrorResponse(
         "missing_config",
-        `Discord activity is not configured: ${error.key}`
+        "Discord activity is unavailable right now."
       );
     }
 

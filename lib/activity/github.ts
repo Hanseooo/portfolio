@@ -278,6 +278,9 @@ async function runQuery<T>(
   }
 }
 
+// One year, matching the default contributionCalendar range. The heatmap shows fewer on small screens.
+const CALENDAR_WEEKS = 53;
+
 function getCalendarActivity(
   weeks:
     | Array<{
@@ -301,31 +304,25 @@ function getCalendarActivity(
   const day = parts.find((part) => part.type === "day")?.value;
   const todayInTimezone = `${year ?? "0000"}-${month ?? "00"}-${day ?? "00"}`;
 
-  const allDays = (weeks ?? [])
-    .flatMap((week) => week.contributionDays)
-    .filter((day) => typeof day.date === "string")
-    .filter((day) => (day.date ?? "") <= todayInTimezone)
-    .sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
+  const allDays = (weeks ?? []).flatMap((week) => week.contributionDays);
+  if (allDays.length === 0) return [];
+  const byDate = new Map(allDays.map((day) => [day.date, day]));
+  const today = new Date(`${todayInTimezone}T00:00:00Z`);
+  const dayMs = 86_400_000;
+  const firstSunday = today.getTime() - (today.getUTCDay() + (CALENDAR_WEEKS - 1) * 7) * dayMs;
 
-  if (allDays.length === 0) {
-    return [];
-  }
-
-  // Get the last 140 days (20 weeks x 7 days) to fit nicely in a heatmap
-  const recentDays = allDays.slice(-140);
-  
-  return recentDays.map((day) => {
-    let level: 0 | 1 | 2 | 3 | 4 = 0;
-    const count = day.contributionCount;
-    if (count > 0) level = 1;
-    if (count >= 3) level = 2;
-    if (count >= 6) level = 3;
-    if (count >= 10) level = 4;
-    
+  return Array.from({ length: CALENDAR_WEEKS }, (_, weekIndex) => {
+    const start = firstSunday + weekIndex * 7 * dayMs;
     return {
-      date: day.date || "",
-      count,
-      level,
+      start: new Date(start).toISOString().slice(0, 10),
+      days: Array.from({ length: 7 }, (_, weekday) => {
+        const date = new Date(start + weekday * dayMs).toISOString().slice(0, 10);
+        const day = byDate.get(date);
+        if (!day || date > todayInTimezone) return null;
+        const count = day.contributionCount;
+        const level = count >= 10 ? 4 : count >= 6 ? 3 : count >= 3 ? 2 : count > 0 ? 1 : 0;
+        return { date, count, level };
+      }),
     };
   });
 }
@@ -435,7 +432,8 @@ function emptyData(): GitHubActivity {
 export async function getGitHubActivity(): Promise<ActivityResponse<GitHubActivity>> {
   try {
     const { token, username } = getGitHubEnv();
-    const from = new Date(new Date().getFullYear(), 0, 1).toISOString();
+    // Rolling year: the heatmap band shows 53 weeks. GitHub caps a collection at one year.
+    const from = new Date(Date.now() - 365 * 86_400_000).toISOString();
 
     const [statsResult, repoResult] = await Promise.all([
       runQuery<QueryAResponse>(token, statsQuery, {
@@ -537,7 +535,7 @@ export async function getGitHubActivity(): Promise<ActivityResponse<GitHubActivi
     if (error instanceof ActivityConfigError) {
       return buildErrorResponse(
         "missing_config",
-        `GitHub activity is not configured: ${error.key}`
+        "GitHub activity is unavailable right now."
       );
     }
 

@@ -8,7 +8,7 @@ type SceneSurface = "foundation" | "reading" | "signal" | "raised";
 interface HomepageSceneFrameProps {
   /** Stable section ID — must match SECTION_IDS from lib/anchor-navigation */
   id: string;
-  /** Semantic scene number (01–06) for indexing */
+  /** Semantic scene number (01–07) for indexing */
   sceneNumber: string;
   /** Accessible heading text for the scene */
   heading: string;

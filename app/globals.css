@@ -80,6 +80,10 @@
   --cs-raised-neutral: #EDE9E3;
   --cs-focus-ring: #E10600;
   --cs-error: #DC2626;
+  --cs-status-online: #15803D;
+  --cs-status-idle: #B45309;
+  --cs-status-dnd: #DC2626;
+  --cs-status-offline: #71717A;
   --cs-gutter-portfolio: clamp(20px, 4vw, 48px);
   --nav-height: 64px;
 }
@@ -118,6 +122,10 @@
   --cs-raised-neutral: #18181B;
   --cs-focus-ring: #00E5FF;
   --cs-error: #EF4444;
+  --cs-status-online: #22C55E;
+  --cs-status-idle: #FBBF24;
+  --cs-status-dnd: #EF4444;
+  --cs-status-offline: #A1A1AA;
 }
 
 @media (min-width: 768px) {
@@ -498,5 +506,136 @@
   border-radius: 50%;
   background: var(--cs-signal);
   box-shadow: 0 140px 0 -10px var(--cs-signal);
+}
+
+.github-heatmap {
+  --hm-weeks: 18;
+  --hm-gap: 2px;
+  --hm-0: var(--cs-structural-line);
+  --hm-1: color-mix(in oklab, var(--cs-signal) 25%, var(--cs-reading-surface));
+  --hm-2: color-mix(in oklab, var(--cs-signal) 45%, var(--cs-reading-surface));
+  --hm-3: color-mix(in oklab, var(--cs-signal) 70%, var(--cs-reading-surface));
+  --hm-4: var(--cs-signal);
+}
+
+/* Cells size from the available width, so the grid always spans the band.
+   Weeks are subgrid columns: month label row + seven day rows. */
+.hm-weeks {
+  display: grid;
+  grid-template-columns: 2rem repeat(var(--hm-weeks), minmax(0, 1fr));
+  grid-template-rows: auto repeat(7, auto);
+  gap: var(--hm-gap);
+}
+
+.hm-week {
+  position: relative;
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  /* Month labels overflow; they must not widen the week past its column. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.hm-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 1px;
+}
+
+.hm-month {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.hm-weekday {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.hm-old-base { display: none; }
+
+/* Busiest day: registration ring plus drafting crosshair through the gaps. */
+.hm-cell[data-busiest]::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1.5px solid var(--cs-signal);
+  border-radius: 50%;
+}
+
+/* Crosshair segments sit behind the cells, so they only show in the gaps. */
+.hm-cell[data-row-mark]::before,
+.hm-cell[data-col-mark]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--cs-text-primary);
+  opacity: 0.3;
+}
+
+.hm-cell[data-row-mark]::before {
+  top: 50%;
+  left: calc(-1 * var(--hm-gap));
+  right: calc(-1 * var(--hm-gap));
+  height: 1px;
+}
+
+.hm-cell[data-col-mark]::after {
+  left: 50%;
+  top: calc(-1 * var(--hm-gap));
+  bottom: calc(-1 * var(--hm-gap));
+  width: 1px;
+}
+
+.hm-busiest-key {
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--cs-signal);
+  border-radius: 50%;
+}
+
+.hm-dimension {
+  display: flex;
+  align-items: center;
+  margin-left: calc(2rem + var(--hm-gap) + 4px);
+}
+
+.hm-dimension-rule {
+  flex: 1;
+  height: 7px;
+  border-bottom: 1px solid var(--cs-structural-line-strong);
+  transform: translateY(-3px);
+}
+
+.hm-dimension-rule:first-child { border-left: 1px solid var(--cs-structural-line-strong); }
+.hm-dimension-rule:last-child { border-right: 1px solid var(--cs-structural-line-strong); }
+
+@media (min-width: 640px) {
+  .github-heatmap { --hm-weeks: 30; --hm-gap: 3px; }
+  .hm-old-base { display: grid; }
+  .hm-old-sm { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .github-heatmap { --hm-weeks: 53; --hm-gap: 4px; }
+  .hm-old-sm { display: grid; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .github-heatmap[data-reveal="on"] .hm-week:not(.hm-weekday-col) {
+    animation: hm-rise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--w, 0) * 12ms);
+  }
+}
+
+@keyframes hm-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 

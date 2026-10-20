@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import LiveProviderRegionComponent from "@/components/evidence/LiveProviderRegion";
-import GitHubActivityCard from "@/components/sections/live-activity/GitHubActivityCard";
-import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
+import GitHubActivityCard, { GitHubContributionBand } from "@/components/sections/live-activity/GitHubActivityCard";
+// Spotify hidden until SPOTIFY_REFRESH_TOKEN is re-minted (refresh docket, blocker 3).
+// import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
 import DiscordStatusCard from "@/components/sections/live-activity/DiscordStatusCard";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import type {
   ActivityResponse,
   GitHubActivity,
-  SpotifyActivity,
+  // SpotifyActivity,
   DiscordActivity,
   ActivityErrorCode,
 } from "@/lib/activity/types";
@@ -119,9 +120,10 @@ export default function ScenePresenceClient() {
   const reducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const inView = useInView(sectionRef, { margin: "200px" });
+  const revealed = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const github = usePolledActivity<GitHubActivity>("/api/activity/github", 5 * 60 * 1000, inView);
-  const spotify = usePolledActivity<SpotifyActivity>("/api/activity/spotify", 20 * 1000, inView);
+  // const spotify = usePolledActivity<SpotifyActivity>("/api/activity/spotify", 20 * 1000, inView);
   const discord = usePolledActivity<DiscordActivity>("/api/activity/discord", 20 * 1000, inView);
 
   return (
@@ -137,50 +139,62 @@ export default function ScenePresenceClient() {
         hidden: {}
       }}
     >
-      {/* Background Architectural Scaffolding (Connecting the columns) */}
-      <div className="absolute top-[30%] left-[-2rem] lg:left-[-5rem] w-[80%] h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
-      <div className="absolute top-[-2rem] bottom-[-4rem] left-[66.66%] w-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
-      <div className="absolute top-[65%] right-[-2rem] lg:right-[-5rem] w-[40%] h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
-      
-      {/* Surveyor Ring sitting at the primary data intersection */}
-      <div className="absolute top-[30%] left-[66.66%] w-8 h-8 border border-[color:var(--cs-structural-line-strong)] rounded-full -translate-x-1/2 -translate-y-1/2 z-0 hidden lg:block" aria-hidden="true" />
-
-      {/* GitHub — primary evidence rail */}
-      <motion.div 
+      {/* Contribution band — full width, the expressive moment of this scene */}
+      <motion.div
         variants={{
           hidden: { opacity: 0, y: 30 },
-          visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
         }}
-        className="col-span-4 md:col-span-5 lg:col-span-8 relative z-10"
+        className="col-span-4 md:col-span-8 lg:col-span-12 relative z-10"
       >
-        {/* GitHub Targeting Brackets (Framing the primary system window) */}
-        <motion.div 
+        {/* Crop marks framing the band */}
+        <motion.div
           variants={{
-            hidden: { opacity: 0, scale: 0.5, x: 10, y: 10 },
-            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+            hidden: { opacity: 0, scale: 0.5 },
+            visible: { opacity: 1, scale: 1, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
           }}
-          className="absolute top-0 left-0 w-8 md:w-12 h-8 md:h-12 border-t-2 border-l-2 border-[color:var(--cs-signal)] z-20 pointer-events-none -translate-x-[2px] -translate-y-[2px] origin-top-left" aria-hidden="true" 
+          className="absolute -top-4 -left-4 w-8 md:w-12 h-8 md:h-12 border-t-2 border-l-2 border-[color:var(--cs-signal)] pointer-events-none origin-top-left hidden md:block" aria-hidden="true"
         />
-        <motion.div 
+        <motion.div
           variants={{
-            hidden: { opacity: 0, scale: 0.5, x: -10, y: -10 },
-            visible: { opacity: 1, scale: 1, x: 0, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.4, delay: 0.3, ease: "easeOut" } }
+            hidden: { opacity: 0, scale: 0.5 },
+            visible: { opacity: 1, scale: 1, transition: { duration: 0.4, delay: 0.3, ease: "easeOut" } }
           }}
-          className="absolute bottom-0 right-0 w-8 md:w-12 h-8 md:h-12 border-b-2 border-r-2 border-[color:var(--cs-signal)] z-20 pointer-events-none translate-x-[2px] translate-y-[2px] origin-bottom-right" aria-hidden="true" 
+          className="absolute -bottom-4 -right-4 w-8 md:w-12 h-8 md:h-12 border-b-2 border-r-2 border-[color:var(--cs-signal)] pointer-events-none origin-bottom-right hidden md:block" aria-hidden="true"
         />
-        
+
+        <LiveProviderRegionComponent
+          providerId="github-calendar"
+          state={resolveProviderState(github.loading, github.payload)}
+          label="GitHub contributions"
+          minHeight="320px"
+        >
+          <GitHubContributionBand payload={github.payload} loading={github.loading} revealed={revealed} />
+        </LiveProviderRegionComponent>
+      </motion.div>
+
+      {/* GitHub details — reading column */}
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+        }}
+        className="col-span-4 mt-16 md:col-span-5 md:mt-20 lg:col-span-7 relative z-10"
+      >
         <LiveProviderRegionComponent
           providerId="github"
           state={resolveProviderState(github.loading, github.payload)}
-          label="GitHub activity"
-          minHeight="200px"
+          label="GitHub recent work"
         >
           <GitHubActivityCard payload={github.payload} loading={github.loading} />
         </LiveProviderRegionComponent>
       </motion.div>
 
-      {/* Spotify + Discord — subordinate region */}
-      <div className="col-span-4 mt-8 flex flex-col gap-8 md:col-span-3 md:col-start-6 md:mt-0 lg:col-span-4 lg:col-start-9">
+      {/* Spotify + Discord — stepped down from the band, tied to it by a leader line */}
+      <div className="relative col-span-4 mt-8 flex flex-col gap-8 md:col-span-3 md:col-start-6 md:mt-20 lg:col-span-4 lg:col-start-9 lg:mt-36">
+        <div className="absolute -top-36 left-0 hidden h-36 w-px bg-[color:var(--cs-structural-line-strong)] lg:block" aria-hidden="true" />
+        <div className="absolute -top-36 left-0 hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] lg:block" aria-hidden="true" />
+        {/* Spotify hidden until the refresh token is fixed. Restore with the import and poll above.
         <motion.div
           variants={{
             hidden: { opacity: 0, x: 30 },
@@ -196,6 +210,7 @@ export default function ScenePresenceClient() {
             <SpotifyActivityCard payload={spotify.payload} loading={spotify.loading} />
           </LiveProviderRegionComponent>
         </motion.div>
+        */}
 
         <motion.div
           variants={{

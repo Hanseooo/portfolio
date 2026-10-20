@@ -15,16 +15,17 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 const OBSERVED_IDS = [
   SECTION_IDS.identity,
   SECTION_IDS.flagships,
+  SECTION_IDS.stack,
   SECTION_IDS.experience,
   SECTION_IDS.moreWork,
   SECTION_IDS.presence,
   SECTION_IDS.contact,
 ];
 
-const CHAPTER_NUMBERS = ["01", "02", "03", "04", "05", "06"];
+const CHAPTER_NUMBERS = ["01", "02", "03", "04", "05", "06", "07"];
 
 export default function HomepageChapterNav() {
-  const activeId = useSectionObserver(OBSERVED_IDS);
+  const activeId = useSectionObserver(OBSERVED_IDS, true);
   const { navigateToSection } = useAnchorConsumer();
   const { tier } = useCapability();
 

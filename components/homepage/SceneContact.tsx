@@ -19,7 +19,7 @@ export default function SceneContact({ data }: SceneContactProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.contact}
-      sceneNumber="06"
+      sceneNumber="07"
       heading="Contact"
       surface="reading"
       className="relative py-16 md:py-24 lg:py-32 border-t border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)] text-[color:var(--cs-text-primary)] overflow-hidden"
@@ -56,7 +56,7 @@ export default function SceneContact({ data }: SceneContactProps) {
             data-motion-target="contact-close"
           >
             <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-              06 · CONTACT
+              07 · CONTACT
             </p>
 
             <h2

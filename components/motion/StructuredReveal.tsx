@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { useCapability } from "@/components/providers/CapabilityProvider";
 import { REVEAL_RECIPES, type RevealRecipeName } from "@/lib/motion-recipes";
 import type { ReactNode } from "react";
@@ -39,7 +39,6 @@ export default function StructuredReveal({
   onRevealComplete,
 }: StructuredRevealProps) {
   const { tier, structuredReveal } = useCapability();
-  const ref = useRef<HTMLDivElement>(null);
   const [focusForced, setFocusForced] = useState(false);
 
   const recipeData = REVEAL_RECIPES[recipe];
@@ -52,29 +51,24 @@ export default function StructuredReveal({
       },
     [variants]
   );
-  const inView = useInView(ref, {
-    once: true,
-    amount: viewportAmount ?? recipeData.viewportAmount,
-  });
 
   // No animation: reduced-motion, restoration, webview, or ineligible.
   if (!structuredReveal || !motionVariants) {
     return <div className={className}>{children}</div>;
   }
 
-  const resolved = inView || focusForced;
-
   return (
     <motion.div
-      ref={ref}
       data-reveal-id={revealId}
       className={className}
       variants={motionVariants}
       initial="initial"
-      animate={resolved ? "animate" : "initial"}
+      animate={focusForced ? "animate" : undefined}
+      whileInView="animate"
+      viewport={{ once: true, amount: viewportAmount ?? recipeData.viewportAmount }}
       onFocusCapture={() => setFocusForced(true)}
-      onAnimationComplete={() => {
-        if (!resolved) return;
+      onAnimationComplete={(definition) => {
+        if (definition !== "animate") return;
         onRevealComplete?.();
         if (revealId) {
           window.dispatchEvent(

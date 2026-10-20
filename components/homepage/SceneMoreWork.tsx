@@ -70,7 +70,7 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.moreWork}
-      sceneNumber="04"
+      sceneNumber="05"
       heading="More Work"
       surface="reading"
       className="relative overflow-hidden"
@@ -93,7 +93,7 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
       <div className="hp-grid relative z-10">
         <div className="col-span-4 md:col-span-6 lg:col-span-8">
           <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            04 · More Selected Work
+            05 · More Selected Work
           </p>
           <div className="mt-4 h-0.5 w-16 bg-[color:var(--cs-signal)] dark:bg-zinc-700 md:w-24" aria-hidden="true" />
         </div>
@@ -104,7 +104,7 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
           <StructuredReveal key={project.slug} recipe="supporting-record">
             <SupportingRecord
               project={project}
-              position={i + 3} /* 03, 04, 05 — continuing from the 2 flagships */
+              position={i + data.firstPosition}
             />
           </StructuredReveal>
         ))}
@@ -124,7 +124,7 @@ export default function SceneMoreWork({ data }: SceneMoreWorkProps) {
             className="group relative z-10 flex flex-col items-center justify-center py-20 md:py-32 px-4 text-center focus-visible:outline-none"
           >
             <p className="mb-6 font-[family-name:var(--font-mono)] text-xs md:text-sm uppercase tracking-[0.2em] text-white/70">
-              04 · Project Catalogue
+              05 · Project Catalogue
             </p>
             <h3 className="font-[family-name:var(--font-display)] text-[clamp(3.5rem,8vw,8rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
               View All<br />Projects

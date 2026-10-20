@@ -224,8 +224,8 @@ Statuses: DONE (spec linked **and** constraints confirmed) · PARTIAL (stopped e
 
 Turned up mid-session, belongs to no session here. Recorded so it is not lost, and not this docket's work.
 
-- None.
+- 2026-10-20: `docs/dockets/portfolio-refresh-docket.md` supersedes named S1, S2, and S3 constraints (hero ~80%, project curation and cap, experience records, red anchors, geometry wording). Sessions above are unchanged.
 
 ## Amendments
 
-- None.
+- 2026-10-20: `docs/dockets/portfolio-refresh-docket.md` supersedes named S1, S2, and S3 constraints (hero ~80%, project curation and cap, experience records, red anchors, geometry wording). Sessions above are unchanged.

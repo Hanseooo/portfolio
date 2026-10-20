@@ -9,7 +9,7 @@
 import type { StaticImageData } from "next/image";
 import hansPortrait from "@/app/assets/myImages/hans.webp";
 import { projects } from "@/lib/projects";
-import { experience } from "@/lib/experience";
+import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
 import { EMAIL_ADDRESS, LINKEDIN_URL, GITHUB_URL } from "@/components/utils/externalLinks";
 import type {
@@ -19,6 +19,46 @@ import type {
   CredentialProjection,
   ContactChannel,
 } from "./types";
+
+const FLAGSHIP_SLUGS = ["story-buddy", "clarift", "le-doux"] as const;
+const MORE_WORK_SLUGS = ["simply-note", "the-podium", "hcdc-lfms"] as const;
+
+const leDouxProof: ProofFigure = {
+  value: "75%",
+  label: "faster order processing",
+  attribution: "Client-reported, Le Doux",
+  source: { source: "lib/experience.ts", recordId: "freelance" },
+};
+
+const projectEditorial: Record<string, { summary: string; technicalEvidence?: string[] }> = {
+  "story-buddy": {
+    summary: "As the solo developer working with three researchers, I built StoryBuddy, a capstone that turns Grade 5–6 learners' stories into picture books. Its 11-node LangGraph pipeline connects story analysis, reference generation, consistency checks, and targeted scene regeneration using open-weight models.",
+    technicalEvidence: [
+      "11-node deterministic LangGraph pipeline",
+      "VLM-based consistency checks and targeted scene regeneration",
+      "Character-identity annotation with precision, recall, and F1 reporting",
+    ],
+  },
+  "clarift": {
+    summary: "I built Clarift as an AI-powered study engine for Filipino students. It turns uploaded material into grounded summaries, quizzes, and targeted practice using a Next.js and FastAPI architecture with background jobs, Redis, and pgvector.",
+    technicalEvidence: [
+      "Split Next.js + FastAPI architecture for AI pipelines",
+      "ARQ worker with Redis for async document ingestion",
+      "pgvector RAG grounding all outputs in student materials",
+    ],
+  },
+  "le-doux": {
+    summary: "I built Le Doux for an artisanal cookie business in Davao, replacing its Google Forms workflow with a structured ordering platform and admin system. As the sole full-stack developer, I handled ordering, GCash verification, menu management, CRM, and analytics. The client reported processing orders 75% faster.",
+    technicalEvidence: [
+      "Next.js full-stack App Router with Server Actions",
+      "Server-side total recalculation, row-level security, and order snapshots",
+      "Client-side OCR for GCash reference extraction",
+    ],
+  },
+  "simply-note": { summary: "An AI learning application that turns a learner's own notes and PDFs into summaries, roadmaps, and quizzes." },
+  "the-podium": { summary: "A seminar platform for HCDC's VPAA with QR attendance, certificate generation, email notifications, and evaluation analytics." },
+  "hcdc-lfms": { summary: "A centralized lost-and-found system with reporting, claims, notifications, moderation, and role-based access." },
+};
 
 function requireProject(slug: string) {
   const project = projects.find((record) => record.slug === slug);
@@ -36,13 +76,42 @@ function requireCertificate(slug: string) {
   return certificate;
 }
 
+function requireExperience(id: ExperienceRecord["id"]) {
+  const record = experience.find((record) => record.id === id);
+  if (!record) {
+    throw new Error(`Homepage projection requires experience id: ${id}`);
+  }
+  return record;
+}
+
+function projectCard(slug: string): ProjectCardProjection {
+  const project = requireProject(slug);
+  const editorial = projectEditorial[slug];
+  if (!editorial) {
+    throw new Error(`Homepage projection requires editorial summary: ${slug}`);
+  }
+  return {
+    slug: project.slug,
+    title: project.title,
+    year: project.year,
+    role: project.role,
+    editorialSummary: editorial.summary,
+    heroImage: project.heroImage,
+    detailRoute: `/projects/${project.slug}`,
+    source: { source: "lib/projects.ts", recordId: project.slug },
+    technicalEvidence: editorial.technicalEvidence,
+    liveUrl: project.live,
+    githubUrl: project.github,
+  };
+}
+
 // ─── Scene 01: Identity & Immediate Proof ───────────────────────────
 
 export interface HomepageIdentityProjection {
   name: "Hans Amoguis";
   roleStatement: string;
   introduction: string;
-  immediateProof: [ProofFigure, ProofFigure];
+  immediateProof: ProofFigure[];
   portrait: StaticImageData;
 }
 
@@ -53,17 +122,18 @@ export function getHomepageIdentity(): HomepageIdentityProjection {
     introduction:
       "I build maintainable full-stack and AI products with clear architecture, clean implementation, and practical user experience.",
     immediateProof: [
+      leDouxProof,
       {
-        value: "Full-Stack Developer",
-        label: "Architecture & Systems",
-        attribution: "Core capability",
-        source: { source: "lib/experience.ts", recordId: "freelance" },
+        value: "5",
+        label: "merged PRs across PyCon Davao 2026, TechTix, and the DurianPy badge service",
+        attribution: "DurianPy contributions",
+        source: { source: "lib/experience.ts", recordId: "durianpy" },
       },
       {
-        value: "Product Engineer",
-        label: "AI & User Experience",
-        attribution: "Product delivery",
-        source: { source: "lib/experience.ts", recordId: "eskwelabs" },
+        value: "11",
+        label: "node LangGraph pipeline behind StoryBuddy",
+        attribution: "StoryBuddy",
+        source: { source: "lib/projects.ts", recordId: "story-buddy" },
       },
     ],
     portrait: hansPortrait,
@@ -73,65 +143,23 @@ export function getHomepageIdentity(): HomepageIdentityProjection {
 // ─── Scene 02: Flagship Work ────────────────────────────────────────
 
 export interface HomepageFlagshipProjection {
-  flagships: [ProjectCardProjection, ProjectCardProjection];
+  flagships: ProjectCardProjection[];
 }
 
 export function getHomepageFlagships(): HomepageFlagshipProjection {
-  const leDoux = requireProject("le-doux");
-  const clarift = requireProject("clarift");
-
-  return {
-    flagships: [
-      {
-        slug: leDoux.slug,
-        title: leDoux.title,
-        year: leDoux.year,
-        role: leDoux.role,
-        editorialSummary:
-          "I built Le Doux for an artisanal cookie business in Davao, replacing its Google Forms workflow with a structured ordering platform and admin system. As the sole full-stack developer, I handled ordering, GCash verification, menu management, CRM, and analytics. The client reported processing orders 75% faster.",
-        heroImage: leDoux.heroImage,
-        detailRoute: `/projects/${leDoux.slug}`,
-        source: { source: "lib/projects.ts", recordId: leDoux.slug },
-        technicalEvidence: [
-          "Next.js full-stack App Router with Server Actions",
-          "Supabase PostgreSQL + RLS for multi-tenant isolation",
-          "Client-side OCR for GCash reference extraction",
-        ],
-        liveUrl: leDoux.live,
-      },
-      {
-        slug: clarift.slug,
-        title: clarift.title,
-        year: clarift.year,
-        role: clarift.role,
-        editorialSummary:
-          "I built Clarift as an AI-powered study engine for Filipino students. It turns uploaded material into grounded summaries, quizzes, and targeted practice using a Next.js and FastAPI architecture with background jobs, Redis, and pgvector.",
-        heroImage: clarift.heroImage,
-        detailRoute: `/projects/${clarift.slug}`,
-        source: { source: "lib/projects.ts", recordId: clarift.slug },
-        technicalEvidence: [
-          "Split Next.js + FastAPI architecture for AI pipelines",
-          "ARQ worker with Redis for async document ingestion",
-          "pgvector RAG grounding all outputs in student materials",
-        ],
-        liveUrl: clarift.live,
-        githubUrl: clarift.github,
-      },
-    ],
-  };
+  return { flagships: FLAGSHIP_SLUGS.map(projectCard) };
 }
 
-// ─── Scene 03: Experience & Corroboration ────────────────────────────
-
 export interface HomepageExperienceProjection {
-  records: [ExperienceCardProjection, ExperienceCardProjection];
+  records: ExperienceCardProjection[];
   /** Eskwelabs credential attached as corroboration */
   attachedCredential: CredentialProjection;
 }
 
 export function getHomepageExperience(): HomepageExperienceProjection {
-  const eskwelabs = experience[0];
-  const freelance = experience[1];
+  const eskwelabs = requireExperience("eskwelabs");
+  const durianpy = requireExperience("durianpy");
+  const freelance = requireExperience("freelance");
   const eskwelabsCert = requireCertificate(
     "eskwelabs-ai-solution-development-track"
   );
@@ -143,14 +171,17 @@ export function getHomepageExperience(): HomepageExperienceProjection {
         company: eskwelabs.company,
         period: eskwelabs.period,
         editorialSummary:
-          "At Eskwelabs, I architected and scaffolded a recruitment automation system with AI-assisted job-description and social-post generation. I owned the UI layer, coordinated implementation tasks through GitHub issues, and helped reduce manual recruitment work by about 80%.",
-        proof: {
-          value: "~80%",
-          label: "reduced manual recruitment work",
-          attribution: "Eskwelabs internship",
-          source: { source: "lib/experience.ts", recordId: "eskwelabs" },
-        },
+          "At Eskwelabs, I built a recruitment automation prototype, its React frontend, and LangChain workflows for job descriptions and social posts. I coordinated fellow interns through GitHub issues, then took over the Slide Deck Generator from v1 and built v1.1 with a fellow intern; it runs for instructors.",
         source: { source: "lib/experience.ts", recordId: "eskwelabs" },
+      },
+      {
+        role: durianpy.role,
+        company: durianpy.company,
+        period: durianpy.period,
+        editorialSummary:
+          "On DurianPy's engineering committee, I contributed the PyCon Davao 2026 hero and travel guide, updated TechTix registration, and built a FastAPI endpoint for badge-artwork uploads. These contributions were merged.",
+        evidenceLink: { label: "5 merged PRs", href: "/experience#durianpy" },
+        source: { source: "lib/experience.ts", recordId: "durianpy" },
       },
       {
         role: freelance.role,
@@ -158,12 +189,7 @@ export function getHomepageExperience(): HomepageExperienceProjection {
         period: freelance.period,
         editorialSummary:
           "As the sole developer for Le Doux, I replaced a Google Forms ordering workflow with a production platform covering customer orders, GCash verification, menu management, CRM, and analytics.",
-        proof: {
-          value: "75%",
-          label: "faster order processing",
-          attribution: "Client-reported, Le Doux",
-          source: { source: "lib/experience.ts", recordId: "freelance" },
-        },
+        proof: leDouxProof,
         source: { source: "lib/experience.ts", recordId: "freelance" },
       },
     ],
@@ -184,51 +210,18 @@ export function getHomepageExperience(): HomepageExperienceProjection {
 // ─── Scene 04: More Selected Work ────────────────────────────────────
 
 export interface HomepageMoreWorkProjection {
-  supporting: [ProjectCardProjection, ProjectCardProjection, ProjectCardProjection];
+  supporting: ProjectCardProjection[];
+  firstPosition: number;
   catalogueRoute: "/projects";
 }
 
 export function getHomepageMoreWork(): HomepageMoreWorkProjection {
-  const simplyNote = requireProject("simply-note");
-  const thePodium = requireProject("the-podium");
-  const hcdcLfms = requireProject("hcdc-lfms");
-
-  const mapSupporting = (
-    p: ReturnType<typeof requireProject>,
-    summary: string
-  ): ProjectCardProjection => ({
-    slug: p.slug,
-    title: p.title,
-    year: p.year,
-    role: p.role,
-    editorialSummary: summary,
-    heroImage: p.heroImage,
-    detailRoute: `/projects/${p.slug}`,
-    source: { source: "lib/projects.ts", recordId: p.slug },
-    liveUrl: p.live,
-    githubUrl: p.github,
-  });
-
   return {
-    supporting: [
-      mapSupporting(
-        simplyNote,
-        "An AI learning application that turns a learner's own notes and PDFs into summaries, roadmaps, and quizzes."
-      ),
-      mapSupporting(
-        thePodium,
-        "A seminar platform for HCDC's VPAA with QR attendance, certificate generation, email notifications, and evaluation analytics."
-      ),
-      mapSupporting(
-        hcdcLfms,
-        "A centralized lost-and-found system with reporting, claims, notifications, moderation, and role-based access."
-      ),
-    ],
+    supporting: MORE_WORK_SLUGS.map(projectCard),
+    firstPosition: FLAGSHIP_SLUGS.length + 1,
     catalogueRoute: "/projects",
   };
 }
-
-// ─── Scene 05: Personal & Live Presence ──────────────────────────────
 
 export interface HomepagePersonalProjection {
   portrait: StaticImageData;

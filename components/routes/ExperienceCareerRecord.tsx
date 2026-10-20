@@ -1,5 +1,6 @@
 // components/routes/ExperienceCareerRecord.tsx
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import ScreenshotFrame from "@/components/evidence/ScreenshotFrame";
 import type { ExperienceLedgerRecord } from "@/lib/content/collection-projections";
 
 interface ExperienceCareerRecordProps {
@@ -20,6 +21,7 @@ export default function ExperienceCareerRecord({
   return (
     <StructuredReveal recipe="career-record">
     <div
+      id={record.id}
       className="ruled-band"
       data-motion-target="career-record"
     >
@@ -63,6 +65,27 @@ export default function ExperienceCareerRecord({
               </li>
             ))}
           </ol>
+          {record.links && (
+            <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2" aria-label={`${record.company} evidence`}>
+              {record.links.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-[color:var(--cs-signal-text)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {record.gallery && (
+            <div className="mt-8 space-y-8">
+              {record.gallery.map((item) => (
+                <div key={item.image.src}>
+                  <ScreenshotFrame src={item.image} alt={item.alt} wide />
+                  <p className="mt-2 text-sm text-[color:var(--cs-text-secondary)]">{item.caption}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

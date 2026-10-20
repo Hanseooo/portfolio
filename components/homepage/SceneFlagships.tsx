@@ -96,7 +96,7 @@ function FlagshipRecord({
               Case study / {String(index + 1).padStart(2, '0')}
             </span>
             
-            <h3 className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,5.5vw,5rem)] font-black uppercase leading-[0.85] tracking-tight text-white mb-8 lg:mb-12 w-[90%] md:w-[80%]">
+            <h3 className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,5.5vw,5rem)] font-black uppercase leading-[0.85] tracking-tight text-white mb-8 lg:mb-12 w-[90%] md:w-[80%] break-words">
               {project.title}
             </h3>
             
@@ -149,6 +149,8 @@ function FlagshipRecord({
 }
 
 export default function SceneFlagships({ data }: SceneFlagshipsProps) {
+  const [leadFlagship] = data.flagships;
+
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.flagships}
@@ -178,27 +180,27 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
 
         {/* Main Flagship Content Area (Cols 4–12) with vertical divider border */}
         <div className="col-span-4 md:col-span-8 lg:col-span-9 lg:border-l lg:border-[color:var(--cs-structural-line)] lg:pl-8 bg-[color:var(--cs-reading-surface)]">
-          <StructuredReveal recipe="flagship-record" revealId={`flagship-${data.flagships[0].slug}`}>
-            <FlagshipRecord
-              project={data.flagships[0]}
-              index={0}
-              reversed={false}
-              depthId={`flagship-${data.flagships[0].slug}-image`}
-            />
-          </StructuredReveal>
-
-          <StructuredReveal recipe="flagship-record" revealId={`flagship-${data.flagships[1].slug}`}>
-            <FlagshipRecord project={data.flagships[1]} index={1} reversed={true} />
-          </StructuredReveal>
+          {data.flagships.map((project, index) => (
+            <StructuredReveal key={project.slug} recipe="flagship-record" revealId={`flagship-${project.slug}`}>
+              <FlagshipRecord
+                project={project}
+                index={index}
+                reversed={index % 2 === 1}
+                depthId={index === 0 ? "flagship-lead-image" : undefined}
+              />
+            </StructuredReveal>
+          ))}
         </div>
       </div>
 
-      <EvidenceDepthEffect
-        containerId={SECTION_IDS.flagships}
-        targetSelector={`[data-gsap-depth="flagship-${data.flagships[0].slug}-image"]`}
-        waitForRevealId={`flagship-${data.flagships[0].slug}`}
-        direction={-1}
-      />
+      {leadFlagship && (
+        <EvidenceDepthEffect
+          containerId={SECTION_IDS.flagships}
+          targetSelector='[data-gsap-depth="flagship-lead-image"]'
+          waitForRevealId={`flagship-${leadFlagship.slug}`}
+          direction={-1}
+        />
+      )}
     </HomepageSceneFrame>
   );
 }

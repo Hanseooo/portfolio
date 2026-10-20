@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
  * @param sectionIds - Ordered array of section IDs to observe
  * @returns The currently active section ID, or null if none visible
  */
-export function useSectionObserver(sectionIds: string[]): string | null {
+export function useSectionObserver(sectionIds: string[], includePageEnd = false): string | null {
   const [activeId, setActiveId] = useState<string | null>(
     sectionIds.length > 0 ? sectionIds[0] : null
   );
@@ -25,20 +25,28 @@ export function useSectionObserver(sectionIds: string[]): string | null {
 
     // Observe at the upper-third threshold
     const rootMargin = "-33% 0px -67% 0px";
+    let observedId = sectionIds[0];
+    const updateActive = () => {
+      // A short closing chapter may never reach the upper-third line.
+      const atEnd = includePageEnd && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 1;
+      setActiveId(atEnd ? sectionIds[sectionIds.length - 1] : observedId);
+    };
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
+            observedId = entry.target.id;
           }
         }
+        updateActive();
       },
       {
         rootMargin,
         threshold: 0,
       }
     );
+    if (includePageEnd) window.addEventListener("scroll", updateActive, { passive: true });
 
     // Observe each section element
     for (const id of sectionIds) {
@@ -51,8 +59,9 @@ export function useSectionObserver(sectionIds: string[]): string | null {
     return () => {
       observerRef.current?.disconnect();
       observerRef.current = null;
+      if (includePageEnd) window.removeEventListener("scroll", updateActive);
     };
-  }, [sectionIds]);
+  }, [sectionIds, includePageEnd]);
 
   return activeId;
 }

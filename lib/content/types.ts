@@ -12,7 +12,7 @@ export interface SourceIdentity {
 
 /** A qualified proof figure for the homepage. */
 export interface ProofFigure {
-  /** The numeric value, e.g. "75%" or "~80%" */
+  /** The numeric value, e.g. "75%" or "11" */
   value: string;
   /** What it measures */
   label: string;
@@ -54,6 +54,7 @@ export interface ExperienceCardProjection {
   editorialSummary: string;
   /** Strongest proof from this experience */
   proof?: ProofFigure;
+  evidenceLink?: { label: string; href: string };
   source: SourceIdentity;
 }
 

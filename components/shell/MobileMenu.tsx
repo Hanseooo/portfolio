@@ -113,8 +113,8 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
       // Same-route anchor
       if (dest.fragment && !isRouteChange(dest, currentPathname)) {
         const request = buildAnchorRequest(dest, currentPathname);
-        if (request) performNativeAnchorNavigation(request);
         close();
+        if (request && performNativeAnchorNavigation(request)) restoreFocusRef.current = null;
         return;
       }
 

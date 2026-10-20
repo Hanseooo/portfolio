@@ -20,7 +20,7 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.presence}
-      sceneNumber="05"
+      sceneNumber="06"
       heading="Presence"
       surface="reading"
       className="relative overflow-hidden isolate"
@@ -32,7 +32,7 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
       <div className="hp-grid relative z-10">
         <div className="col-span-4 md:col-span-8 lg:col-span-12">
           <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            05 · Personal & Live Presence
+            06 · Personal & Live Presence
           </p>
           <div className="mt-4 h-0.5 w-16 bg-[color:var(--cs-signal)] dark:bg-zinc-700 md:w-24" aria-hidden="true" />
         </div>
