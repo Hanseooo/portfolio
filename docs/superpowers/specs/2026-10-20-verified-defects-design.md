@@ -140,3 +140,13 @@ is Hans's call, outside the repo.
 - Lint: exit 0, three existing unused-variable warnings. Build: exit 0, 37 generated pages.
   Build still warns about broad file tracing from lib/og-image.tsx. That separate warning
   is outside R4. No test runner or dependency was added.
+
+- Review corrections: compact marker is a semantic anchor with native modified-click behavior,
+  uses neutral text for its small stage number, and includes the centered header container's
+  offset. A 1600px check first caught wordmark overlap and then passed after correction.
+  Final checks found zero content/header overlaps at 1280, 1440, 1600, and 1680px.
+  Geometry checks wait for fonts and provider loading to settle before measuring.
+- Initial build failure: Argument of type 'string' is not assignable, in the stage lookup.
+  Replaced the narrow-array indexOf call with findIndex. Subsequent lint and build exit 0.
+- Changing the workspace root required clearing generated .next/dev manifests before fresh
+  browser verification. Final project and homepage loads render with no console errors.

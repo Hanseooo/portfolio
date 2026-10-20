@@ -242,7 +242,7 @@
       display: block;
       position: fixed;
       top: 18px;
-      left: calc(var(--cs-gutter-portfolio) + 112px);
+      left: calc(max(0px, (100vw - 1400px) / 2) + var(--cs-gutter-portfolio) + 112px);
       z-index: 50;
     }
 

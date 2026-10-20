@@ -7,6 +7,7 @@ import { useCapability } from "@/components/providers/CapabilityProvider";
 import {
   HOMEPAGE_CHAPTER_SEQUENCE,
   DESTINATIONS,
+  getDestinationHref,
   type DestinationId,
 } from "@/lib/destinations";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
@@ -46,18 +47,22 @@ export default function HomepageChapterNav() {
       aria-label="Homepage sections"
       className="hp-chapter-nav"
     >
-      <button
-        type="button"
-        onClick={() => handleClick(HOMEPAGE_CHAPTER_SEQUENCE[activeIndex])}
+      <a
+        href={getDestinationHref(activeDestination)}
+        onClick={(event) => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          handleClick(HOMEPAGE_CHAPTER_SEQUENCE[activeIndex]);
+        }}
         aria-label={activeDestination.accessibleName}
         aria-current="true"
         className="hp-stage-marker h-11 items-center gap-2 text-xs text-[color:var(--cs-text-secondary)]"
       >
-        <span className="font-[family-name:var(--font-mono)] text-[10px] text-[color:var(--cs-signal)]">
+        <span className="font-[family-name:var(--font-mono)] text-[10px] text-[color:var(--cs-text-primary)]">
           {CHAPTER_NUMBERS[activeIndex]}
         </span>
         {activeDestination.label.replace(/^\d+\s/, "")}
-      </button>
+      </a>
       <div className="hp-chapter-rail">
         {HOMEPAGE_CHAPTER_SEQUENCE.map((destId, index) => {
           const dest = DESTINATIONS[destId];
