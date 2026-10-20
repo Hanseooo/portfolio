@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# playwright-cli output (keep the check scripts the docket cites)
+.playwright-cli/*
+!.playwright-cli/*.cjs
+!.playwright-cli/*.mjs
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

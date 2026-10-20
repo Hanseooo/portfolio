@@ -37,7 +37,7 @@ export async function generateMetadata({
   const url = `${baseUrl}/certificates/${certificate.slug}`;
 
   return {
-    title,
+    title: certificate.title,
     description,
     alternates: {
       canonical: `/certificates/${certificate.slug}`,

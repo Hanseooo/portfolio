@@ -15,7 +15,15 @@ import {
 
 /** Default: reduced-motion tier (simplest/safest) */
 const DEFAULT_DECISIONS: CapabilityDecisions = getCapabilityDecisions(
-  resolveCapabilityFacts() // server-safe: returns reduced-motion defaults
+  {
+    reducedMotion: true,
+    coarsePointer: false,
+    touchDominant: false,
+    viewportHeight: 0,
+    viewportWidth: 0,
+    isWebview: false,
+    isRestoration: false,
+  }
 );
 
 export type CapabilityContextValue = CapabilityDecisions & {

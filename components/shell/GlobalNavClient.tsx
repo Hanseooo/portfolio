@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { ThemeControl } from "./ThemeControl";
 import MobileMenu from "./MobileMenu";
 import {
@@ -12,17 +12,27 @@ import {
   type DestinationId,
 } from "@/lib/destinations";
 import { useRouteHandoff } from "@/components/motion/RouteHandoffController";
+import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 
 const MENU_ID = "portfolio-mobile-menu";
 
 /** Desktop-visible nav destinations (excludes Contact — it's in footer/menu) */
-const DESKTOP_NAV_IDS: DestinationId[] = ["home", "projects", "experience", "certificates"];
+const DESKTOP_NAV_IDS: DestinationId[] = ["home", "projects", "experience", "certificates", "resources"];
 
 export default function GlobalNavClient() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const { navigate: handoffNavigate } = useRouteHandoff();
+
+  useEffect(() => {
+    const header = navRef.current?.closest("header");
+    const update = () => header?.setAttribute("data-scrolled", String(window.scrollY > 0));
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
@@ -38,6 +48,7 @@ export default function GlobalNavClient() {
   return (
     <>
       <nav
+        ref={navRef}
         aria-label="Site navigation"
         className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-[var(--cs-gutter-portfolio)] md:h-20"
       >
@@ -92,6 +103,18 @@ export default function GlobalNavClient() {
               </li>
             );
           })}
+          <li>
+            <a
+              href={RESUME_URL}
+              target="_blank"
+              rel="noopener"
+              aria-label={RESUME_LABEL}
+              className="flex h-11 items-center gap-1 px-4 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+            >
+              Resume
+              <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
+          </li>
         </ul>
 
         {/* Right controls */}

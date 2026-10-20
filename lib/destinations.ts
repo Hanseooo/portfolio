@@ -18,9 +18,11 @@ export type DestinationId =
   | "projects"
   | "experience"
   | "certificates"
+  | "resources"
   | "contact"
   | "scene-identity"
   | "scene-flagships"
+  | "scene-stack"
   | "scene-experience"
   | "scene-more-work"
   | "scene-presence"
@@ -59,6 +61,11 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     pathname: "/certificates",
     label: "Certificates",
   },
+  resources: {
+    id: "resources",
+    pathname: "/resources",
+    label: "Resources",
+  },
   contact: {
     id: "contact",
     pathname: "/",
@@ -80,33 +87,40 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     label: "02 Flagships",
     accessibleName: "Go to section 02 Flagships",
   },
+  "scene-stack": {
+    id: "scene-stack",
+    pathname: "/",
+    fragment: "stack",
+    label: "03 Tech Stack",
+    accessibleName: "Go to section 03 Tech Stack",
+  },
   "scene-experience": {
     id: "scene-experience",
     pathname: "/",
     fragment: "experience",
-    label: "03 Experience",
-    accessibleName: "Go to section 03 Experience",
+    label: "04 Experience",
+    accessibleName: "Go to section 04 Experience",
   },
   "scene-more-work": {
     id: "scene-more-work",
     pathname: "/",
     fragment: "more-work",
-    label: "04 More Work",
-    accessibleName: "Go to section 04 More Work",
+    label: "05 More Work",
+    accessibleName: "Go to section 05 More Work",
   },
   "scene-presence": {
     id: "scene-presence",
     pathname: "/",
     fragment: "presence",
-    label: "05 Presence",
-    accessibleName: "Go to section 05 Presence",
+    label: "06 Presence",
+    accessibleName: "Go to section 06 Presence",
   },
   "scene-contact": {
     id: "scene-contact",
     pathname: "/",
     fragment: "contact",
-    label: "06 Contact",
-    accessibleName: "Go to section 06 Contact",
+    label: "07 Contact",
+    accessibleName: "Go to section 07 Contact",
   },
 } as const;
 
@@ -114,6 +128,7 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
 export const HOMEPAGE_CHAPTER_SEQUENCE = [
   "scene-identity",
   "scene-flagships",
+  "scene-stack",
   "scene-experience",
   "scene-more-work",
   "scene-presence",
@@ -126,6 +141,7 @@ export const GLOBAL_NAV_SEQUENCE: DestinationId[] = [
   "projects",
   "experience",
   "certificates",
+  "resources",
   "contact",
 ];
 

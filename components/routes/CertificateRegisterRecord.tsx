@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import { CropMarks, IndexMark } from "@/components/geometry";
 import type { CertificateCollectionRecord } from "@/lib/content/collection-projections";
 
 interface CertificateRegisterRecordProps {
@@ -32,9 +33,10 @@ export default function CertificateRegisterRecord({
         <div className="md:col-span-3">
           <Link
             href={record.detailRoute}
-            className="group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+            className="group relative block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
             aria-label={`View ${record.title} certificate detail`}
           >
+            <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
             <div className="relative aspect-[4/3] w-full overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)]">
               <Image
                 src={record.image}
@@ -50,9 +52,7 @@ export default function CertificateRegisterRecord({
         {/* Information — 9 columns on desktop */}
         <div className="flex flex-col justify-center gap-2 md:col-span-9">
           {/* Record index */}
-          <span className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            {String(record.position).padStart(2, "0")}
-          </span>
+          <IndexMark position={record.position} className="mb-1" />
 
           {/* Title — wraps at readable size, never clips */}
           <h2 className="text-xl font-semibold leading-snug text-[color:var(--cs-text-primary)] md:text-2xl">

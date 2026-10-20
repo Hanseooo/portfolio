@@ -28,6 +28,7 @@ const NAV_ANCHOR_OFFSET_DESKTOP = 80;
 export const SECTION_IDS = {
   identity: "identity",
   flagships: "flagships",
+  stack: "stack",
   experience: "experience",
   moreWork: "more-work",
   presence: "presence",

@@ -12,7 +12,7 @@ export interface SourceIdentity {
 
 /** A qualified proof figure for the homepage. */
 export interface ProofFigure {
-  /** The numeric value, e.g. "75%" or "~80%" */
+  /** The numeric value, e.g. "75%" or "11" */
   value: string;
   /** What it measures */
   label: string;
@@ -36,7 +36,9 @@ export interface ProjectCardProjection {
   detailRoute: string;
   /** Source provenance */
   source: SourceIdentity;
-  /** Optional: up to 3 concise technical evidence statements (flagships only) */
+  /** Optional: one-line hook shown instead of the summary (flagships only) */
+  tagline?: string;
+  /** Optional: up to 3 short technical highlights (flagships only) */
   technicalEvidence?: string[];
   /** Live URL if available — omitted if absent */
   liveUrl?: string;
@@ -54,6 +56,7 @@ export interface ExperienceCardProjection {
   editorialSummary: string;
   /** Strongest proof from this experience */
   proof?: ProofFigure;
+  evidenceLink?: { label: string; href: string };
   source: SourceIdentity;
 }
 
@@ -73,7 +76,7 @@ export interface CredentialProjection {
 
 /** Contact channel — omitted if unconfigured. */
 export interface ContactChannel {
-  type: "email" | "linkedin" | "github";
+  type: "email" | "linkedin" | "github" | "resume";
   label: string;
   href: string;
 }

@@ -47,9 +47,12 @@ export type GitHubActivity = {
     ratio: number;
   }>;
   calendar: Array<{
-    date: string;
-    count: number;
-    level: 0 | 1 | 2 | 3 | 4;
+    start: string;
+    days: Array<{
+      date: string;
+      count: number;
+      level: 0 | 1 | 2 | 3 | 4;
+    } | null>;
   }>;
   weeklyActivity: Array<{
     day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";

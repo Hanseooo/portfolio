@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
 import ProofFigureComponent from "@/components/evidence/ProofFigure";
 import DocumentaryArtifactComponent from "@/components/evidence/DocumentaryArtifact";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import { CompassArc, RegistrationMark } from "@/components/geometry";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import type { HomepageExperienceProjection } from "@/lib/content/homepage-projections";
@@ -29,6 +31,7 @@ function ExperienceRecord({
     >
       {/* Structural Timeline Hash (Connects to the vertical column border on Desktop) */}
       <div className="absolute top-[2.75rem] md:top-[3.25rem] left-[-1rem] lg:left-[-2rem] w-4 lg:w-8 h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
+      <div className="absolute top-[calc(2.75rem-3px)] md:top-[calc(3.25rem-3px)] left-[-2rem] h-[7px] w-[7px] -translate-x-1/2 rounded-full border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] z-0 hidden lg:block" aria-hidden="true" />
 
       <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-3 relative z-10">
         <h3 className="text-lg font-medium text-[color:var(--cs-text-primary)]">
@@ -49,6 +52,12 @@ function ExperienceRecord({
           <ProofFigureComponent data={record.proof} size="compact" />
         </div>
       )}
+      {record.evidenceLink && (
+        <Link href={record.evidenceLink.href} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm text-[color:var(--cs-signal-text)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]">
+          {record.evidenceLink.label}
+          <ArrowUpRight size={12} aria-hidden="true" />
+        </Link>
+      )}
     </article>
   );
 }
@@ -60,33 +69,46 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.experience}
-      sceneNumber="03"
+      sceneNumber="04"
       heading="Experience"
       surface="foundation"
       className="border-t border-b border-[color:var(--cs-structural-line)] relative isolate"
     >
       <div className="hp-grid">
         {/* Left Side Kicker (Cols 1–3) */}
-        <div className="col-span-4 md:col-span-8 lg:col-span-3 pr-4 py-4 md:py-6">
-          <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-            03 · EXPERIENCE
-          </p>
-          <h3 className="mt-3 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
+        <div className="col-span-4 md:col-span-8 lg:col-span-3 lg:mr-8 bg-zinc-900 dark:bg-zinc-800 text-white p-6 md:p-8 lg:p-6 xl:p-8 shadow-2xl relative overflow-clip isolate">
+          <CompassArc className="absolute bottom-0 left-0 z-0 w-[90%] text-white/15 hidden lg:block" />
+          <div className="lg:sticky lg:top-28 relative z-10">
+          <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl lg:text-[clamp(1.125rem,1.75vw,1.875rem)] font-black uppercase leading-tight tracking-tight text-white">
             History & Credentials
           </h3>
-          <p className="mt-3 max-w-[28ch] text-xs text-[color:var(--cs-text-secondary)] leading-relaxed">
-            Corroborated track record in full-stack architecture & AI engineering.
-          </p>
-          <div className="mt-6 h-0.5 w-12 bg-[color:var(--cs-signal)]" aria-hidden="true" />
+          {/* Schedule of the records on the right */}
+          <ol role="list" className="mt-10 hidden flex-col gap-6 border-l border-white/25 pl-5 lg:flex">
+            {data.records.map((record) => (
+              <li key={record.source.recordId} className="relative">
+                <span className="absolute -left-5 top-1.5 h-[7px] w-[7px] -translate-x-1/2 rounded-full border border-white bg-zinc-900 dark:bg-zinc-800" aria-hidden="true" />
+                <p className="text-sm font-medium leading-tight text-white">{record.company}</p>
+                {record.period && (
+                  <p className="mt-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/60">
+                    {record.period}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ol>
+          </div>
         </div>
 
         {/* Main Records Column (Cols 4–9) separated by vertical border line */}
         <div className="col-span-4 md:col-span-8 lg:col-span-6 lg:border-l lg:border-[color:var(--cs-structural-line-strong)] lg:pl-8 relative z-10">
+          {data.records.map((record, index) => (
+          <Fragment key={record.source.recordId}>
           <StructuredReveal recipe="experience-record">
-            <ExperienceRecord record={data.records[0]} isFirst={true} />
+            <ExperienceRecord record={record} isFirst={index === 0} />
           </StructuredReveal>
 
           {/* Eskwelabs credential — attached to Eskwelabs record */}
+          {record.source.recordId === "eskwelabs" && (
           <StructuredReveal recipe="credential-artifact">
           <div
             className="border-t border-[color:var(--cs-structural-line)] py-6 relative isolate"
@@ -95,7 +117,7 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
             <div className="absolute top-[2.25rem] left-[-1rem] lg:left-[-2rem] w-4 lg:w-8 h-[1px] bg-[color:var(--cs-structural-line-strong)] z-0 hidden lg:block" aria-hidden="true" />
 
             <p className="mb-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] relative z-10">
-              Corroborating Credential
+              Certificate
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start relative z-10">
               <DocumentaryArtifactComponent
@@ -127,28 +149,24 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
             </div>
           </div>
           </StructuredReveal>
-
-          <StructuredReveal recipe="experience-record">
-            <ExperienceRecord record={data.records[1]} isFirst={false} />
-          </StructuredReveal>
+          )}
+          </Fragment>
+          ))}
         </div>
 
         {/* Route cues sidebar (Cols 10–12) - Option 2: Architectural Pillar */}
-        <div className="col-span-4 mt-12 md:mt-16 lg:mt-0 flex flex-col lg:col-span-3 lg:col-start-10 bg-[color:var(--cs-signal)] dark:bg-zinc-800 text-white relative overflow-hidden shadow-2xl isolate">
+        <div className="col-span-4 mt-12 md:mt-16 lg:mt-0 flex flex-col lg:col-span-3 lg:col-start-10 bg-[color:var(--cs-signal)] dark:bg-zinc-800 text-white relative overflow-clip shadow-2xl isolate">
           {/* Geometric accents inside the pillar */}
-          <div className="absolute top-[-10%] right-[-30%] w-[150%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
-          <div className="absolute bottom-[10%] left-[-20%] w-[120%] aspect-square border border-white/10 pointer-events-none z-0 rotate-12" aria-hidden="true" />
+          <RegistrationMark className="absolute -top-20 -right-20 z-0 w-64 text-white/20" />
+          <CompassArc className="absolute bottom-0 left-0 z-0 w-full text-white/15" />
           <div className="absolute top-[50%] left-0 w-full h-[1px] bg-white/10 pointer-events-none z-0" aria-hidden="true" />
 
-          <div className="p-6 md:p-8 lg:p-10 flex flex-col h-full relative z-10 justify-between min-h-[400px]">
-            <div className="flex flex-col gap-10">
+          <div className="p-6 md:p-8 lg:p-6 xl:p-8 flex flex-col flex-1 relative z-10 min-h-[400px]">
+            <div className="flex flex-col gap-10 lg:sticky lg:top-28">
               <Link
                 href={getDestinationHref(experienceDest)}
-                className="group flex flex-col gap-3 focus-visible:outline-none"
+                className="group flex flex-col gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
-                <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/70 transition-colors group-hover:text-white">
-                  Directory / 01
-                </span>
                 <span className="font-[family-name:var(--font-display)] text-3xl lg:text-[clamp(1.5rem,2.5vw,2.25rem)] xl:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
                   Full<br />Experience
                 </span>
@@ -161,11 +179,8 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
 
               <Link
                 href={getDestinationHref(certificatesDest)}
-                className="group flex flex-col gap-3 focus-visible:outline-none"
+                className="group flex flex-col gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
-                <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/70 transition-colors group-hover:text-white">
-                  Directory / 02
-                </span>
                 <span className="font-[family-name:var(--font-display)] text-3xl lg:text-[clamp(1.5rem,2.5vw,2.25rem)] xl:text-4xl font-black uppercase tracking-tight text-white transition-transform duration-300 group-hover:translate-x-2 leading-[0.9]">
                   All<br />Certificates
                 </span>
@@ -173,12 +188,6 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
                   <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
                 </div>
               </Link>
-            </div>
-            
-            <div className="mt-12">
-              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/40">
-                End of Section 03
-              </span>
             </div>
           </div>
         </div>

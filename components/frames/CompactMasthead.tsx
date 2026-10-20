@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CompassArc } from "@/components/geometry";
 
 interface CompactMastheadProps {
   /** Parent destination label, e.g. "Projects", "Certificates", "Home" */
@@ -36,12 +37,15 @@ export default function CompactMasthead({
   actions,
 }: CompactMastheadProps) {
   return (
-    <div className="relative pb-12 pt-8 md:pb-16 md:pt-12">
+    <div className="relative isolate pb-12 pt-8 md:pb-16 md:pt-12">
       {/* Signal rule — controlled structural break */}
       <div
         className="absolute left-0 top-0 h-0.5 w-16 bg-[color:var(--cs-signal)] md:w-24"
         aria-hidden="true"
       />
+
+      {/* Compass construction swung from the bottom-right corner */}
+      <CompassArc className="absolute bottom-0 right-0 -z-10 hidden w-56 -rotate-90 text-[color:var(--cs-structural-line-strong)] md:block lg:w-72" />
 
       {/* Parent navigation */}
       <nav aria-label="Parent route" className="mb-4">

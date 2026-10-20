@@ -7,16 +7,20 @@ import StructuredReveal from "@/components/motion/StructuredReveal";
 import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
+import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { RESUME_LABEL } from "@/components/utils/externalLinks";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
 }
 
 export default function SceneContact({ data }: SceneContactProps) {
+  const reducedMotion = usePrefersReducedMotion();
+
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.contact}
-      sceneNumber="06"
+      sceneNumber="07"
       heading="Contact"
       surface="reading"
       className="relative py-16 md:py-24 lg:py-32 border-t border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)] text-[color:var(--cs-text-primary)] overflow-hidden"
@@ -52,13 +56,9 @@ export default function SceneContact({ data }: SceneContactProps) {
             className="flex flex-col items-start"
             data-motion-target="contact-close"
           >
-            <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-              06 · CONTACT
-            </p>
-
             <h2
               id={`${SECTION_IDS.contact}-heading`}
-              className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
+              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
             >
               <SplitText text={data.closeStatement as string} />
             </h2>
@@ -66,11 +66,12 @@ export default function SceneContact({ data }: SceneContactProps) {
             <motion.ul 
               className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
               role="list"
-              initial="hidden"
+              initial={reducedMotion ? false : "hidden"}
+              animate={reducedMotion ? "visible" : undefined}
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               variants={{
-                visible: { transition: { staggerChildren: 0.1, delayChildren: 0.5 } },
+                visible: { transition: reducedMotion ? { staggerChildren: 0, delayChildren: 0 } : { staggerChildren: 0.1, delayChildren: 0.5 } },
                 hidden: {}
               }}
             >
@@ -79,13 +80,14 @@ export default function SceneContact({ data }: SceneContactProps) {
                   key={channel.type}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                    visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
                   }}
                 >
                   <a
                     href={channel.href}
                     target={channel.type !== "email" ? "_blank" : undefined}
                     rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
+                    aria-label={channel.type === "resume" ? RESUME_LABEL : undefined}
                     className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[color:var(--cs-text-primary)] hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                   >
                     <span>{channel.label}</span>

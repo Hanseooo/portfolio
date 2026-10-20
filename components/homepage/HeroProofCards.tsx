@@ -22,13 +22,13 @@ export default function HeroProofCards({
   proof: HomepageIdentityProjection["immediateProof"];
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[color:var(--cs-structural-line)]">
+    <div className="grid grid-cols-1 md:grid-cols-3 border-b border-[color:var(--cs-structural-line)]">
       {proof.map((item, idx) => (
         <motion.div
           key={idx}
           variants={staggerItem}
           className={`flex flex-col justify-start p-4 md:p-5 lg:p-6 min-h-[104px] border-zinc-800 ${
-            idx === 0 ? 'border-b md:border-b-0 md:border-r' : ''
+            idx < proof.length - 1 ? 'border-b md:border-b-0 md:border-r' : ''
           }`}
         >
           <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-zinc-400 mb-2">

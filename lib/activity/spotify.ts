@@ -82,6 +82,7 @@ const TOP_DATA_TTL_MS = Number.isFinite(topTtlSeconds)
 
 let recentCache: { data: RecentData; expiresAt: number } | null = null;
 let topCache: { data: TopData; expiresAt: number } | null = null;
+let tokenCache: { token: string; expiresAt: number } | null = null;
 
 function emptySpotifyData(nowPlaying: SpotifyActivity["nowPlaying"]): SpotifyActivity {
   return {
@@ -142,6 +143,8 @@ function toErrorCode(error: unknown): ActivityErrorCode {
 }
 
 async function getSpotifyAccessToken() {
+  if (tokenCache && Date.now() < tokenCache.expiresAt) return tokenCache.token;
+
   const { clientId, clientSecret, refreshToken } = getSpotifyEnv();
   const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
@@ -169,11 +172,18 @@ async function getSpotifyAccessToken() {
 
   const payload = (await response.json()) as {
     access_token?: string;
+    expires_in?: number;
   };
 
   if (!payload.access_token) {
     throw new Error("invalid_response");
   }
+
+  // Renew a minute early so a token never expires mid-request.
+  tokenCache = {
+    token: payload.access_token,
+    expiresAt: Date.now() + ((payload.expires_in ?? 3600) - 60) * 1000,
+  };
 
   return payload.access_token;
 }
@@ -351,7 +361,7 @@ export async function getSpotifyActivity(
     if (error instanceof ActivityConfigError) {
       return buildErrorResponse(
         "missing_config",
-        `Spotify activity is not configured: ${error.key}`
+        "Spotify activity is unavailable right now."
       );
     }
 

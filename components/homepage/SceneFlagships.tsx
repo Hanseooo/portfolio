@@ -5,6 +5,8 @@ import ScreenshotFrameComponent from "@/components/evidence/ScreenshotFrame";
 import EmptySafeActionsComponent from "@/components/evidence/EmptySafeActions";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import EvidenceDepthEffect from "@/components/motion/EvidenceDepthEffect";
+import { CompassArc, CropMarks, RegistrationMark } from "@/components/geometry";
+import FlagshipIndex from "./FlagshipIndex";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageFlagshipProjection } from "@/lib/content/homepage-projections";
 import type { ProjectCardProjection } from "@/lib/content/types";
@@ -73,7 +75,7 @@ function FlagshipRecord({
 
   return (
     <article
-      className={`hp-grid items-start gap-y-8 py-12 md:py-16 lg:py-20 ${
+      className={`hp-grid items-center gap-y-8 py-12 md:py-16 lg:py-20 ${
         index > 0 ? "border-t border-[color:var(--cs-structural-line)]" : ""
       }`}
       data-motion-target={`flagship-record-${project.slug}`}
@@ -86,21 +88,19 @@ function FlagshipRecord({
         {...(depthId ? { "data-gsap-depth": depthId } : {})}
       >
         <div className="relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 p-6 md:p-10 lg:p-12 text-white isolate shadow-xl">
-          {/* Geometric lines inside the block */}
-          <div className="absolute top-[12%] left-[8%] w-[72%] aspect-square border border-white/20 pointer-events-none z-0" aria-hidden="true" />
-          <div className="absolute right-[-5%] bottom-[-10%] w-[64%] aspect-square border border-white/10 rounded-full pointer-events-none z-0" aria-hidden="true" />
+          {/* Compass construction from the top-right corner, registration mark under the screenshot */}
+          <CompassArc className="absolute right-0 top-0 z-0 w-[62%] rotate-180 text-white/25" />
+          <RegistrationMark className="absolute -bottom-12 -left-12 z-0 w-40 text-white/20" />
           <div className="absolute top-[50%] left-[-10%] w-[40%] h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
 
-          <div className="relative z-10 flex flex-col h-full">
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/70 mb-6 lg:mb-8 block">
-              Case study / {String(index + 1).padStart(2, '0')}
-            </span>
-            
-            <h3 className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,5.5vw,5rem)] font-black uppercase leading-[0.85] tracking-tight text-white mb-8 lg:mb-12 w-[90%] md:w-[80%]">
+          <div className="@container relative z-10 flex flex-col h-full">
+            {/* Sized to the plate so single-word titles never break mid-word */}
+            <h3 className="font-[family-name:var(--font-display)] text-[clamp(2rem,15cqi,5rem)] font-black uppercase leading-[0.85] tracking-tight text-white mb-8 lg:mb-12">
               {project.title}
             </h3>
             
             <div className="mt-auto shadow-2xl relative z-10 border-4 border-white/10 dark:border-black/20 bg-[color:var(--cs-foundation)]">
+              <CropMarks className="text-white/70" />
               <ScreenshotFrameComponent
                 src={project.heroImage}
                 alt={`${project.title} — application screenshot`}
@@ -114,33 +114,45 @@ function FlagshipRecord({
 
       {/* Text content / Summary Block */}
       <div
-        className={`col-span-4 md:col-span-8 lg:col-span-4 ${
-          reversed ? "lg:order-1 lg:col-start-1" : "lg:order-2 lg:col-start-9"
-        } flex flex-col justify-end pt-2 pb-4 lg:pb-12`}
+        className={`col-span-4 md:col-span-8 lg:col-span-5 ${
+          reversed ? "lg:order-1 lg:col-start-1" : "lg:order-2 lg:col-start-8"
+        } flex flex-col pt-2 pb-4`}
       >
-        <p className="mb-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+        {/* Index with a leader line pointing at the plate */}
+        <div className={`mb-6 flex items-center gap-4 ${reversed ? "" : "lg:flex-row-reverse"}`}>
+          <span className="font-[family-name:var(--font-display)] text-5xl font-black leading-none text-[color:var(--cs-signal-text)] md:text-6xl">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span aria-hidden="true" className="h-px flex-1 bg-[color:var(--cs-structural-line-strong)]" />
+        </div>
+
+        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
           {project.year} · {project.role}
         </p>
 
-        <p className="text-[15px] leading-relaxed text-[color:var(--cs-text-secondary)]">
-          {project.editorialSummary}
+        <p className="mt-3 max-w-[34ch] text-lg leading-snug text-[color:var(--cs-text-primary)]">
+          {project.tagline ?? project.editorialSummary}
         </p>
 
         {project.technicalEvidence && project.technicalEvidence.length > 0 && (
-          <ul className="mt-8 flex flex-col gap-3" role="list">
-            {project.technicalEvidence.map((evidence, i) => (
+          <ul
+            className="mt-6 max-w-sm border-t border-[color:var(--cs-structural-line)]"
+            role="list"
+            aria-label="Highlights"
+          >
+            {project.technicalEvidence.map((evidence) => (
               <li
-                key={i}
-                className="flex items-start gap-3 font-[family-name:var(--font-mono)] text-xs leading-relaxed text-[color:var(--cs-text-primary)]"
+                key={evidence}
+                className="flex items-center gap-3 border-b border-[color:var(--cs-structural-line)] py-2.5 text-sm text-[color:var(--cs-text-secondary)]"
               >
-                <span className="mt-1 h-[3px] w-[3px] shrink-0 bg-[color:var(--cs-signal)] dark:bg-zinc-500" aria-hidden="true" />
+                <span aria-hidden="true" className="w-3 shrink-0 border-t border-[color:var(--cs-signal)]" />
                 {evidence}
               </li>
             ))}
           </ul>
         )}
 
-        <div className="mt-10 lg:mt-12">
+        <div className="mt-8">
           <EmptySafeActionsComponent actions={actions} />
         </div>
       </div>
@@ -149,6 +161,8 @@ function FlagshipRecord({
 }
 
 export default function SceneFlagships({ data }: SceneFlagshipsProps) {
+  const [leadFlagship] = data.flagships;
+
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.flagships}
@@ -163,42 +177,39 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
       {/* 12-column editorial layout matching prototype */}
       <div className="hp-grid relative z-10">
         {/* Left Side Category Kicker (Cols 1–3) */}
-        <div className="col-span-4 md:col-span-8 lg:col-span-3 pr-4 py-4 md:py-6 bg-[color:var(--cs-reading-surface)]">
-          <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[color:var(--cs-signal-text)]">
-            02 · WORK
-          </p>
-          <h3 className="mt-3 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
-            Selected Flagship Systems
+        <div className="col-span-4 md:col-span-8 lg:col-span-3 lg:sticky lg:top-28 lg:self-start pr-4 py-4 md:py-6 bg-[color:var(--cs-reading-surface)]">
+          <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase leading-tight tracking-tight text-[color:var(--cs-text-primary)]">
+            Selected work
           </h3>
-          <p className="mt-3 max-w-[28ch] text-xs text-[color:var(--cs-text-secondary)] leading-relaxed">
-            Case studies demonstrating end-to-end AI product & full-stack software delivery.
-          </p>
-          <div className="mt-6 h-0.5 w-12 bg-[color:var(--cs-signal)]" aria-hidden="true" />
+          <FlagshipIndex items={data.flagships.map((p) => ({ id: `work-${p.slug}`, title: p.title }))} />
         </div>
 
         {/* Main Flagship Content Area (Cols 4–12) with vertical divider border */}
         <div className="col-span-4 md:col-span-8 lg:col-span-9 lg:border-l lg:border-[color:var(--cs-structural-line)] lg:pl-8 bg-[color:var(--cs-reading-surface)]">
-          <StructuredReveal recipe="flagship-record" revealId={`flagship-${data.flagships[0].slug}`}>
-            <FlagshipRecord
-              project={data.flagships[0]}
-              index={0}
-              reversed={false}
-              depthId={`flagship-${data.flagships[0].slug}-image`}
-            />
-          </StructuredReveal>
-
-          <StructuredReveal recipe="flagship-record" revealId={`flagship-${data.flagships[1].slug}`}>
-            <FlagshipRecord project={data.flagships[1]} index={1} reversed={true} />
-          </StructuredReveal>
+          {data.flagships.map((project, index) => (
+            // Stable anchor for FlagshipIndex: StructuredReveal remounts its children when capability resolves
+            <div key={project.slug} id={`work-${project.slug}`} className="scroll-mt-28">
+            <StructuredReveal recipe="flagship-record" revealId={`flagship-${project.slug}`}>
+              <FlagshipRecord
+                project={project}
+                index={index}
+                reversed={index % 2 === 1}
+                depthId={index === 0 ? "flagship-lead-image" : undefined}
+              />
+            </StructuredReveal>
+            </div>
+          ))}
         </div>
       </div>
 
-      <EvidenceDepthEffect
-        containerId={SECTION_IDS.flagships}
-        targetSelector={`[data-gsap-depth="flagship-${data.flagships[0].slug}-image"]`}
-        waitForRevealId={`flagship-${data.flagships[0].slug}`}
-        direction={-1}
-      />
+      {leadFlagship && (
+        <EvidenceDepthEffect
+          containerId={SECTION_IDS.flagships}
+          targetSelector='[data-gsap-depth="flagship-lead-image"]'
+          waitForRevealId={`flagship-${leadFlagship.slug}`}
+          direction={-1}
+        />
+      )}
     </HomepageSceneFrame>
   );
 }

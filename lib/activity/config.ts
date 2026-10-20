@@ -1,4 +1,3 @@
-const DEFAULT_GITHUB_REVALIDATE_SECONDS = 300;
 const DEFAULT_SPOTIFY_REVALIDATE_SECONDS = 20;
 const DEFAULT_DISCORD_REVALIDATE_SECONDS = 20;
 
@@ -17,12 +16,6 @@ function readNumberEnv(
 }
 
 export const activityConfig = {
-  githubRevalidateSeconds: readNumberEnv(
-    process.env.ACTIVITY_GITHUB_REVALIDATE_SECONDS,
-    DEFAULT_GITHUB_REVALIDATE_SECONDS,
-    60,
-    3600
-  ),
   spotifyRevalidateSeconds: readNumberEnv(
     process.env.ACTIVITY_SPOTIFY_REVALIDATE_SECONDS,
     DEFAULT_SPOTIFY_REVALIDATE_SECONDS,

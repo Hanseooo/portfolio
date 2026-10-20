@@ -3,19 +3,42 @@
 import { memo } from "react";
 import { Activity, Gamepad2, Headphones, PlayCircle } from "lucide-react";
 import type { ActivityResponse, DiscordActivity } from "@/lib/activity/types";
-import { formatClockTime } from "@/lib/activity/formatters";
+import LiveCardHeader from "./LiveCardHeader";
+import { LIVE_LABEL, SKELETON_BAR } from "./labels";
 
 type DiscordStatusCardProps = {
   payload: ActivityResponse<DiscordActivity> | null;
   loading?: boolean;
 };
 
-const STATUS_DOT: Record<DiscordActivity["status"], string> = {
-  online: "bg-emerald-500",
-  idle: "bg-amber-400",
-  dnd: "bg-red-500",
-  offline: "bg-gray-500",
+const STATUS: Record<DiscordActivity["status"], { dot: string; word: string }> = {
+  online: { dot: "bg-[color:var(--cs-status-online)]", word: "Online" },
+  idle: { dot: "bg-[color:var(--cs-status-idle)]", word: "Idle" },
+  dnd: { dot: "bg-[color:var(--cs-status-dnd)]", word: "Do not disturb" },
+  offline: { dot: "bg-[color:var(--cs-status-offline)]", word: "Offline" },
 };
+
+/** Same frame as a loaded card with no activity rows (R2-5). */
+function DiscordStatusSkeleton() {
+  return (
+    <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl motion-safe:animate-pulse">
+      <LiveCardHeader label="Discord" />
+      <span className="sr-only">Loading Discord status</span>
+      <div aria-hidden="true" className="p-4 md:p-6 flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4 md:gap-6 border-b border-[color:var(--cs-structural-line)] pb-6">
+          <div className="h-20 w-20 md:h-24 md:w-24 shrink-0 bg-[color:var(--cs-structural-line)]" />
+          <div className="min-w-0 flex flex-col justify-end">
+            <p className="mb-2 text-xs"><span className={`${SKELETON_BAR} w-16`}>&nbsp;</span></p>
+            <p className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black">
+              <span className={`${SKELETON_BAR} w-32`}>&nbsp;</span>
+            </p>
+          </div>
+        </div>
+        <div />
+      </div>
+    </article>
+  );
+}
 
 function ActivityIcon({ kind, type }: { kind: "spotify" | "activity"; type?: number }) {
   const cls = "h-4 w-4 text-[color:var(--cs-signal-text)]";
@@ -31,23 +54,16 @@ function DiscordStatusCard({
 }: DiscordStatusCardProps) {
   const data = payload?.data;
 
-  if (loading) {
-    return (
-      <div className="py-3">
-        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-          Loading Discord presence…
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <DiscordStatusSkeleton />;
 
   if (payload && !payload.ok) {
     return (
-      <div className="py-3">
-        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-error)]">
-          {payload.error?.message ?? "Discord presence temporarily unavailable."}
+      <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl">
+        <LiveCardHeader label="Discord" />
+        <p className="p-4 md:p-6 text-sm text-[color:var(--cs-text-secondary)]">
+          Discord status is unavailable right now.
         </p>
-      </div>
+      </article>
     );
   }
 
@@ -56,16 +72,8 @@ function DiscordStatusCard({
   const spotifyHasLink = Boolean(data.live.spotify?.trackUrl);
 
   return (
-    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-white/5 dark:bg-black/20 backdrop-blur-sm isolate">
-      {/* Editorial Header */}
-      <div className="flex items-center justify-between gap-2 bg-[color:var(--cs-signal)] dark:bg-zinc-800 px-4 py-3 text-white">
-        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/90">
-          LIVE DISCORD STATUS
-        </p>
-        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-white/60">
-          {payload?.updatedAt ? `Sync: ${formatClockTime(payload.updatedAt)}` : "Offline"}
-        </span>
-      </div>
+    <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl isolate">
+      <LiveCardHeader label="Discord" updatedAt={payload?.updatedAt} />
 
       <div className="p-4 md:p-6 flex flex-col gap-6">
         {/* User (Macro Typography) */}
@@ -77,15 +85,15 @@ function DiscordStatusCard({
               alt={`${data.user.displayName ?? data.user.username} avatar`}
               loading="lazy"
               decoding="async"
-              className="h-20 w-20 md:h-24 md:w-24 shrink-0 object-cover border border-white/20 shadow-xl grayscale opacity-80 mix-blend-luminosity transition-all duration-500 hover:grayscale-0 hover:mix-blend-normal hover:opacity-100"
+              className="h-20 w-20 md:h-24 md:w-24 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
             />
           ) : (
             <div className="h-20 w-20 md:h-24 md:w-24 shrink-0 border border-[color:var(--cs-structural-line)] bg-black/10" />
           )}
           <div className="min-w-0 flex flex-col justify-end">
-            <div className="mb-2 flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-signal-text)]">
-              <span className={`h-2 w-2 rounded-full ${STATUS_DOT[data.status]} shadow-[0_0_8px_currentColor]`} aria-hidden="true" />
-              <span>STATUS // {data.status}</span>
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-[color:var(--cs-text-secondary)]">
+              <span className={`h-2 w-2 rounded-full ${STATUS[data.status].dot}`} aria-hidden="true" />
+              <span>{STATUS[data.status].word}</span>
             </div>
             <p className="line-clamp-1 font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black uppercase tracking-tight text-[color:var(--cs-text-primary)]">
               {data.user.displayName ?? data.user.username}
@@ -104,7 +112,7 @@ function DiscordStatusCard({
                   alt={`${data.live.spotify.album} cover`}
                   loading="lazy"
                   decoding="async"
-                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                  className="h-14 w-14 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
                 />
               ) : (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
@@ -112,8 +120,8 @@ function DiscordStatusCard({
                 </div>
               )}
               <div className="min-w-0 flex flex-col">
-                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
-                  Spotify Activity
+                <p className={`mb-1 ${LIVE_LABEL}`}>
+                  Listening on Spotify
                 </p>
                 {spotifyHasLink ? (
                   <a
@@ -146,7 +154,7 @@ function DiscordStatusCard({
                   alt={`${data.live.gaming.name} cover`}
                   loading="lazy"
                   decoding="async"
-                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                  className="h-14 w-14 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
                 />
               ) : (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
@@ -154,8 +162,8 @@ function DiscordStatusCard({
                 </div>
               )}
               <div className="min-w-0 flex flex-col">
-                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
-                  Current Game
+                <p className={`mb-1 ${LIVE_LABEL}`}>
+                  Playing
                 </p>
                 <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
                   {data.live.gaming.name}
@@ -177,7 +185,7 @@ function DiscordStatusCard({
                   alt={`${activity.name} artwork`}
                   loading="lazy"
                   decoding="async"
-                  className="h-14 w-14 shrink-0 object-cover border border-white/20 grayscale opacity-80 mix-blend-luminosity"
+                  className="h-14 w-14 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
                 />
               ) : (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
@@ -185,7 +193,7 @@ function DiscordStatusCard({
                 </div>
               )}
               <div className="min-w-0 flex flex-col">
-                <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[color:var(--cs-text-secondary)] mb-1">
+                <p className={`mb-1 ${LIVE_LABEL}`}>
                   {activity.typeLabel}
                 </p>
                 <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">

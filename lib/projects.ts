@@ -49,6 +49,19 @@ import leDoux9 from "@/app/assets/projects/leDoux/9.webp";
 import leDoux10 from "@/app/assets/projects/leDoux/10.webp";
 
 import { StaticImageData } from "next/image";
+import storyBuddyHero from "@/app/assets/projects/story-buddy/hero.webp";
+import storyBuddyStoryEditor from "@/app/assets/projects/story-buddy/student-story-editor.webp";
+import storyBuddyCharacterCast from "@/app/assets/projects/story-buddy/student-character-cast.webp";
+import storyBuddyBookGallery from "@/app/assets/projects/story-buddy/student-book-gallery.webp";
+import storyBuddyClassroomDashboard from "@/app/assets/projects/story-buddy/teacher-classroom-dashboard.webp";
+import storyBuddyStudentRoster from "@/app/assets/projects/story-buddy/teacher-student-roster.webp";
+import storyBuddyReviewQueue from "@/app/assets/projects/story-buddy/teacher-review-queue.webp";
+import storyBuddyBookReview from "@/app/assets/projects/story-buddy/teacher-book-review.webp";
+import storyBuddyGenerationRuns from "@/app/assets/projects/story-buddy/research-generation-runs.webp";
+import storyBuddyPipelinePageSplitting from "@/app/assets/projects/story-buddy/research-pipeline-page-splitting.webp";
+import storyBuddyCharacterReferences from "@/app/assets/projects/story-buddy/research-character-references.webp";
+import storyBuddyConflictAdjudication from "@/app/assets/projects/story-buddy/research-conflict-adjudication.webp";
+import storyBuddyCharacterComparison from "@/app/assets/projects/story-buddy/research-character-comparison.webp";
 
 
 const simplyNoteImages : StaticImageData[] = [
@@ -127,9 +140,66 @@ export type Project = {
     live?: string;
     client?: string;
     clientConsent?: boolean;
+    /** ISO date of the last content change; sitemap falls back to CONTENT_UPDATED */
+    updated?: string;
 }
 
 export const projects: Project[] = [
+  {
+    slug: "story-buddy",
+    title: "StoryBuddy",
+    subtitle: "AI picture books for young storytellers",
+    heroImage: storyBuddyHero,
+    ogImageSrc: "app/assets/projects/story-buddy/hero.webp",
+    year: "2026",
+    problem:
+      "Turning Grade 5–6 learners' stories into illustrated picture books requires characters to stay recognizable across scenes while checking generated content for child safety and personal information.",
+    overview:
+      "StoryBuddy is a capstone project developed at Holy Cross of Davao College for Grade 5–6 learners, with stories collected at Matina Aplaya Elementary School. As the solo developer working with three researchers, I built an 11-node deterministic LangGraph pipeline that turns stories into picture books using open-weight models. The workflow connects story analysis, reference generation, VLM-based consistency checks, and targeted scene regeneration. I also built annotation and evaluation tooling for character-identity review with precision, recall, and F1 reporting. The project supports SDG 4: Quality Education.",
+    technicalDecisions: [
+      "An 11-node deterministic LangGraph pipeline connects story analysis, reference generation, consistency checks, and scene regeneration.",
+      "Open-weight models handle text and image generation: Mistral Small 3.2 and Gemma-3-27B, with Qwen-Image and Qwen-Image-Edit on fal.ai.",
+      "Llama Guard 4 12B and gpt-oss-safeguard check content safety, while Presidio handles personal-information redaction.",
+      "VLM-based character consistency checks and targeted scene regeneration address character drift; annotation tooling records human labels and reports precision, recall, and F1.",
+    ],
+    features: [
+      "AI picture-book generation from Grade 5–6 learners' stories",
+      "Story analysis and character-reference generation",
+      "VLM-based character consistency checks across scenes",
+      "Targeted regeneration of scenes with character drift",
+      "Content safety checks and personal-information redaction",
+      "Character-identity annotation and evaluation with precision, recall, and F1 reporting",
+    ],
+    role: "Solo developer, 3-person research team",
+    stack: [
+      "LangGraph",
+      "Qwen-Image",
+      "Qwen-Image-Edit",
+      "Mistral Small 3.2",
+      "Gemma-3-27B",
+      "Llama Guard 4 12B",
+      "gpt-oss-safeguard",
+      "Presidio",
+    ],
+    integrations: ["fal.ai"],
+    gallery: [
+      storyBuddyStoryEditor,
+      storyBuddyCharacterCast,
+      storyBuddyBookGallery,
+      storyBuddyClassroomDashboard,
+      storyBuddyStudentRoster,
+      storyBuddyReviewQueue,
+      storyBuddyBookReview,
+      storyBuddyGenerationRuns,
+      storyBuddyPipelinePageSplitting,
+      storyBuddyCharacterReferences,
+      storyBuddyConflictAdjudication,
+      storyBuddyCharacterComparison,
+    ],
+    updated: "2026-10-21",
+    github: "https://github.com/Hanseooo/story-buddy",
+    live: "https://storybuddy.hanseo.tech",
+  },
   {
     slug: "le-doux",
     title: "Le Doux",
@@ -142,7 +212,7 @@ export const projects: Project[] = [
       "A cookie seller relied on Instagram for discovery and Google Forms for order intake. Manual payment screenshot review, no order tracking, no CRM data, and no analytics made operations slow and error-prone. There was no structured product catalog, no automated confirmations, and no way to manage orders at scale.",
     technicalDecisions: [
       "Next.js full-stack App Router: Server Components, Server Actions, Route Handlers, and Middleware in a single deployment — no separate backend needed for this scope.",
-      "Supabase for database, auth, and storage: PostgreSQL with RLS handles multi-tenant data isolation, Supabase Auth manages admin sessions, and Storage handles payment proofs and menu images without custom upload logic.",
+      "Supabase for database, auth, and storage: PostgreSQL row-level security controls data access, Supabase Auth manages admin sessions, and Storage handles payment proofs and menu images without custom upload logic.",
       "Order snapshot strategy with JSONB: all customer, payment, and form response data is denormalized into snapshots at creation time. Historical orders render from snapshots only, ensuring accuracy as products, prices, or settings change.",
       "Server-side price recalculation: the client submits line items but the server re-fetches product prices from the database and recalculates all totals. Client-submitted totals are never trusted, preventing price tampering.",
       "Tesseract.js for client-side OCR: payment screenshots are processed in the browser to auto-extract GCash reference numbers, reducing manual entry errors without a server-side OCR pipeline.",
@@ -343,7 +413,7 @@ export const projects: Project[] = [
       "Cloudinary",
     ],
     gallery: thePodiumImages,
-    github: "https://github.com/Hanseooo/attendance-evaluation-certification",
+    github: "https://github.com/Hanseooo/the-podium",
     live: "https://hcdc-podium.vercel.app",
   },
   {
