@@ -20,7 +20,7 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.presence}
-      sceneNumber="06"
+      sceneNumber="05"
       heading="Presence"
       surface="reading"
       className="relative overflow-hidden isolate"
@@ -28,6 +28,29 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
       {/* Section-Wide Blueprint Crosshair */}
       <div className="absolute top-[30%] left-[-10%] w-[120%] h-[1px] bg-[color:var(--cs-structural-line)] pointer-events-none z-0 hidden lg:block" aria-hidden="true" />
       <div className="absolute top-[-10%] left-[55%] w-[1px] h-[120%] bg-[color:var(--cs-structural-line)] pointer-events-none z-0 hidden lg:block" aria-hidden="true" />
+
+      {/* Option 1: Live providers — Telemetry Grid Island */}
+      <div className="relative pb-16 mb-16 md:mb-24 border-b border-[color:var(--cs-structural-line-strong)]" data-motion-target="presence-providers">
+        
+        {/* Telemetry Grid Masked to the right */}
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none opacity-[0.15] dark:opacity-[0.07]" 
+          aria-hidden="true"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, currentColor 1px, transparent 1px),
+              linear-gradient(to bottom, currentColor 1px, transparent 1px)
+            `,
+            backgroundSize: '128px 128px',
+            maskImage: 'linear-gradient(to right, transparent 20%, black 80%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 80%)'
+          }}
+        />
+
+        <div className="relative z-10">
+          <ScenePresenceClient />
+        </div>
+      </div>
 
       <div className="hp-grid relative z-10">
         <div className="col-span-4 md:col-span-8 lg:col-span-12">
@@ -150,29 +173,6 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
         waitForRevealId="presence-static"
         direction={1}
       />
-
-      {/* Option 1: Live providers — Telemetry Grid Island */}
-      <div className="relative mt-24 md:mt-32 pt-16 pb-12 border-t border-[color:var(--cs-structural-line-strong)]" data-motion-target="presence-providers">
-        
-        {/* Telemetry Grid Masked to the right */}
-        <div 
-          className="absolute inset-0 z-0 pointer-events-none opacity-[0.15] dark:opacity-[0.07]" 
-          aria-hidden="true"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, currentColor 1px, transparent 1px),
-              linear-gradient(to bottom, currentColor 1px, transparent 1px)
-            `,
-            backgroundSize: '128px 128px',
-            maskImage: 'linear-gradient(to right, transparent 20%, black 80%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 80%)'
-          }}
-        />
-
-        <div className="relative z-10">
-          <ScenePresenceClient />
-        </div>
-      </div>
     </HomepageSceneFrame>
   );
 }

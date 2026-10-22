@@ -30,7 +30,6 @@ export const SECTION_IDS = {
   flagships: "flagships",
   stack: "stack",
   experience: "experience",
-  moreWork: "more-work",
   presence: "presence",
   contact: "contact",
 } as const;

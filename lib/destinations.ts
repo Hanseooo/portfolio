@@ -24,7 +24,6 @@ export type DestinationId =
   | "scene-flagships"
   | "scene-stack"
   | "scene-experience"
-  | "scene-more-work"
   | "scene-presence"
   | "scene-contact";
 
@@ -84,15 +83,15 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     id: "scene-flagships",
     pathname: "/",
     fragment: "flagships",
-    label: "02 Flagships",
-    accessibleName: "Go to section 02 Flagships",
+    label: "02 Selected Work",
+    accessibleName: "Go to section 02 Selected Work",
   },
   "scene-stack": {
     id: "scene-stack",
     pathname: "/",
     fragment: "stack",
-    label: "03 Tech Stack",
-    accessibleName: "Go to section 03 Tech Stack",
+    label: "03 Capabilities",
+    accessibleName: "Go to section 03 Capabilities",
   },
   "scene-experience": {
     id: "scene-experience",
@@ -101,26 +100,19 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     label: "04 Experience",
     accessibleName: "Go to section 04 Experience",
   },
-  "scene-more-work": {
-    id: "scene-more-work",
-    pathname: "/",
-    fragment: "more-work",
-    label: "05 More Work",
-    accessibleName: "Go to section 05 More Work",
-  },
   "scene-presence": {
     id: "scene-presence",
     pathname: "/",
     fragment: "presence",
-    label: "06 Presence",
-    accessibleName: "Go to section 06 Presence",
+    label: "05 Presence",
+    accessibleName: "Go to section 05 Presence",
   },
   "scene-contact": {
     id: "scene-contact",
     pathname: "/",
     fragment: "contact",
-    label: "07 Contact",
-    accessibleName: "Go to section 07 Contact",
+    label: "06 Contact",
+    accessibleName: "Go to section 06 Contact",
   },
 } as const;
 
@@ -130,7 +122,6 @@ export const HOMEPAGE_CHAPTER_SEQUENCE = [
   "scene-flagships",
   "scene-stack",
   "scene-experience",
-  "scene-more-work",
   "scene-presence",
   "scene-contact",
 ] as const satisfies readonly DestinationId[];

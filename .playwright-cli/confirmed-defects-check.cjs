@@ -42,8 +42,8 @@ async page => {
     assert(completions.includes("hero-proof") && completions.includes("flagship-story-buddy"), "Named reveal completion events must reach nested effects");
 
     const nav = page.getByRole("navigation", { name: "Homepage sections", exact: true });
-    const chapters = ["01 Identity", "02 Flagships", "03 Tech Stack", "04 Experience", "05 More Work", "06 Presence", "07 Contact"];
-    assert(await nav.getByRole("button").count() === 7, "Chapter rail must contain all seven chapters");
+    const chapters = ["01 Identity", "02 Selected Work", "03 Capabilities", "04 Experience", "05 Presence", "06 Contact"];
+    assert(await nav.getByRole("button").count() === 6, "Chapter rail must contain all six chapters");
     for (const chapter of chapters) {
       await nav.getByRole("button", { name: `Go to section ${chapter}`, exact: true }).click();
       await page.waitForTimeout(1100);

@@ -21,7 +21,6 @@ import type {
 } from "./types";
 
 const FLAGSHIP_SLUGS = ["story-buddy", "clarift", "le-doux"] as const;
-const MORE_WORK_SLUGS = ["simply-note", "the-podium", "hcdc-lfms"] as const;
 
 const leDouxProof: ProofFigure = {
   value: "75%",
@@ -46,9 +45,6 @@ const projectEditorial: Record<string, { summary: string; tagline?: string; tech
     tagline: "Ordering platform for a Davao cookie business",
     technicalEvidence: ["Next.js Server Actions", "Row-level security", "GCash OCR"],
   },
-  "simply-note": { summary: "An AI learning application that turns a learner's own notes and PDFs into summaries, roadmaps, and quizzes." },
-  "the-podium": { summary: "A seminar platform for HCDC's VPAA with QR attendance, certificate generation, email notifications, and evaluation analytics." },
-  "hcdc-lfms": { summary: "A centralized lost-and-found system with reporting, claims, notifications, moderation, and role-based access." },
 };
 
 function requireProject(slug: string) {
@@ -142,10 +138,11 @@ export function getHomepageIdentity(): HomepageIdentityProjection {
 
 export interface HomepageFlagshipProjection {
   flagships: ProjectCardProjection[];
+  catalogueRoute: "/projects";
 }
 
 export function getHomepageFlagships(): HomepageFlagshipProjection {
-  return { flagships: FLAGSHIP_SLUGS.map(projectCard) };
+  return { flagships: FLAGSHIP_SLUGS.map(projectCard), catalogueRoute: "/projects" };
 }
 
 export interface HomepageExperienceProjection {
@@ -205,22 +202,6 @@ export function getHomepageExperience(): HomepageExperienceProjection {
   };
 }
 
-// ─── Scene 04: More Selected Work ────────────────────────────────────
-
-export interface HomepageMoreWorkProjection {
-  supporting: ProjectCardProjection[];
-  firstPosition: number;
-  catalogueRoute: "/projects";
-}
-
-export function getHomepageMoreWork(): HomepageMoreWorkProjection {
-  return {
-    supporting: MORE_WORK_SLUGS.map(projectCard),
-    firstPosition: FLAGSHIP_SLUGS.length + 1,
-    catalogueRoute: "/projects",
-  };
-}
-
 export interface HomepagePersonalProjection {
   portrait: StaticImageData;
   aboutPrimary: string;
@@ -266,7 +247,6 @@ export function getHomepageProjections() {
     identity: getHomepageIdentity(),
     flagships: getHomepageFlagships(),
     experience: getHomepageExperience(),
-    moreWork: getHomepageMoreWork(),
     personal: getHomepagePersonal(),
     contact: getHomepageContact(),
   };

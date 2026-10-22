@@ -17,12 +17,11 @@ const OBSERVED_IDS = [
   SECTION_IDS.flagships,
   SECTION_IDS.stack,
   SECTION_IDS.experience,
-  SECTION_IDS.moreWork,
   SECTION_IDS.presence,
   SECTION_IDS.contact,
 ];
 
-const CHAPTER_NUMBERS = ["01", "02", "03", "04", "05", "06", "07"];
+const CHAPTER_NUMBERS = ["01", "02", "03", "04", "05", "06"];
 
 export default function HomepageChapterNav() {
   const activeId = useSectionObserver(OBSERVED_IDS, true);
