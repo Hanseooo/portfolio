@@ -8,6 +8,7 @@ import { ThemeControl } from "./ThemeControl";
 import MobileMenu from "./MobileMenu";
 import {
   DESTINATIONS,
+  GLOBAL_NAV_SEQUENCE,
   getDestinationHref,
   type DestinationId,
 } from "@/lib/destinations";
@@ -17,7 +18,7 @@ import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 const MENU_ID = "portfolio-mobile-menu";
 
 /** Desktop-visible nav destinations (excludes Contact — it's in footer/menu) */
-const DESKTOP_NAV_IDS: DestinationId[] = ["home", "projects", "experience", "certificates", "resources"];
+const DESKTOP_NAV_IDS = GLOBAL_NAV_SEQUENCE.filter(id => id !== "contact");
 
 export default function GlobalNavClient() {
   const [menuOpen, setMenuOpen] = useState(false);

@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
@@ -20,7 +21,7 @@ export default function SceneContact({ data }: SceneContactProps) {
   return (
     <HomepageSceneFrame
       id={SECTION_IDS.contact}
-      sceneNumber="07"
+      sceneNumber="06"
       heading="Contact"
       surface="reading"
       className="relative py-16 md:py-24 lg:py-32 border-t border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)] text-[color:var(--cs-text-primary)] overflow-hidden"
@@ -62,6 +63,20 @@ export default function SceneContact({ data }: SceneContactProps) {
             >
               <SplitText text={data.closeStatement as string} />
             </h2>
+            {/* Status line: signal leader, live dot, availability */}
+            <p className="mt-6 flex max-w-2xl items-start gap-3 font-[family-name:var(--font-mono)] text-xs uppercase leading-relaxed tracking-widest text-[color:var(--cs-text-secondary)] md:mt-8">
+              <span aria-hidden="true" className="mt-[0.6rem] h-px w-8 shrink-0 bg-[color:var(--cs-signal)] md:w-12" />
+              <span aria-hidden="true" className="mt-[0.4rem] size-1.5 shrink-0 rounded-full bg-[color:var(--cs-status-online)]" />
+              {/* Wrap only at the separators, never inside "Remote-friendly" */}
+              <span>
+                {data.availability.split(" · ").map((part, i, parts) => (
+                  <Fragment key={part}>
+                    {i > 0 && " "}
+                    <span className="whitespace-nowrap">{i < parts.length - 1 ? `${part} ·` : part}</span>
+                  </Fragment>
+                ))}
+              </span>
+            </p>
 
             <motion.ul 
               className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 

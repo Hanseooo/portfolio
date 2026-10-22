@@ -1,13 +1,41 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { fadeUpReveal, clipReveal, peelReveal } from "@/lib/motion";
 import SplitText from "@/components/motion/SplitText";
 import { buildItems, toolsItems, deployItems } from "@/lib/skills";
+import type { HomepageCapability } from "@/lib/content/homepage-projections";
+import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
+import { CompassArc, RegistrationMark, IndexMark } from "@/components/geometry";
 
-export default function TechStackSection({ id }: { id: string }) {
+function ProofLinks({ links, inverse = false }: { links: HomepageCapability["proof"]; inverse?: boolean }) {
+  return (
+    <ul className="mt-4 flex flex-col items-start">
+      {links.map((link) => (
+        <li key={link.href} className="max-w-full">
+          <Link
+            href={link.href}
+            className={`group inline-flex min-h-11 max-w-full items-center gap-2 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              inverse
+                ? "text-white hover:text-white/70 focus-visible:outline-white"
+                : "text-[color:var(--cs-text-secondary)] hover:text-[color:var(--cs-signal)] focus-visible:outline-[color:var(--cs-focus-ring)]"
+            }`}
+          >
+            <span>{link.label}</span>
+            <ArrowUpRight size={14} className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function TechStackSection({ id, capabilities }: { id: string; capabilities: HomepageCapability[] }) {
   const reducedMotion = usePrefersReducedMotion();
+  const [lead, ...rest] = capabilities;
 
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className="relative w-full overflow-hidden flex flex-col items-center">
@@ -48,6 +76,58 @@ export default function TechStackSection({ id }: { id: string }) {
         <div 
           className="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-border bg-background relative z-10"
         >
+          {/* What I build: lead plate (5 cols) + numbered records (7 cols), aligned to the Build/Tools split below */}
+          <motion.div
+            {...fadeUpReveal(reducedMotion)}
+            className="lg:col-span-5 border-b lg:border-r border-border bg-[color:var(--cs-signal)] dark:bg-zinc-800 text-white p-8 lg:p-12 xl:p-16 flex flex-col relative overflow-hidden isolate"
+          >
+            {/* Compass swung from the bottom-left, registration mark bleeding off the top-right */}
+            <CompassArc className="absolute bottom-0 left-0 z-0 w-[85%] text-white/20" />
+            <RegistrationMark className="absolute -top-16 -right-16 z-0 w-48 text-white/20" />
+            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/80 mb-4 relative z-10">
+              What I build
+            </p>
+            {/* Dimension line spanning the plate's content width */}
+            <svg aria-hidden="true" className="relative z-10 mb-16 lg:mb-24 block h-3 w-full text-white/40 overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 12">
+              <path d="M0 0 V12 M100 0 V12 M0 6 H100" fill="none" stroke="currentColor" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+            </svg>
+            <div className="mt-auto relative z-10">
+              <span className="block font-[family-name:var(--font-display)] text-5xl font-black leading-none text-white/40 mb-4">
+                01
+              </span>
+              <h3 className="text-[clamp(2rem,4vw,3.5rem)] font-black uppercase tracking-tighter leading-[0.9] text-white">
+                {lead.name}
+              </h3>
+              <p className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-white/85">
+                {lead.description}
+              </p>
+              <ProofLinks links={lead.proof} inverse />
+            </div>
+          </motion.div>
+
+          <div className="lg:col-span-7 flex flex-col border-b border-border">
+            {rest.map((capability, idx) => (
+              <motion.div
+                key={capability.name}
+                {...fadeUpReveal(reducedMotion, 0.1 + idx * 0.08)}
+                className="group/row relative flex-1 grid grid-cols-1 sm:grid-cols-[auto_minmax(0,1fr)] xl:grid-cols-[auto_minmax(0,1fr)_auto] gap-x-8 gap-y-2 p-8 lg:px-12 xl:px-16 border-b last:border-b-0 border-border"
+              >
+                <IndexMark position={idx + 2} className="sm:self-start sm:pt-1" />
+                <div className="min-w-0">
+                  <h3 className="text-2xl xl:text-3xl font-black uppercase tracking-tighter leading-none text-foreground">
+                    {capability.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {capability.description}
+                  </p>
+                </div>
+                <div className="sm:col-start-2 xl:col-start-3 xl:self-center">
+                  <ProofLinks links={capability.proof} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
           {/* Cell 1: BUILD (Large Left Column) */}
           <motion.div 
             {...fadeUpReveal(reducedMotion, 0.1)}
@@ -151,6 +231,18 @@ export default function TechStackSection({ id }: { id: string }) {
               </ul>
             </motion.div>
           </div>
+        </div>
+        <div className="relative z-10 flex flex-col gap-4 border border-t-0 border-border bg-zinc-900 dark:bg-zinc-800 text-white p-6 md:flex-row md:items-center md:justify-between md:px-8">
+          <p className="text-sm leading-relaxed">
+            Also taking freelance work: AI/RAG features · workflow automation · custom web apps · business systems
+          </p>
+          <a
+            href={getDestinationHref(DESTINATIONS.contact)}
+            className="inline-flex h-11 shrink-0 items-center gap-2 self-start font-mono text-xs font-bold uppercase tracking-widest hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+          >
+            Start a project
+            <ArrowUpRight size={14} aria-hidden="true" />
+          </a>
         </div>
       </div>
 

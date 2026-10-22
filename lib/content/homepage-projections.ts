@@ -21,7 +21,6 @@ import type {
 } from "./types";
 
 const FLAGSHIP_SLUGS = ["story-buddy", "clarift", "le-doux"] as const;
-const MORE_WORK_SLUGS = ["simply-note", "the-podium", "hcdc-lfms"] as const;
 
 const leDouxProof: ProofFigure = {
   value: "75%",
@@ -46,9 +45,6 @@ const projectEditorial: Record<string, { summary: string; tagline?: string; tech
     tagline: "Ordering platform for a Davao cookie business",
     technicalEvidence: ["Next.js Server Actions", "Row-level security", "GCash OCR"],
   },
-  "simply-note": { summary: "An AI learning application that turns a learner's own notes and PDFs into summaries, roadmaps, and quizzes." },
-  "the-podium": { summary: "A seminar platform for HCDC's VPAA with QR attendance, certificate generation, email notifications, and evaluation analytics." },
-  "hcdc-lfms": { summary: "A centralized lost-and-found system with reporting, claims, notifications, moderation, and role-based access." },
 };
 
 function requireProject(slug: string) {
@@ -102,6 +98,8 @@ function projectCard(slug: string): ProjectCardProjection {
 /** Matches the resume. Feeds the hero role line, site title, OG/Twitter titles, and JSON-LD jobTitle. */
 export const SITE_HEADLINE = "AI Engineer · Full-Stack Developer";
 
+export const AVAILABILITY = "Open to work · Full-time & freelance · Davao, PH · Remote-friendly";
+
 export const SITE_DESCRIPTION =
   "Hans Amoguis builds applied AI products end to end, from LangGraph pipelines and RAG to the Next.js and FastAPI apps around them.";
 
@@ -142,11 +140,50 @@ export function getHomepageIdentity(): HomepageIdentityProjection {
 
 export interface HomepageFlagshipProjection {
   flagships: ProjectCardProjection[];
+  catalogueRoute: "/projects";
 }
 
 export function getHomepageFlagships(): HomepageFlagshipProjection {
-  return { flagships: FLAGSHIP_SLUGS.map(projectCard) };
+  return { flagships: FLAGSHIP_SLUGS.map(projectCard), catalogueRoute: "/projects" };
 }
+
+export function getHomepageCapabilities() {
+  return [
+    {
+      name: "AI products & RAG",
+      description: "Grounded answers and AI product pipelines.",
+      projectSlugs: ["clarift", "story-buddy"],
+    },
+    {
+      name: "Workflow automation",
+      description: "Recruitment automation and Slide Deck Generator.",
+      projectSlugs: [],
+      experienceLink: { label: "Eskwelabs", href: "/experience" },
+    },
+    {
+      name: "Full-stack web apps",
+      description: "Complete web apps, from interface to database.",
+      projectSlugs: ["simply-note", "hcdc-lfms"],
+    },
+    {
+      name: "Business & ops systems",
+      description: "Ordering, admin, and CRM-style records.",
+      projectSlugs: ["le-doux", "the-podium"],
+    },
+  ].map(({ name, description, projectSlugs, experienceLink }) => ({
+    name,
+    description,
+    proof: [
+      ...projectSlugs.map((slug) => {
+        const project = requireProject(slug);
+        return { label: project.title, href: `/projects/${project.slug}` };
+      }),
+      ...(experienceLink ? [experienceLink] : []),
+    ],
+  }));
+}
+
+export type HomepageCapability = ReturnType<typeof getHomepageCapabilities>[number];
 
 export interface HomepageExperienceProjection {
   records: ExperienceCardProjection[];
@@ -205,22 +242,6 @@ export function getHomepageExperience(): HomepageExperienceProjection {
   };
 }
 
-// ─── Scene 04: More Selected Work ────────────────────────────────────
-
-export interface HomepageMoreWorkProjection {
-  supporting: ProjectCardProjection[];
-  firstPosition: number;
-  catalogueRoute: "/projects";
-}
-
-export function getHomepageMoreWork(): HomepageMoreWorkProjection {
-  return {
-    supporting: MORE_WORK_SLUGS.map(projectCard),
-    firstPosition: FLAGSHIP_SLUGS.length + 1,
-    catalogueRoute: "/projects",
-  };
-}
-
 export interface HomepagePersonalProjection {
   portrait: StaticImageData;
   aboutPrimary: string;
@@ -244,12 +265,14 @@ export function getHomepagePersonal(): HomepagePersonalProjection {
 
 export interface HomepageContactProjection {
   closeStatement: "Let's connect.";
+  availability: string;
   channels: ContactChannel[];
 }
 
 export function getHomepageContact(): HomepageContactProjection {
   return {
     closeStatement: "Let's connect.",
+    availability: AVAILABILITY,
     channels: [
       { type: "email", label: "Email", href: `mailto:${EMAIL_ADDRESS}` },
       { type: "linkedin", label: "LinkedIn", href: LINKEDIN_URL },
@@ -266,7 +289,6 @@ export function getHomepageProjections() {
     identity: getHomepageIdentity(),
     flagships: getHomepageFlagships(),
     experience: getHomepageExperience(),
-    moreWork: getHomepageMoreWork(),
     personal: getHomepagePersonal(),
     contact: getHomepageContact(),
   };

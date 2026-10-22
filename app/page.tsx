@@ -1,8 +1,8 @@
 import {
   getHomepageIdentity,
   getHomepageFlagships,
+  getHomepageCapabilities,
   getHomepageExperience,
-  getHomepageMoreWork,
   getHomepagePersonal,
   getHomepageContact,
 } from "@/lib/content/homepage-projections";
@@ -10,7 +10,6 @@ import {
   SceneIdentity,
   SceneFlagships,
   SceneExperience,
-  SceneMoreWork,
   ScenePresence,
   SceneContact,
   HomepageChapterNav,
@@ -22,7 +21,6 @@ export default function Home() {
   const identity = getHomepageIdentity();
   const flagships = getHomepageFlagships();
   const experience = getHomepageExperience();
-  const moreWork = getHomepageMoreWork();
   const personal = getHomepagePersonal();
   const contact = getHomepageContact();
 
@@ -31,9 +29,8 @@ export default function Home() {
       <HomepageChapterNav />
       <SceneIdentity data={identity} />
       <SceneFlagships data={flagships} />
-      <TechStackSection id={SECTION_IDS.stack} />
+      <TechStackSection id={SECTION_IDS.stack} capabilities={getHomepageCapabilities()} />
       <SceneExperience data={experience} />
-      <SceneMoreWork data={moreWork} />
       <ScenePresence data={personal} />
       <SceneContact data={contact} />
     </>

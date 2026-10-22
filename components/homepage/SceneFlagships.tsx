@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HandoffLink from "@/components/shell/HandoffLink";
 import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
@@ -167,7 +168,7 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
     <HomepageSceneFrame
       id={SECTION_IDS.flagships}
       sceneNumber="02"
-      heading="Flagships"
+      heading="Selected Work"
       surface="reading"
       className="border-t border-b border-[color:var(--cs-structural-line)] relative isolate"
     >
@@ -199,6 +200,33 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
             </StructuredReveal>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Explosive CTA Block */}
+      <div className="hp-grid mt-12 md:mt-20 mb-12 md:mb-20">
+        <div className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
+          
+          {/* Geometric lines inside the block */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[70%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
+          <CompassArc className="absolute right-0 top-0 z-0 w-[24%] rotate-180 text-white/20" />
+          <div className="absolute top-[50%] left-0 w-full h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
+
+          <Link
+            href={data.catalogueRoute}
+            className="group relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-4 text-center focus-visible:outline-2 focus-visible:-outline-offset-8 focus-visible:outline-white"
+          >
+            <h3 className="font-[family-name:var(--font-display)] text-[clamp(3rem,6.5vw,6.5rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
+              View All<br />Projects
+            </h3>
+            <div className="mt-8 md:mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">
+              <ArrowUpRight
+                size={24}
+                className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                aria-hidden="true"
+              />
+            </div>
+          </Link>
         </div>
       </div>
 

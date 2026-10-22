@@ -13,7 +13,7 @@ async page => {
     await page.waitForTimeout(1600);
     await page.locator("#stack").scrollIntoViewIfNeeded();
     await page.waitForTimeout(600);
-    assert((await page.locator(".hp-stage-marker").innerText()).replace(/\s+/g, " ") === "03 Tech Stack", "Compact marker must identify Stack 03");
+    assert((await page.locator(".hp-stage-marker").innerText()).replace(/\s+/g, " ") === "03 Capabilities", "Compact marker must identify Stack 03");
     await page.goto("http://localhost:3000/certificates/python-essentials-1");
     assert(await page.title() === "Python Essentials 1 | Hans Amoguis", "Certificate browser title must include owner once");
     assert(await page.locator('meta[property="og:title"]').getAttribute("content") === "Python Essentials 1 | Hans Amoguis", "Certificate OG metadata must keep owner");
@@ -36,7 +36,7 @@ async page => {
       await mobile.waitForTimeout(300);
       assert(await mobile.evaluate(() => document.activeElement.getAttribute("aria-label") === "Open menu"), "Dismiss must restore the menu trigger");
       await mobile.getByRole("button", { name: "Open menu", exact: true }).click();
-      await mobile.getByRole("button", { name: "Go to section 03 Tech Stack", exact: true }).click();
+      await mobile.getByRole("button", { name: "Go to section 03 Capabilities", exact: true }).click();
       await mobile.waitForTimeout(700);
       const destination = await mobile.evaluate(() => ({ hash: location.hash, id: document.activeElement.id, tag: document.activeElement.tagName, name: document.activeElement.getAttribute("aria-label") }));
       assert(destination.hash === "#stack" && destination.id === "stack", `Mobile menu Stack action must update fragment and focus: ${JSON.stringify(destination)}`);

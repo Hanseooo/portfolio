@@ -511,6 +511,7 @@
 .github-heatmap {
   --hm-weeks: 18;
   --hm-gap: 2px;
+  --hm-label: 2rem;
   --hm-0: var(--cs-structural-line);
   --hm-1: color-mix(in oklab, var(--cs-signal) 25%, var(--cs-reading-surface));
   --hm-2: color-mix(in oklab, var(--cs-signal) 45%, var(--cs-reading-surface));
@@ -520,10 +521,15 @@
 
 /* Cells size from the available width, so the grid always spans the band.
    Weeks are subgrid columns: month label row + seven day rows. */
+.hm-frame {
+  container-type: inline-size;
+}
+
 .hm-weeks {
+  --hm-cell: calc((100cqw - var(--hm-label) - var(--hm-weeks) * var(--hm-gap)) / var(--hm-weeks));
   display: grid;
-  grid-template-columns: 2rem repeat(var(--hm-weeks), minmax(0, 1fr));
-  grid-template-rows: auto repeat(7, auto);
+  grid-template-columns: var(--hm-label) repeat(var(--hm-weeks), minmax(0, 1fr));
+  grid-template-rows: auto repeat(7, var(--hm-cell));
   gap: var(--hm-gap);
 }
 
@@ -603,7 +609,7 @@
 .hm-dimension {
   display: flex;
   align-items: center;
-  margin-left: calc(2rem + var(--hm-gap) + 4px);
+  margin-left: calc(var(--hm-label) + var(--hm-gap) + 4px);
 }
 
 .hm-dimension-rule {
@@ -639,3 +645,10 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Theme toggle: ThemeControl animates the new snapshot as a growing circle,
+   so drop the default root crossfade. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}

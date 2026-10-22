@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, X } from "lucide-react";
 import {
-  GLOBAL_NAV_SEQUENCE,
+  MOBILE_NAV_SEQUENCE,
   HOMEPAGE_CHAPTER_SEQUENCE,
   DESTINATIONS,
   getDestinationHref,
@@ -167,7 +167,7 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
           {/* Route links */}
           <nav aria-label="Menu navigation" className="flex-1 px-[var(--cs-gutter-portfolio)] py-8">
             <ul className="flex flex-col gap-2" role="list">
-              {GLOBAL_NAV_SEQUENCE.map((destId, index) => {
+              {MOBILE_NAV_SEQUENCE.map((destId, index) => {
                 const dest = DESTINATIONS[destId];
                 const href = getDestinationHref(dest);
                 const isCurrent =
