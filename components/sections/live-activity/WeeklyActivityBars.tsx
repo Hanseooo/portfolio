@@ -67,7 +67,7 @@ export default function GitHubHeatmap({ data, revealed = false }: GitHubHeatmapP
 
   return (
     <figure className="github-heatmap text-[color:var(--cs-text-secondary)]" data-reveal={revealed ? "on" : undefined}>
-      <div className="relative overflow-hidden px-1 pt-1 pb-2">
+      <div className="hm-frame relative overflow-hidden px-1 pt-1 pb-2">
         <div
           className="hm-weeks"
           role="img"
@@ -160,7 +160,7 @@ export default function GitHubHeatmap({ data, revealed = false }: GitHubHeatmapP
 export function HeatmapPlaceholder({ weeks = 53 }: { weeks?: number }) {
   return (
     <div className="github-heatmap" aria-hidden="true">
-      <div className="relative overflow-hidden px-1 pt-1 pb-2">
+      <div className="hm-frame relative overflow-hidden px-1 pt-1 pb-2">
         <div className="hm-weeks">
           <div className="hm-week hm-weekday-col">
             <span />
