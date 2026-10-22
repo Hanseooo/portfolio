@@ -27,7 +27,7 @@ export const certificates: Certificate[] = [
     date: "May 9, 2026",
     credentialUrl: null,
     description:
-      "Built AI-powered internal tools and workflows for Eskwelabs' recruitment and operations processes, including an AI-assisted Job Description generator, Social Media Post generator, and Recruitment Automation System. Completed as part of Eskwelabs' AI Solution Development Track.",
+      "Completed Eskwelabs' AI Solution Development Track as an AI Solutions Development Intern (Feb–May 2026). Took over the instructor Slide Deck Generator from v1 and built v1.1 with a fellow intern, turning class PRDs into Google Slides lecture decks through template-driven slide ordering and placeholder replacement. Added generation history, speaker notes with retry, single-slide regeneration, and Slides API backoff. Also built a recruitment automation prototype with LangChain workflows for job descriptions and LinkedIn/Facebook posts.",
   },
   {
     title: "Introduction to Modern AI",

@@ -7,6 +7,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import type { HomepageIdentityProjection } from "@/lib/content/homepage-projections";
 import HeroProofCards from "@/components/homepage/HeroProofCards";
+import HandoffLink from "@/components/shell/HandoffLink";
 import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 
 interface SceneIdentityProps {
@@ -89,6 +90,13 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
           <p className="mt-4 text-[15px] leading-relaxed text-white/90 md:text-[color:var(--cs-text-secondary)]">
             {data.introduction}
           </p>
+          <HandoffLink
+            href={getDestinationHref(DESTINATIONS.about)}
+            className="group mt-3 inline-flex min-h-11 items-center gap-2 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-white underline underline-offset-4 md:text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:focus-visible:outline-[color:var(--cs-focus-ring)]"
+          >
+            More about me
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" />
+          </HandoffLink>
         </div>
 
         {/* The Blueprint Portrait Slot */}

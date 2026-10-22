@@ -6,7 +6,7 @@ import { SITE_URL } from "@/components/utils/externalLinks";
 const baseUrl = SITE_URL;
 
 /** Bump by hand when site copy changes, so crawlers see real change dates. */
-const CONTENT_UPDATED = "2026-10-21";
+const CONTENT_UPDATED = "2026-10-22";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -15,6 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: CONTENT_UPDATED,
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: CONTENT_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/projects`,

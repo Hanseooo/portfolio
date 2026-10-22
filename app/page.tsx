@@ -1,6 +1,7 @@
 import {
   getHomepageIdentity,
   getHomepageFlagships,
+  getHomepageCapabilities,
   getHomepageExperience,
   getHomepagePersonal,
   getHomepageContact,
@@ -28,7 +29,7 @@ export default function Home() {
       <HomepageChapterNav />
       <SceneIdentity data={identity} />
       <SceneFlagships data={flagships} />
-      <TechStackSection id={SECTION_IDS.stack} />
+      <TechStackSection id={SECTION_IDS.stack} capabilities={getHomepageCapabilities()} />
       <SceneExperience data={experience} />
       <ScenePresence data={personal} />
       <SceneContact data={contact} />

@@ -56,10 +56,10 @@ Test: every changed line traces to the request.
 - Critical paths: Animation smoothness and scroll behavior are the highest-risk regression areas. No auth/billing/infra.
 
 ## Documentation Map
-- Always read: `docs/01-project-brief.md`, `docs/05-design-system.md`
+- Always read: `docs/01-project-brief.md`, `DESIGN.md`
 - Read when:
   - Active multi-session design work → `docs/dockets/portfolio-redesign-docket.md` (governs session scope and binding constraints)
-  - UI/section work → `docs/04-visual-direction.md`, `docs/06-ux-interactions.md`
+  - UI/section work → `docs/06-ux-interactions.md`
   - Layout/structure → `docs/03-information-architecture.md`
   - Responsive work → `docs/07-responsive-behavior.md`
   - Accessibility → `docs/08-accessibility-performance.md`

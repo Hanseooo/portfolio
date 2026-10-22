@@ -98,6 +98,8 @@ function projectCard(slug: string): ProjectCardProjection {
 /** Matches the resume. Feeds the hero role line, site title, OG/Twitter titles, and JSON-LD jobTitle. */
 export const SITE_HEADLINE = "AI Engineer · Full-Stack Developer";
 
+export const AVAILABILITY = "Open to work · Full-time & freelance · Davao, PH · Remote-friendly";
+
 export const SITE_DESCRIPTION =
   "Hans Amoguis builds applied AI products end to end, from LangGraph pipelines and RAG to the Next.js and FastAPI apps around them.";
 
@@ -144,6 +146,44 @@ export interface HomepageFlagshipProjection {
 export function getHomepageFlagships(): HomepageFlagshipProjection {
   return { flagships: FLAGSHIP_SLUGS.map(projectCard), catalogueRoute: "/projects" };
 }
+
+export function getHomepageCapabilities() {
+  return [
+    {
+      name: "AI products & RAG",
+      description: "Grounded answers and AI product pipelines.",
+      projectSlugs: ["clarift", "story-buddy"],
+    },
+    {
+      name: "Workflow automation",
+      description: "Recruitment automation and Slide Deck Generator.",
+      projectSlugs: [],
+      experienceLink: { label: "Eskwelabs", href: "/experience" },
+    },
+    {
+      name: "Full-stack web apps",
+      description: "Complete web apps, from interface to database.",
+      projectSlugs: ["simply-note", "hcdc-lfms"],
+    },
+    {
+      name: "Business & ops systems",
+      description: "Ordering, admin, and CRM-style records.",
+      projectSlugs: ["le-doux", "the-podium"],
+    },
+  ].map(({ name, description, projectSlugs, experienceLink }) => ({
+    name,
+    description,
+    proof: [
+      ...projectSlugs.map((slug) => {
+        const project = requireProject(slug);
+        return { label: project.title, href: `/projects/${project.slug}` };
+      }),
+      ...(experienceLink ? [experienceLink] : []),
+    ],
+  }));
+}
+
+export type HomepageCapability = ReturnType<typeof getHomepageCapabilities>[number];
 
 export interface HomepageExperienceProjection {
   records: ExperienceCardProjection[];
@@ -225,12 +265,14 @@ export function getHomepagePersonal(): HomepagePersonalProjection {
 
 export interface HomepageContactProjection {
   closeStatement: "Let's connect.";
+  availability: string;
   channels: ContactChannel[];
 }
 
 export function getHomepageContact(): HomepageContactProjection {
   return {
     closeStatement: "Let's connect.",
+    availability: AVAILABILITY,
     channels: [
       { type: "email", label: "Email", href: `mailto:${EMAIL_ADDRESS}` },
       { type: "linkedin", label: "LinkedIn", href: LINKEDIN_URL },

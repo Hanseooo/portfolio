@@ -15,6 +15,7 @@
 /** All stable portfolio destinations */
 export type DestinationId =
   | "home"
+  | "about"
   | "projects"
   | "experience"
   | "certificates"
@@ -44,6 +45,11 @@ export const DESTINATIONS: Record<DestinationId, PortfolioDestination> = {
     id: "home",
     pathname: "/",
     label: "Home",
+  },
+  about: {
+    id: "about",
+    pathname: "/about",
+    label: "About",
   },
   projects: {
     id: "projects",
@@ -128,13 +134,16 @@ export const HOMEPAGE_CHAPTER_SEQUENCE = [
 
 /** Global navigation route sequence */
 export const GLOBAL_NAV_SEQUENCE: DestinationId[] = [
-  "home",
+  "about",
   "projects",
   "experience",
   "certificates",
   "resources",
   "contact",
 ];
+
+/** Mobile retains an explicit way home alongside all global destinations. */
+export const MOBILE_NAV_SEQUENCE: DestinationId[] = ["home", ...GLOBAL_NAV_SEQUENCE];
 
 /** Resolve a destination intent to its full target. Returns null if unknown. */
 export function resolveDestination(id: DestinationId): PortfolioDestination | null {

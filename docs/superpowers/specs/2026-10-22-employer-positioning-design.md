@@ -54,7 +54,7 @@ it goes first.
 | 2 | Homepage restructure | Done (on `main`) |
 | 3 | Capabilities row, client strip, availability badge | Ready |
 | 4 | `/about` page, nav swap, entry links | **Blocked on owner content** |
-| 5 | Theme transition | Ready |
+| 5 | Theme transition | Done (on `feat/employer-about`) |
 | 6 | Eskwelabs certificate text | Ready (investigation step first) |
 
 ---
@@ -348,6 +348,27 @@ feature safe either way, but record the real support matrix in this spec.
 `::view-transition` pseudo-elements present. Toggling during a Lenis scroll causes no scroll
 jump. Toggle focus stays on the button after the switch. Console clean.
 
+### Implementation notes (2026-10-22)
+
+Check: `.playwright-cli/theme-transition-check.cjs` (port `3123`). Red before the change (no
+`::view-transition-new(root)` animation), green after in all three engines below.
+
+**Support matrix.** Measured: `typeof document.startViewTransition === "function"` and the check
+passes in Playwright's Chromium 155, WebKit (Safari 26.4 UA) and Firefox 151. First versions
+with same-document support (Chrome 111, Safari 18, Firefox 144) are *inferred*, not checked.
+Real iOS Safari and Android webviews are unverified.
+
+- **`flushSync` around `setTheme`.** next-themes 0.4.6 applies the class in a `useEffect`, so
+  without it the new snapshot captured the old theme. The check wraps `startViewTransition` and
+  reads the class when the update callback returns; it went red with `flushSync` removed.
+- **Default root crossfade disabled** in `app/globals.css` (`::view-transition-old/new(root)`,
+  `animation: none`) so only the circle shows. No other view transitions exist in the repo.
+- **Fallback** uses the capability `tier`: `reduced-motion` (also the default before the
+  provider resolves) and `webview-constrained` switch instantly. The webview path isn't driven
+  by the check. It's the same branch as reduced motion.
+- **Focus is asserted via keyboard** (focus + Enter). WebKit does not focus a button on mouse
+  click, so a click-based focus assertion tests the engine, not the code.
+
 ---
 
 ## PR 6 · Eskwelabs certificate text
@@ -382,6 +403,31 @@ metrics that aren't in a source.
 
 **Check:** the `/certificates/eskwelabs-ai-solution-development-track` page and its OG image
 build (`pnpm build`), and the description renders in full on `/certificates`.
+
+### Implementation sources (2026-10-22)
+
+Investigated the exact repository identified by the earlier content-alignment spec,
+`aremis9/esk-lecture-materials-gen`, using `gh`. No broad repository or organization search
+was needed. Sources used for the final description:
+
+- `lib/experience.ts`, record `eskwelabs`: internship role and dates, taking over v1,
+  collaborating with a fellow intern on v1.1, and the recruitment automation prototype with
+  LangChain workflows for job descriptions and LinkedIn/Facebook posts.
+- [Repository README](https://github.com/aremis9/esk-lecture-materials-gen/blob/main/README.md):
+  class PRD input, Google Slides API output, master-template duplication, slide ordering,
+  placeholder replacement, and speaker notes written to the notes panel.
+- [Merged PR #24](https://github.com/aremis9/esk-lecture-materials-gen/pull/24): persistent
+  generation history.
+- [Merged PR #20](https://github.com/aremis9/esk-lecture-materials-gen/pull/20): targeted
+  single-slide regeneration during quality checks.
+- [Merged PR #25](https://github.com/aremis9/esk-lecture-materials-gen/pull/25) and
+  [merged PR #32](https://github.com/aremis9/esk-lecture-materials-gen/pull/32): speaker-notes
+  generation and completion, reliable template ordering and placeholder bindings, and Slides
+  retry/batching resilience. Retry and backoff are also recorded in `lib/experience.ts`.
+
+The owner approved the final wording in this session. It preserves shared v1.1 credit,
+foregrounds Google Slides integration, and treats recruitment automation and social posts as
+one project. No performance metrics were added.
 
 ---
 

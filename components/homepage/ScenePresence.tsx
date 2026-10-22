@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
+import HandoffLink from "@/components/shell/HandoffLink";
+import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
 import StructuredReveal from "@/components/motion/StructuredReveal";
@@ -163,6 +166,13 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
               </p>
             </motion.div>
 
+            <HandoffLink
+              href={getDestinationHref(DESTINATIONS.about)}
+              className="group inline-flex min-h-12 items-center justify-between gap-4 self-start border border-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-colors hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] motion-reduce:transition-none"
+            >
+              Read the full story
+              <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" />
+            </HandoffLink>
           </motion.div>
         </div>
       </StructuredReveal>
