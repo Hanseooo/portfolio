@@ -3,6 +3,7 @@ import SkipLink from "./SkipLink";
 import GlobalNav from "./GlobalNav";
 import FooterFrame from "./FooterFrame";
 import BrandedArrival from "@/components/motion/BrandedArrival";
+import DrawController from "@/components/motion/DrawController";
 import RouteHandoffOverlay from "./RouteHandoffOverlay";
 
 /**
@@ -15,6 +16,7 @@ import RouteHandoffOverlay from "./RouteHandoffOverlay";
  * - Route-level focus-safe entry point
  * - Mounting point for branded arrival (Plan 5)
  * - Mounting point for route-handoff overlay (Plan 5)
+ * - Mounting point for drawn geometry marks (DrawController)
  *
  * Does NOT own:
  * - Homepage chapter navigation
@@ -25,6 +27,8 @@ export default function PortfolioFrame({ children }: { children: ReactNode }) {
   return (
     <>
       <BrandedArrival />
+      {/* After BrandedArrival so its arming effect sees the arrival cover state. */}
+      <DrawController />
       <RouteHandoffOverlay />
       <SkipLink />
       <GlobalNav />

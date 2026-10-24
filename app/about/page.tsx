@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Fragment } from "react";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { PageFamilyFrame, CompactMasthead } from "@/components/frames";
 import { CropMarks } from "@/components/geometry";
+import { ThemePortrait } from "@/components/evidence";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import ScenePresenceClient from "@/components/homepage/ScenePresenceClient";
@@ -48,7 +48,7 @@ export default function AboutPage() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 bg-zinc-900 dark:bg-zinc-800 md:translate-x-4 md:translate-y-4" />
             <div className="relative">
             <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
-            <Image src={personal.portrait} alt="Hans Amoguis" priority sizes="(max-width: 767px) 90vw, 40vw" className="aspect-[4/5] w-full object-cover lg:aspect-auto lg:h-[min(45vh,26rem)]" />
+            <ThemePortrait light={personal.portrait} dark={personal.portraitDark} alt="Hans Amoguis" priority sizes="(max-width: 767px) 90vw, 40vw" imageClassName="aspect-[4/5] w-full object-cover lg:aspect-auto lg:h-[min(45vh,26rem)]" />
             <figcaption className="flex flex-wrap justify-between gap-2 bg-[color:var(--cs-signal)] px-5 py-4 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-white dark:bg-zinc-800">
               <span>{personal.personalHandle}</span>
               <span>Building since 2023</span>

@@ -204,7 +204,7 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
       </div>
 
       {/* Explosive CTA Block */}
-      <div className="hp-grid mt-12 md:mt-20 mb-12 md:mb-20">
+      <div className="hp-grid mt-12 md:mt-20">
         <div className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
           
           {/* Geometric lines inside the block */}

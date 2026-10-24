@@ -65,7 +65,11 @@ export default function StructuredReveal({
       initial="initial"
       animate={focusForced ? "animate" : undefined}
       whileInView="animate"
-      viewport={{ once: true, amount: viewportAmount ?? recipeData.viewportAmount }}
+      viewport={{
+        once: true,
+        amount: viewportAmount ?? recipeData.viewportAmount,
+        margin: recipeData.viewportMargin,
+      }}
       onFocusCapture={() => setFocusForced(true)}
       onAnimationComplete={(definition) => {
         if (definition !== "animate") return;

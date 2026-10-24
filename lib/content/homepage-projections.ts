@@ -8,6 +8,7 @@
 
 import type { StaticImageData } from "next/image";
 import hansPortrait from "@/app/assets/myImages/hans.webp";
+import hansPortraitDark from "@/app/assets/myImages/hans2.webp";
 import { projects } from "@/lib/projects";
 import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
@@ -244,6 +245,8 @@ export function getHomepageExperience(): HomepageExperienceProjection {
 
 export interface HomepagePersonalProjection {
   portrait: StaticImageData;
+  /** Shown in place of `portrait` under the dark theme. */
+  portraitDark: StaticImageData;
   aboutPrimary: string;
   aboutSecondary: string;
   /** Personal identifier only — not a replacement for professional name */
@@ -253,6 +256,7 @@ export interface HomepagePersonalProjection {
 export function getHomepagePersonal(): HomepagePersonalProjection {
   return {
     portrait: hansPortrait,
+    portraitDark: hansPortraitDark,
     aboutPrimary:
       "I design architecture from product requirements before implementation so delivery stays clear and maintainable. I use specs and ADRs to keep decisions explicit and reduce rework.",
     aboutSecondary:

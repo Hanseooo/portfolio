@@ -10,8 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import Lenis from "lenis";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import type Lenis from "lenis";
 import { useCapability } from "@/components/providers/CapabilityProvider";
 import { computeScrollTarget } from "@/lib/anchor-navigation";
 
@@ -47,36 +46,52 @@ const ScrollEnhancementContext = createContext<ScrollEnhancementAPI>(DEFAULT_API
 export function ScrollEnhancementProvider({ children }: { children: ReactNode }) {
   const { lenisEligible } = useCapability();
   const lenisRef = useRef<Lenis | null>(null);
+  /** A stop() that lands before Lenis loads still applies once it does. */
+  const suspendedRef = useRef(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (!lenisEligible) return;
 
-    const lenis = new Lenis({
-      smoothWheel: true,
-      duration: 1.2,
-    });
+    let cancelled = false;
+    let teardown: (() => void) | undefined;
 
-    lenisRef.current = lenis;
+    // Loaded on demand: tiers without smooth scroll never download Lenis or GSAP.
+    Promise.all([import("lenis"), import("@/lib/gsap")]).then(
+      ([{ default: LenisClass }, { gsap, ScrollTrigger }]) => {
+        if (cancelled) return;
 
-    // Sync with GSAP ticker for ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+        const lenis = new LenisClass({
+          smoothWheel: true,
+          duration: 1.2,
+        });
+        if (suspendedRef.current) lenis.stop();
 
-    const update = (time: number) => {
-      lenis.raf(time * 1000);
-    };
+        lenisRef.current = lenis;
 
-    gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
-    // ponytail: sync setState after external setup — intentional
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsReady(true);
+        // Sync with GSAP ticker for ScrollTrigger
+        lenis.on("scroll", ScrollTrigger.update);
+
+        const update = (time: number) => {
+          lenis.raf(time * 1000);
+        };
+
+        gsap.ticker.add(update);
+        gsap.ticker.lagSmoothing(0);
+        setIsReady(true);
+
+        teardown = () => {
+          gsap.ticker.remove(update);
+          lenis.destroy();
+          lenisRef.current = null;
+          setIsReady(false);
+        };
+      }
+    );
 
     return () => {
-      gsap.ticker.remove(update);
-      lenis.destroy();
-      lenisRef.current = null;
-      setIsReady(false);
+      cancelled = true;
+      teardown?.();
     };
   }, [lenisEligible]);
 
@@ -100,10 +115,12 @@ export function ScrollEnhancementProvider({ children }: { children: ReactNode })
   }, []);
 
   const stop = useCallback(() => {
+    suspendedRef.current = true;
     lenisRef.current?.stop();
   }, []);
 
   const resume = useCallback(() => {
+    suspendedRef.current = false;
     lenisRef.current?.start();
   }, []);
 
