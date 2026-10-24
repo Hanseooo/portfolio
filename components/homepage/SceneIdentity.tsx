@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { HomepageSceneFrame } from "@/components/frames";
 import StructuredReveal from "@/components/motion/StructuredReveal";
@@ -9,6 +10,11 @@ import type { HomepageIdentityProjection } from "@/lib/content/homepage-projecti
 import HeroProofCards from "@/components/homepage/HeroProofCards";
 import HandoffLink from "@/components/shell/HandoffLink";
 import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
+
+/** Staggers a drawn mark within the hero sequence; `from` sets where its sweep starts. */
+function drawDelay(ms: number, from?: number) {
+  return { "--draw-delay": `${ms}ms`, ...(from !== undefined && { "--draw-from": `${from}deg` }) } as CSSProperties;
+}
 
 interface SceneIdentityProps {
   data: HomepageIdentityProjection;
@@ -51,10 +57,11 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
 
       {/* Signal Ribbon backdrop field (gray in dark mode as requested by user) */}
       <div className="absolute top-0 right-0 w-full md:w-[45%] h-full bg-[color:var(--cs-signal)] dark:bg-zinc-800/80 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Architectural Cross Intersection (Top Right) */}
-        <div className="absolute top-[15%] right-[-10%] w-[150%] h-[1px] bg-white/20 hidden md:block" />
-        <div className="absolute top-[-10%] right-[15%] w-[1px] h-[150%] bg-white/20 hidden md:block" />
-        <div className="absolute top-[15%] right-[15%] w-12 h-12 border border-white/30 rounded-full -translate-y-1/2 translate-x-1/2 hidden md:block" />
+        {/* Architectural Cross Intersection (Top Right). The rules grow out of
+            their crossing (origins sit on it), then the ring closes on it. */}
+        <div data-draw="extend-x" className="absolute top-[15%] right-[-10%] w-[150%] h-[1px] origin-[83.33%_50%] bg-white/20 hidden md:block" style={drawDelay(150)} />
+        <div data-draw="extend-y" className="absolute top-[-10%] right-[15%] w-[1px] h-[150%] origin-[50%_16.67%] bg-white/20 hidden md:block" style={drawDelay(250)} />
+        <div data-draw="ring" className="absolute top-[15%] right-[15%] w-12 h-12 border border-white/30 rounded-full -translate-y-1/2 translate-x-1/2 hidden md:block" style={drawDelay(500)} />
       </div>
 
       {/* ARTS & CHAOS 12-COLUMN LAYOUT */}
@@ -111,10 +118,10 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
             aria-hidden="true"
             data-parallax-speed="-1.1"
           >
-            {/* Geometric Outlines */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] aspect-square rounded-full border border-[color:var(--cs-structural-line)]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] aspect-square border border-[color:var(--cs-structural-line-strong)]" style={{ borderRadius: '48% 48% 12% 12%' }} />
-            <div className="absolute top-[45%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-[90%] aspect-square rounded-full border border-dashed border-[color:var(--cs-structural-line-strong)] opacity-50" />
+            {/* Geometric Outlines — swung open in sequence once the page is uncovered */}
+            <div data-draw="ring" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] aspect-square rounded-full border border-[color:var(--cs-structural-line)]" style={drawDelay(0, 200)} />
+            <div data-draw="ring" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] aspect-square border border-[color:var(--cs-structural-line-strong)]" style={{ borderRadius: '48% 48% 12% 12%', ...drawDelay(120, 180) }} />
+            <div data-draw="ring" className="absolute top-[45%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-[90%] aspect-square rounded-full border border-dashed border-[color:var(--cs-structural-line-strong)] opacity-50" style={drawDelay(240, 20)} />
             <div className="absolute top-[60%] left-[20%] w-[30%] aspect-square border border-[color:var(--cs-structural-line-strong)] opacity-30 rotate-12" />
 
             {/* Dark orb (gray in dark mode) */}

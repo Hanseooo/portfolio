@@ -203,6 +203,19 @@ All primitives stroke with `currentColor` at 1px and `vector-effect: non-scaling
 4. Line weight carries meaning: hairline for structure, 1px strong for groups, heavier only for an active state or a major change in hierarchy. Never put thick borders around ordinary records.
 5. Use SVG for anything curved. Use divs for straight rules.
 
+### Drawn on entry (`data-draw`, `components/motion/DrawController.tsx`)
+
+Marks are constructed once as they enter the viewport, at the same edge as register reveals (bottom 15%), and only after the arrival or a route handoff lifts. `CompassArc` and `RegistrationMark` carry the attribute already; inline marks opt in.
+
+| `data-draw` | Construction |
+|---|---|
+| `compass` | Arc swings 90° open from its origin corner |
+| `ring` | Full turn from 12 o'clock (`--draw-from` changes the start) |
+| `settle` | Crop-mark corners close in 6px from outside the box. On hover of a `.group` they tighten 3px |
+| `extend-x` / `extend-y` | A straight rule grows out from its `origin-*` crossing point |
+
+Stagger a sequence with `--draw-delay`. Marks already on screen when no cover is up render finished.
+
 ---
 
 ## 8. Surfaces and depth
@@ -244,6 +257,10 @@ Signal leader, then a 6px dot in `--cs-status-online`, then mono xs uppercase te
 
 Full-bleed, ink (`bg-zinc-900 dark:bg-zinc-800`), tilted ±2°, edges faded with `ticker-fade`. Use them in pairs with opposite tilt and direction. The words are real workflow terms, not filler. The band stops moving under reduced motion (`animation: none`).
 
+### Theme portrait (`components/evidence/ThemePortrait.tsx`)
+
+The About portrait (homepage Presence and `/about`) shows `hans.webp` in light and `hans2.webp` in dark. The dark image covers the light one, so the theme toggle's circle reveal carries the swap. No grayscale on it in dark. The hero keeps `hans.webp` in both themes.
+
 ### Separators in copy
 
 Use `·` between list-like facts ("AI Engineer · Full-Stack Developer").
@@ -258,7 +275,7 @@ Budgets are in `lib/motion-budget.ts` and recipes in `lib/motion.ts`.
 - **Timing:** interactions take 120 to 240ms. Editorial entrances take 350 to 700ms.
 - **Recipes:** `fadeUpReveal(reducedMotion, delay)` for rows, `clipReveal` and `peelReveal` for plates, `SplitText` for the contact title, `StructuredReveal` for scene blocks. Stagger by 0.08s, with at most 8 staggered items.
 - **Parallax:** only through `data-parallax-speed` inside the hero (`HeroDepthEffect`). Never put a mask on the moving element.
-- Animate only `transform` and `opacity`. Never animate layout properties.
+- Animate only `transform` and `opacity`. Never animate layout properties. One exception: the drawn-mark sweep (§7) animates a conic `mask-image` angle once per mark, 700ms, and drops the mask when done. Stroke-dash drawing is not used because dashes ignore `pathLength` under `non-scaling-stroke`.
 - **Reduced motion is a full design state.** Every element ends visible at opacity 1, marquees stand still, and parallax is off. Pass `usePrefersReducedMotion()` into every recipe. No part of the hierarchy should depend on an animation finishing.
 
 ---

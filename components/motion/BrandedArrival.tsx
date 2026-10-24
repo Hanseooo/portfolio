@@ -12,6 +12,12 @@ import { EASING_BUDGET } from "@/lib/motion-budget";
  */
 const ARRIVAL_HOLD_MS = 900;
 
+/**
+ * Fired on window once an animated arrival has fully exited. While it plays,
+ * <html data-arrival="covering"> tells DrawController the page is hidden.
+ */
+export const ARRIVAL_DONE_EVENT = "portfolio:arrival-done";
+
 /** Blueprint corner bracket — identical to RouteHandoffOverlay variant */
 function CornerBracket({
   position,
@@ -129,6 +135,7 @@ export default function BrandedArrival() {
     }
 
     document.body.style.overflow = "hidden";
+    document.documentElement.dataset.arrival = "covering";
 
     const resolveImmediately = () => {
       if (!utilityIsImmediate()) return;
@@ -159,7 +166,14 @@ export default function BrandedArrival() {
     tier !== "webview-constrained";
 
   return (
-    <AnimatePresence>
+    <AnimatePresence
+      onExitComplete={() => {
+        const root = document.documentElement;
+        if (root.dataset.arrival !== "covering") return;
+        root.dataset.arrival = "done";
+        window.dispatchEvent(new Event(ARRIVAL_DONE_EVENT));
+      }}
+    >
       {visible && (
         <motion.div
           key="branded-arrival"

@@ -4,3 +4,4 @@ export { default as DocumentaryArtifact } from "./DocumentaryArtifact";
 export { default as LiveProviderRegion } from "./LiveProviderRegion";
 export { default as RecordContinuation } from "./RecordContinuation";
 export { default as EmptySafeActions } from "./EmptySafeActions";
+export { default as ThemePortrait } from "./ThemePortrait";

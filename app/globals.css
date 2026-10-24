@@ -652,3 +652,84 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Drawn marks. DrawController arms <html data-draw-armed> on eligible tiers and
+   moves each [data-draw] mark from unset → "run" → "done" as it scrolls into
+   view. Unarmed (no JS, reduced motion, webview) the marks render finished.
+   compass/ring: a conic mask swings open from the construction origin, so
+   1px non-scaling strokes and dashed arcs keep their weight (stroke-dash
+   drawing breaks under vector-effect). The mask is dropped once done.
+   settle: crop-mark corners close in from outside the frame.
+   extend-x/extend-y: straight rules grow out from their crossing point. */
+@property --draw-sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes draw-sweep {
+  to { --draw-sweep: var(--draw-turn, 360deg); }
+}
+
+@keyframes draw-settle {
+  from {
+    opacity: 0;
+    translate: calc(var(--crop-x) * -6px) calc(var(--crop-y) * -6px);
+  }
+}
+
+@keyframes draw-extend-x {
+  from { scale: 0 1; }
+}
+
+@keyframes draw-extend-y {
+  from { scale: 1 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-draw-armed] [data-draw="compass"] {
+    --draw-origin: 0% 100%;
+    --draw-turn: 90deg;
+  }
+
+  html[data-draw-armed] :is([data-draw="compass"], [data-draw="ring"]):not([data-drawn="done"]) {
+    mask-image: conic-gradient(
+      from var(--draw-from, 0deg) at var(--draw-origin, 50% 50%),
+      #000 var(--draw-sweep),
+      #0000 0
+    );
+  }
+
+  html[data-draw-armed] :is([data-draw="compass"], [data-draw="ring"])[data-drawn="run"] {
+    animation: draw-sweep 700ms cubic-bezier(0.4, 0, 0.2, 1) var(--draw-delay, 0ms) both;
+  }
+
+  html[data-draw-armed] [data-draw="settle"]:not([data-drawn]) > *,
+  html[data-draw-armed] :is([data-draw="extend-x"], [data-draw="extend-y"]):not([data-drawn]) {
+    opacity: 0;
+  }
+
+  html[data-draw-armed] [data-draw="settle"][data-drawn="run"] > * {
+    animation: draw-settle 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) backwards;
+  }
+
+  html[data-draw-armed] [data-draw="extend-x"][data-drawn="run"] {
+    animation: draw-extend-x 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) backwards;
+  }
+
+  html[data-draw-armed] [data-draw="extend-y"][data-drawn="run"] {
+    animation: draw-extend-y 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) backwards;
+  }
+
+  /* Crop marks tighten around a framed artifact while its link is hovered. */
+  [data-draw="settle"] > * {
+    transition: translate 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .group:hover [data-draw="settle"] > *,
+  .group:focus-visible [data-draw="settle"] > * {
+    translate: calc(var(--crop-x) * 3px) calc(var(--crop-y) * 3px);
+  }
+}

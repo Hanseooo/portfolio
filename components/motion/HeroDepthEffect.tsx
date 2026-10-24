@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useCapability } from "@/components/providers/CapabilityProvider";
-import { createHeroParallax, type GSAPEffectCleanup } from "@/lib/gsap-effects";
+import type { GSAPEffectCleanup } from "@/lib/gsap-effects";
 
 interface HeroDepthEffectProps {
   /** Stable server-rendered section id */
@@ -27,11 +27,18 @@ export default function HeroDepthEffect({
     if (!parallaxEligible) return;
 
     let cancelled = false;
+    let loading = false;
     const initialize = () => {
       if (cancelled || cleanupRef.current) return;
       const containerEl = document.getElementById(containerId);
       if (!containerEl) return;
-      cleanupRef.current = createHeroParallax({ containerEl, tier });
+      // GSAP loads on demand, so tiers without depth never download it.
+      if (loading) return;
+      loading = true;
+      import("@/lib/gsap-effects").then(({ createHeroParallax }) => {
+        if (cancelled) return;
+        cleanupRef.current = createHeroParallax({ containerEl, tier });
+      });
     };
 
     const onRevealComplete = (event: Event) => {

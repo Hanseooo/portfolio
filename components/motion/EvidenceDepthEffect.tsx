@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useCapability } from "@/components/providers/CapabilityProvider";
-import { createEvidenceDepth, type GSAPEffectCleanup } from "@/lib/gsap-effects";
+import type { GSAPEffectCleanup } from "@/lib/gsap-effects";
 
 interface EvidenceDepthEffectProps {
   containerId: string;
@@ -26,12 +26,19 @@ export default function EvidenceDepthEffect({
     if (!parallaxEligible) return;
 
     let cancelled = false;
+    let loading = false;
     const initialize = () => {
       if (cancelled || cleanupRef.current) return;
       const containerEl = document.getElementById(containerId);
       const targetEl = containerEl?.querySelector<HTMLElement>(targetSelector);
       if (!containerEl || !targetEl) return;
-      cleanupRef.current = createEvidenceDepth({ targetEl, containerEl, direction });
+      // GSAP loads on demand, so tiers without depth never download it.
+      if (loading) return;
+      loading = true;
+      import("@/lib/gsap-effects").then(({ createEvidenceDepth }) => {
+        if (cancelled) return;
+        cleanupRef.current = createEvidenceDepth({ targetEl, containerEl, direction });
+      });
     };
 
     const onRevealComplete = (event: Event) => {

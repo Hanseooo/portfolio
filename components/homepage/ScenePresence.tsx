@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import ThemePortrait from "@/components/evidence/ThemePortrait";
 import HandoffLink from "@/components/shell/HandoffLink";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import { motion } from "framer-motion";
@@ -94,10 +94,12 @@ export default function ScenePresence({ data }: ScenePresenceProps) {
                 />
 
                 <div className="relative z-10 border-4 border-[#F3F0E9] bg-[color:var(--cs-reading-surface)] overflow-hidden shadow-2xl transition-transform duration-500 ease-out group-hover:-translate-y-1">
-                  <Image
-                    src={data.portrait}
+                  <ThemePortrait
+                    light={data.portrait}
+                    dark={data.portraitDark}
                     alt="Hans Amoguis"
-                    className="h-auto w-full object-cover opacity-90 transition-all duration-500 dark:md:grayscale dark:group-hover:grayscale-0"
+                    className="opacity-90"
+                    imageClassName="h-auto w-full object-cover"
                     sizes="(max-width: 768px) 60vw, (max-width: 1280px) 30vw, 300px"
                   />
                 </div>

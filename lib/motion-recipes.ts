@@ -42,10 +42,19 @@ export interface RevealRecipe {
   once: boolean;
   /** Viewport intersection amount (0-1) for in-view trigger */
   viewportAmount: number;
+  /**
+   * Optional IntersectionObserver root margin. With viewportAmount 0 this
+   * triggers on the record's top edge, so tall and short records reveal at
+   * the same scroll point.
+   */
+  viewportMargin?: string;
   /** Get animation variants for a given tier */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getVariants: (tier: MotionTier) => { initial: Record<string, any>; animate: Record<string, any>; transition: Record<string, any> } | null; // null = no animation (reduced-motion)
 }
+
+/** Route registers reveal once a record's top edge is 85% down the viewport. */
+const REGISTER_EDGE_MARGIN = "0px 0px -15% 0px";
 
 /** Shared editorial entrance: opacity + translateY with decisive easing */
 function editorialEntrance(
@@ -182,7 +191,8 @@ export const REVEAL_RECIPES: Record<RevealRecipeName, RevealRecipe> = {
     properties: ["opacity", "transform"],
     trigger: "in-view",
     once: true,
-    viewportAmount: 0.15,
+    viewportAmount: 0,
+    viewportMargin: REGISTER_EDGE_MARGIN,
     getVariants: (tier) => editorialEntrance(tier),
   },
 
@@ -192,7 +202,8 @@ export const REVEAL_RECIPES: Record<RevealRecipeName, RevealRecipe> = {
     properties: ["opacity", "transform"],
     trigger: "in-view",
     once: true,
-    viewportAmount: 0.2,
+    viewportAmount: 0,
+    viewportMargin: REGISTER_EDGE_MARGIN,
     getVariants: (tier) => editorialEntrance(tier),
   },
 
@@ -202,7 +213,8 @@ export const REVEAL_RECIPES: Record<RevealRecipeName, RevealRecipe> = {
     properties: ["opacity", "transform"],
     trigger: "in-view",
     once: true,
-    viewportAmount: 0.2,
+    viewportAmount: 0,
+    viewportMargin: REGISTER_EDGE_MARGIN,
     getVariants: (tier) => editorialEntrance(tier),
   },
 
