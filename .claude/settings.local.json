@@ -1,0 +1,10 @@
+{
+  "skillOverrides": {
+    "apple-design": "user-invocable-only",
+    "brag": "user-invocable-only",
+    "charter": "user-invocable-only",
+    "anthropic-skills:built-in-browser": "user-invocable-only",
+    "anthropic-skills:chrome-browser": "user-invocable-only",
+    "frontend-design": "user-invocable-only"
+  }
+}
