@@ -4,7 +4,7 @@ The design rules for this portfolio. Read this before you change anything a visi
 
 **Name:** Constructed Signal.
 **In one line:** an architect's drawing sheet that a red signal runs through. Ivory paper, ink type, fine construction lines, and a few loud red or ink fields placed on purpose.
-**Last verified against code:** 2026-10-22.
+**Last verified against code:** 2026-11-09.
 
 Where this file and older docs disagree, this file wins, and the code beats both (see §15).
 
@@ -44,7 +44,7 @@ Every region of a page is either **expressive** or **reading**. Decide which bef
 | Stack (`TechStackSection`) | Expressive | Tilted ink marquees, a red lead plate, IndexMark rows, asymmetric 5/7 bento |
 | Experience (`SceneExperience`) | Reading, with a small field at each end | Ledger in the middle, an ink credential plate on the left, a red link pillar on the right |
 | Presence (`ScenePresence`) | Reading | Live data stays neutral. The portrait carries one geometry cluster |
-| Contact (`SceneContact`) | Expressive, quiet | Large split-text title, ghost geometry, a signal-leader status line |
+| Contact (`SceneContact`) | Expressive, quiet | 5/7 split from `lg`. Left: large split-text title, a signal-leader status line, the direct email row (mono `mailto:` address with a Copy button), channel buttons. Right: the transmittal sheet, a reading zone (opaque `--cs-foundation` plate, crop marks, fields as drawn lines). Ghost geometry passes behind the sheet |
 
 **The test.** Take one paragraph or one list of proof. If you can't read it in a single calm pass, you are in a reading zone and you've let chaos in. Move the loud element to the edge of the content. Don't put it under the text.
 
@@ -252,7 +252,7 @@ A mono xs uppercase link with `min-h-11` and an `ArrowUpRight` that nudges on ho
 
 ### Status line (Contact)
 
-Signal leader, then a 6px dot in `--cs-status-online`, then mono xs uppercase text. Line breaks happen only at the `·` separators. Each segment is `whitespace-nowrap`, and each separator stays on the segment before it.
+Signal leader, then a 6px dot in `--cs-status-online`, then mono xs uppercase text. Line breaks happen only at the `·` separators. Each segment is `whitespace-nowrap`, and each separator stays on the segment before it. Two places use it: the availability line under the title, and the sheet's success line "Sent · I'll reply to {email}", which takes focus and is a polite live region. A visitor's address too long for the line breaks inside itself.
 
 ### Marquee band
 
@@ -326,7 +326,7 @@ Budgets are in `lib/motion-budget.ts` and recipes in `lib/motion.ts`.
 3. Check light and dark. Fields should be gray in dark mode, with no ice-blue fills.
 4. Turn on reduced motion. Everything should be visible and still.
 5. Tab through it. Focus must be visible on every surface it crosses.
-6. Run `pnpm lint && pnpm build`.
+6. Run `pnpm test && pnpm lint && pnpm build`.
 
 ---
 

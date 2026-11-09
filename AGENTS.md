@@ -2,7 +2,7 @@
 
 ## Metadata
 - Owner: `Hanseooo (amoguishans@gmail.com)`
-- Last reviewed: `2026-08-05`
+- Last reviewed: `2026-11-09`
 - Review cadence: `monthly`
 
 ## Baseline Rules
@@ -52,8 +52,8 @@ Test: every changed line traces to the request.
 
 ## Project Context
 - Stack: `Next.js 16 + React 19 + TypeScript + Tailwind CSS v4 + Framer Motion + GSAP + Lenis + @use-gesture/react + Radix UI + shadcn/ui` (evidence: `package.json`)
-- Architecture: Single-page portfolio (`app/` router) with chapter-based storytelling sections. Components live in `components/sections/`, `components/layout/`, `components/ui/`, `components/providers/`, `components/transitions/`, `components/dialogs/`, `components/projects/`, `components/certificates/`, `components/cards/`, `components/seo/`, and `components/utils/`. Animation utilities in `lib/motion.ts` and `lib/gsap.ts`. Lenis drives smooth scroll; @use-gesture/react handles gesture input. No backend — static site targeting Vercel deployment.
-- Critical paths: Animation smoothness and scroll behavior are the highest-risk regression areas. No auth/billing/infra.
+- Architecture: Single-page portfolio (`app/` router) with chapter-based storytelling sections. Components live in `components/sections/`, `components/layout/`, `components/ui/`, `components/providers/`, `components/transitions/`, `components/dialogs/`, `components/projects/`, `components/certificates/`, `components/cards/`, `components/seo/`, and `components/utils/`. Animation utilities in `lib/motion.ts` and `lib/gsap.ts`. Lenis drives smooth scroll; @use-gesture/react handles gesture input. Server code is small and runs on Vercel: `app/api/activity/*` route handlers (live GitHub/Discord data) and the contact Server Action `app/actions/contact.ts` (Turnstile check, then Resend). Its env vars: `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `TURNSTILE_SECRET_KEY`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
+- Critical paths: Animation smoothness and scroll behavior are the highest-risk regression areas. No auth or billing. The contact form is a security path: `lib/contact/validate.ts` (server-side validation, honeypot, minimum fill time) and the Turnstile check in `app/actions/contact.ts`.
 
 ## Documentation Map
 - Always read: `docs/01-project-brief.md`, `DESIGN.md`
@@ -72,16 +72,16 @@ Test: every changed line traces to the request.
 - Lint: `pnpm lint` (evidence: `package.json` scripts)
 - Build/Typecheck: `pnpm build` (evidence: `package.json` scripts — Next.js build includes tsc)
 - Dev server: `pnpm dev` (evidence: `package.json` scripts)
-- Unit tests: none configured
-- Integration/E2E: none configured
-- Pre-merge verify: `pnpm lint && pnpm build`
+- Unit tests: `pnpm test` (Vitest, `*.test.ts` beside the code)
+- Integration/E2E: no runner. Browser checks are `.playwright-cli/*-check.cjs` scripts run with `playwright-cli run-code --filename=<script>` against `pnpm dev`
+- Pre-merge verify: `pnpm test && pnpm lint && pnpm build`
 
 ## Tooling Lock
 - Canonical package manager: `pnpm` (evidence: `pnpm-lock.yaml`)
 - Never use: `npm`, `yarn`, `bun`
 
 ## Testing Contract
-- No test runner configured. "Passing" means: `npx eslint` exits 0, `pnpm build` exits 0, and the feature works visually in the browser via `pnpm dev`.
+- "Passing" means: `pnpm test` exits 0, `pnpm lint` exits 0, `pnpm build` exits 0, and the feature works visually in the browser via `pnpm dev`.
 - Visual verification required for every UI change — check scroll behavior and animation smoothness after any layout change.
 - No known flaky tests.
 
@@ -103,5 +103,5 @@ Test: every changed line traces to the request.
 - Never mark complete without proof (passing lint/build output shown, visual browser verification done).
 
 ## Validation Notes
-- No test suite exists — all verification is manual (`pnpm lint && pnpm build` + visual browser check).
+- Vitest covers contact validation and the contact action (`pnpm test`). Everything else is verified by `pnpm lint && pnpm build`, browser checks, and a visual pass.
 - No README.md at repo root — `docs/01-project-brief.md` serves as the project intent document.

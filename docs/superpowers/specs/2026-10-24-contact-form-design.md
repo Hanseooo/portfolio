@@ -1,7 +1,7 @@
 # Contact form — design
 
 **Date:** 2026-10-24
-**Status:** APPROVED (decisions settled in a grilling session on 2026-10-24). Not implemented.
+**Status:** APPROVED (decisions settled in a grilling session on 2026-10-24). Implemented on `feat/contact-form` (#17 to #22). The real send from the deployed preview is still owner-only (see Owner setup).
 **Issue:** [#15 Add a contact form and copyable email to the Contact section](https://github.com/Hanseooo/portfolio/issues/15)
 **Base commit:** `4f914d2` (merge of PR #14)
 
