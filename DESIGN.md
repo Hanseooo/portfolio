@@ -44,7 +44,7 @@ Every region of a page is either **expressive** or **reading**. Decide which bef
 | Stack (`TechStackSection`) | Expressive | Tilted ink marquees, a red lead plate, IndexMark rows, asymmetric 5/7 bento |
 | Experience (`SceneExperience`) | Reading, with a small field at each end | Ledger in the middle, an ink credential plate on the left, a red link pillar on the right |
 | Presence (`ScenePresence`) | Reading | Live data stays neutral. The portrait carries one geometry cluster |
-| Contact (`SceneContact`) | Expressive, quiet | 5/7 split from `lg`. Left: large split-text title, a signal-leader status line, the direct email row (mono `mailto:` address with a Copy button), channel buttons. Right: the transmittal sheet, a reading zone (opaque `--cs-foundation` plate, crop marks, fields as drawn lines). Ghost geometry passes behind the sheet |
+| Contact (`SceneContact`) | Expressive, quiet | Full-width split-text title, a signal-leader status line, then one button row: the primary "Write a message", then Email (`mailto:`), LinkedIn, GitHub, Resume. Ghost geometry behind. "Write a message" opens the transmittal sheet in a native `<dialog>` modal (`ContactDialog`), a reading zone: opaque `--cs-foundation` plate, crop marks, fields as drawn lines, ink backdrop in light and near-black in dark |
 
 **The test.** Take one paragraph or one list of proof. If you can't read it in a single calm pass, you are in a reading zone and you've let chaos in. Move the loud element to the edge of the content. Don't put it under the text.
 
@@ -274,7 +274,7 @@ Budgets are in `lib/motion-budget.ts` and recipes in `lib/motion.ts`.
 
 - **Easing:** `decisiveEditorial` `[0.16, 1, 0.3, 1]` for entrances, `fastGraphic` for hover and focus. No bounce, no elastic.
 - **Timing:** interactions take 120 to 240ms. Editorial entrances take 350 to 700ms.
-- **Recipes:** `fadeUpReveal(reducedMotion, delay)` for rows, `clipReveal` and `peelReveal` for plates, `SplitText` for the contact and Capabilities titles (each word stays on one line), `StructuredReveal` for scene blocks. Stagger by 0.08s, with at most 8 staggered items.
+- **Recipes:** `fadeUpReveal(reducedMotion, delay)` for rows, `clipReveal` and `peelReveal` for plates, `SplitText` for the contact and Capabilities titles, `StructuredReveal` for scene blocks. Stagger by 0.08s, with at most 8 staggered items.
 - **Parallax:** only through `data-parallax-speed` inside the hero (`HeroDepthEffect`). Never put a mask on the moving element.
 - Animate only `transform` and `opacity`. Never animate layout properties. One exception: the drawn-mark sweep (§7) animates a conic `mask-image` angle once per mark, 700ms, and drops the mask when done. Stroke-dash drawing is not used because dashes ignore `pathLength` under `non-scaling-stroke`.
 - **Reduced motion is a full design state.** Every element ends visible at opacity 1, marquees stand still, and parallax is off. Pass `usePrefersReducedMotion()` into every recipe. No part of the hierarchy should depend on an animation finishing.

@@ -4,15 +4,13 @@ import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
-import { CropMarks } from "@/components/geometry";
 import StructuredReveal from "@/components/motion/StructuredReveal";
-import ContactEmailRow from "@/components/homepage/ContactEmailRow";
 import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { RESUME_LABEL } from "@/components/utils/externalLinks";
-import ContactForm from "@/components/homepage/ContactForm";
+import ContactDialog from "@/components/homepage/ContactDialog";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
@@ -54,7 +52,7 @@ export default function SceneContact({ data }: SceneContactProps) {
       <div className="hp-grid relative z-10">
         <StructuredReveal
           recipe="contact-close"
-          className="col-span-4 md:col-span-8 lg:col-span-5"
+          className="col-span-4 md:col-span-8 lg:col-span-12"
         >
           <div
             className="flex flex-col items-start"
@@ -62,7 +60,7 @@ export default function SceneContact({ data }: SceneContactProps) {
           >
             <h2
               id={`${SECTION_IDS.contact}-heading`}
-              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,7vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
+              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
             >
               <SplitText text={data.closeStatement as string} />
             </h2>
@@ -81,10 +79,8 @@ export default function SceneContact({ data }: SceneContactProps) {
               </span>
             </p>
 
-            <ContactEmailRow email={data.email} />
-
             <motion.ul 
-              className="mt-6 flex flex-wrap items-center gap-4" 
+              className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
               role="list"
               initial={reducedMotion ? false : "hidden"}
               animate={reducedMotion ? "visible" : undefined}
@@ -95,6 +91,15 @@ export default function SceneContact({ data }: SceneContactProps) {
                 hidden: {}
               }}
             >
+              {/* The form lives in a modal, so the section stays the title, status and channels */}
+              <motion.li
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                }}
+              >
+                <ContactDialog />
+              </motion.li>
               {data.channels.map((channel) => (
                 <motion.li 
                   key={channel.type}
@@ -105,8 +110,8 @@ export default function SceneContact({ data }: SceneContactProps) {
                 >
                   <a
                     href={channel.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={channel.type !== "email" ? "_blank" : undefined}
+                    rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
                     aria-label={channel.type === "resume" ? RESUME_LABEL : undefined}
                     className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[color:var(--cs-text-primary)] hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                   >
@@ -122,15 +127,6 @@ export default function SceneContact({ data }: SceneContactProps) {
             </motion.ul>
           </div>
         </StructuredReveal>
-        {/* The transmittal sheet: an opaque plate the orbit outlines pass behind */}
-        <div className="relative col-span-4 mt-12 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] p-6 md:col-span-8 md:p-8 lg:col-span-7 lg:mt-0 lg:self-start lg:p-10">
-          <CropMarks className="hidden text-[color:var(--cs-structural-line-strong)] md:block" />
-          <h3 className="mb-8 flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
-            <span aria-hidden="true" className="h-px w-8 shrink-0 bg-[color:var(--cs-signal)] md:w-12" />
-            Or write here
-          </h3>
-          <ContactForm />
-        </div>
       </div>
     </HomepageSceneFrame>
   );

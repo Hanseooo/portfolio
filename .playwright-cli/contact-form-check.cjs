@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions -- Playwright CLI evaluates this function.
 async page => {
-  // Contact form check (issue #22). Run against `pnpm dev -p 3123` started with Cloudflare's
+  // Contact form check (issue #22). The form lives in a modal opened by "Write a message".
+  // Run against `pnpm dev -p 3123` (or `next start -p 3123`) started with Cloudflare's
   // always-pass Turnstile test keys and CONTACT_TO_EMAIL=delivered@resend.dev.
   // Scenario 2 reports UNVERIFIED, not PASS, when the send fails: that is expected when the dev
   // server has no RESEND_API_KEY. With a key set, UNVERIFIED means the send failed.
@@ -20,8 +21,9 @@ async page => {
     // Leave first: a goto that only changes the hash would keep the previous scenario's state.
     await page.goto("about:blank");
     await page.goto(`${BASE}/#contact`);
-    const form = page.getByRole("form", { name: "Contact form", exact: true });
-    await form.scrollIntoViewIfNeeded();
+    const opener = page.getByRole("button", { name: "Write a message", exact: true });
+    await opener.click();
+    const form = page.getByRole("dialog", { name: "Write a message" }).getByRole("form", { name: "Contact form", exact: true });
     await form.waitFor();
     return form;
   };
@@ -79,6 +81,7 @@ async page => {
 
   await run("3 keyboard", async () => {
     const form = await openScene("reduce");
+    await page.keyboard.press("Escape");
     // Start from the last tab stop before the scene, then Tab through it.
     await page.evaluate(() => {
       const scene = document.getElementById("contact");
@@ -87,26 +90,42 @@ async page => {
       const before = tabbable.filter(el => !scene.contains(el) && (el.compareDocumentPosition(scene) & Node.DOCUMENT_POSITION_FOLLOWING));
       before.at(-1).focus();
     });
-    const visited = [];
-    for (let i = 0; i < 40; i++) {
-      await page.keyboard.press("Tab");
-      const stop = await page.evaluate(() => {
-        const el = document.activeElement;
-        if (!el || !document.getElementById("contact").contains(el)) return null;
-        // A visually hidden radio draws its outline on the chip label around it.
-        const target = el.type === "radio" ? el.closest("label") : el;
-        const style = getComputedStyle(target);
-        return {
-          label: [el.tagName.toLowerCase(), el.getAttribute("href"), el.getAttribute("aria-label") || el.textContent.trim() || el.name || el.type].filter(Boolean).join(" "),
-          outline: style.outlineStyle !== "none" && parseFloat(style.outlineWidth) > 0,
-        };
-      });
-      if (!stop) break;
-      visited.push(stop.label);
-      assert(stop.outline, `No focus outline on: ${stop.label}`);
+    const tabThrough = async within => {
+      const visited = [];
+      for (let i = 0; i < 40; i++) {
+        await page.keyboard.press("Tab");
+        const stop = await page.evaluate(selector => {
+          const el = document.activeElement;
+          const scope = document.querySelector(selector);
+          if (!el || !scope?.contains(el) || (selector === "#contact" && el.closest("dialog"))) return null;
+          // A visually hidden radio draws its outline on the chip label around it.
+          const target = el.type === "radio" ? el.closest("label") : el;
+          const style = getComputedStyle(target);
+          return {
+            label: [el.tagName.toLowerCase(), el.getAttribute("href"), el.getAttribute("aria-label") || el.textContent.trim() || el.name || el.type].filter(Boolean).join(" "),
+            outline: style.outlineStyle !== "none" && parseFloat(style.outlineWidth) > 0,
+          };
+        }, within);
+        // A modal dialog wraps focus: stop once a stop repeats.
+        if (!stop || visited.includes(stop.label)) break;
+        visited.push(stop.label);
+        assert(stop.outline, `No focus outline on: ${stop.label}`);
+      }
+      return visited;
+    };
+    const sceneStops = await tabThrough("#contact");
+    for (const expected of ["Write a message", "mailto", "LinkedIn", "GitHub", "Resume"]) {
+      assert(sceneStops.some(label => label.includes(expected)), `Tab never reached ${expected}. Visited: ${sceneStops.join(", ")}`);
     }
-    for (const expected of ["mailto", "Copy", "LinkedIn", "GitHub", "Resume", "input reason", "input name", "input email", "textarea", "Send"]) {
-      assert(visited.some(label => label.includes(expected)), `Tab never reached ${expected}. Visited: ${visited.join(", ")}`);
+    assert(!sceneStops.some(label => label.includes("Copy")), "No copy-email control in the scene");
+    const opener = page.getByRole("button", { name: "Write a message", exact: true });
+    await opener.focus();
+    await page.keyboard.press("Enter");
+    const first = await page.evaluate(() => document.activeElement?.closest("dialog[open]") ? document.activeElement.textContent.trim() : null);
+    assert(first === "Close", `Opening must move focus into the dialog, onto Close; got ${first}`);
+    const dialogStops = await tabThrough("dialog[open]");
+    for (const expected of ["input reason", "input name", "input email", "textarea", "Send"]) {
+      assert(dialogStops.some(label => label.includes(expected)), `Tab never reached ${expected} in the dialog. Visited: ${dialogStops.join(", ")}`);
     }
     const hiring = form.getByRole("radio", { name: "Hiring", exact: true });
     await hiring.focus();
@@ -163,6 +182,25 @@ async page => {
     } finally {
       await page.unroute(TURNSTILE_SCRIPT);
     }
+  });
+
+  await run("5 Escape closes, focus returns, draft survives", async () => {
+    const form = await openScene("reduce");
+    const dialog = page.getByRole("dialog", { name: "Write a message" });
+    await form.getByRole("textbox", { name: "Name", exact: true }).fill("Draft Check");
+    await page.keyboard.press("Escape");
+    await dialog.waitFor({ state: "hidden", timeout: 2000 }).catch(() => {});
+    assert(!(await dialog.isVisible()), "Escape must close the dialog");
+    const focused = await page.evaluate(() => {
+      const el = document.activeElement;
+      return el === document.body ? "<body>" : `${el?.tagName.toLowerCase()} ${el?.textContent.trim().slice(0, 40)}`;
+    });
+    assert(focused === "button Write a message", `Focus must return to the opener, got ${focused}`);
+    await page.getByRole("button", { name: "Write a message", exact: true }).click();
+    const name = await form.getByRole("textbox", { name: "Name", exact: true }).inputValue();
+    assert(name === "Draft Check", `Draft must survive close and reopen, got "${name}"`);
+    await dialog.getByRole("button", { name: "Close", exact: true }).click();
+    assert(!(await dialog.isVisible()), "Close must close the dialog");
   });
 
   if (results.some(line => line.includes(": FAIL"))) throw new Error(results.join("\n"));

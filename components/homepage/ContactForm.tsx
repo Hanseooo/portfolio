@@ -15,7 +15,6 @@ import {
 import { EMAIL_ADDRESS } from "@/components/utils/externalLinks";
 import TurnstileWidget from "@/components/homepage/TurnstileWidget";
 import { RegistrationMark } from "@/components/geometry";
-import { CopyEmailButton } from "./ContactEmailRow";
 
 const EMPTY_VALUES: ContactData = { reason: "", name: "", email: "", message: "" };
 const FIELD_ORDER = ["name", "email", "message"] as const;
@@ -71,12 +70,12 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
   const [values, setValues] = useState<ContactData>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ContactFieldErrors>({});
   const [turnstileFailed, setTurnstileFailed] = useState(false);
+  const [challengeShown, setChallengeShown] = useState(false);
   // A valid submit pressed before Turnstile has a token waits here and sends once it arrives.
   const [awaitingToken, setAwaitingToken] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const startedAt = useRef(0);
   const sentRef = useRef<HTMLParagraphElement>(null);
-  const failedAddressRef = useRef<HTMLSpanElement>(null);
 
   // Render time for the minimum fill-time check. Recorded after mount so server HTML matches,
   // and added to the payload at submit.
@@ -153,12 +152,9 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
       aria-label="Contact form"
       className="flex flex-col gap-8"
     >
-      {/* The fields fade but keep their space, so the sheet holds its height through the swap */}
+      {/* Once sent, the success line replaces the fields, so the dialog shrinks to fit it */}
       <div className="relative">
-        <div
-          inert={sent}
-          className={`flex flex-col gap-8 transition-opacity duration-[240ms] motion-reduce:transition-none ${sent ? "opacity-0" : ""}`}
-        >
+        <div className={sent ? "hidden" : "flex flex-col gap-8"}>
           <fieldset>
             <legend className={labelClass}>Reason (optional)</legend>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -275,7 +271,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
         </div>
 
         {sent && (
-          <div className="absolute inset-x-0 top-0 flex flex-col items-start gap-6">
+          <div className="flex flex-col items-start gap-6">
             {/* Contact status-line grammar: signal leader, live dot, wraps only at the separator */}
             <p
               ref={sentRef}
@@ -315,45 +311,50 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
               <CircleAlert size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
               <span>Couldn&apos;t send. Your message is still here. Try again, or email me directly.</span>
             </p>
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span ref={failedAddressRef} className="break-all font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-primary)]">
-                {EMAIL_ADDRESS}
-              </span>
-              <CopyEmailButton email={EMAIL_ADDRESS} addressRef={failedAddressRef} />
-            </div>
+            <a
+              href={`mailto:${EMAIL_ADDRESS}`}
+              className="mt-2 inline-flex min-h-11 items-center break-all font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-primary)] underline decoration-[color:var(--cs-structural-line-strong)] underline-offset-4 transition-colors hover:decoration-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+            >
+              {EMAIL_ADDRESS}
+            </a>
           </div>
         ))}
 
-      <TurnstileWidget
-        resetKey={state}
-        onLoadError={() => setTurnstileFailed(true)}
-        onToken={() => {
-          if (awaitingToken) formRef.current?.requestSubmit();
-        }}
-      />
+      {/* One block with the Send row: the widget's container is empty until a challenge shows,
+          so it takes no gap of its own */}
+      <div>
+        <TurnstileWidget
+          resetKey={state}
+          onLoadError={() => setTurnstileFailed(true)}
+          onInteractive={setChallengeShown}
+          onToken={() => {
+            if (awaitingToken) formRef.current?.requestSubmit();
+          }}
+        />
 
-      <div className="flex items-center">
-        <button
-          type="submit"
-          disabled={pending || waiting}
-          inert={sent}
-          className="group inline-flex h-12 shrink-0 items-center gap-2 self-start border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform enabled:hover:-translate-x-px enabled:hover:-translate-y-px disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
-        >
-          {pending ? "Sending" : waiting ? "Verifying" : "Send"}
-          <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-px group-enabled:group-hover:-translate-y-px" />
-        </button>
-        {/* Routing line: from Send's right edge across the sheet's right edge (sheet padding + 2rem).
-            Mounted only once sent, so DrawController draws it as a new mark. */}
-        <span role="status" className="sr-only">
-          {waiting ? "Verifying you're human. Your message sends when that's done." : ""}
-        </span>
-        {sent && (
-          <span
-            aria-hidden="true"
-            data-draw="extend-x"
-            className="-mr-14 h-px flex-1 origin-left bg-[color:var(--cs-signal)] md:-mr-16 lg:-mr-18"
-          />
-        )}
+        <div className={`flex items-center ${challengeShown ? "mt-8" : ""}`}>
+          <button
+            type="submit"
+            disabled={pending || waiting}
+            inert={sent}
+            className="group inline-flex h-12 shrink-0 items-center gap-2 self-start border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform enabled:hover:-translate-x-px enabled:hover:-translate-y-px disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+          >
+            {pending ? "Sending" : waiting ? "Verifying" : "Send"}
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-px group-enabled:group-hover:-translate-y-px" />
+          </button>
+          {/* Routing line: from Send's right edge to the sheet's right edge (the dialog body's padding).
+              Mounted only once sent, so DrawController draws it as a new mark. */}
+          <span role="status" className="sr-only">
+            {waiting ? "Verifying you're human. Your message sends when that's done." : ""}
+          </span>
+          {sent && (
+            <span
+              aria-hidden="true"
+              data-draw="extend-x"
+              className="-mr-6 h-px flex-1 origin-left bg-[color:var(--cs-signal)] md:-mr-8 lg:-mr-10"
+            />
+          )}
+        </div>
       </div>
 
       {sent && (
