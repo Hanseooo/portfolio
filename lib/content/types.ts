@@ -76,7 +76,7 @@ export interface CredentialProjection {
 
 /** Contact channel — omitted if unconfigured. */
 export interface ContactChannel {
-  type: "email" | "linkedin" | "github" | "resume";
+  type: "linkedin" | "github" | "resume";
   label: string;
   href: string;
 }

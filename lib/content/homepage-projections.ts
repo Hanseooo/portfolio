@@ -270,6 +270,7 @@ export function getHomepagePersonal(): HomepagePersonalProjection {
 export interface HomepageContactProjection {
   closeStatement: "Let's connect.";
   availability: string;
+  email: string;
   channels: ContactChannel[];
 }
 
@@ -277,8 +278,8 @@ export function getHomepageContact(): HomepageContactProjection {
   return {
     closeStatement: "Let's connect.",
     availability: AVAILABILITY,
+    email: EMAIL_ADDRESS,
     channels: [
-      { type: "email", label: "Email", href: `mailto:${EMAIL_ADDRESS}` },
       { type: "linkedin", label: "LinkedIn", href: LINKEDIN_URL },
       { type: "github", label: "GitHub", href: GITHUB_URL },
       { type: "resume", label: "Resume", href: RESUME_URL },
