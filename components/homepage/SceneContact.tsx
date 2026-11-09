@@ -10,6 +10,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { RESUME_LABEL } from "@/components/utils/externalLinks";
+import ContactDialog from "@/components/homepage/ContactDialog";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
@@ -90,6 +91,15 @@ export default function SceneContact({ data }: SceneContactProps) {
                 hidden: {}
               }}
             >
+              {/* The form lives in a modal, so the section stays the title, status and channels */}
+              <motion.li
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                }}
+              >
+                <ContactDialog />
+              </motion.li>
               {data.channels.map((channel) => (
                 <motion.li 
                   key={channel.type}
