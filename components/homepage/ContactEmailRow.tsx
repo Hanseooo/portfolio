@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { Check, Copy } from "lucide-react";
 
 const RESET_MS = 2000;
@@ -13,12 +13,14 @@ function copyShortcut(): string {
   return /mac|iphone|ipad|ipod/i.test(platform) ? "⌘C" : "Ctrl+C";
 }
 
-interface ContactEmailRowProps {
+interface CopyEmailButtonProps {
   email: string;
+  /** Element holding the visible address; selected when the clipboard API fails. */
+  addressRef: RefObject<HTMLElement | null>;
 }
 
-export default function ContactEmailRow({ email }: ContactEmailRowProps) {
-  const addressRef = useRef<HTMLAnchorElement>(null);
+/** Copy button with a polite live region. Used by the direct email row and the Failed alert. */
+export function CopyEmailButton({ email, addressRef }: CopyEmailButtonProps) {
   const timerRef = useRef<number | undefined>(undefined);
   const [state, setState] = useState<CopyState>("idle");
   const [shortcut, setShortcut] = useState("Ctrl+C");
@@ -60,14 +62,7 @@ export default function ContactEmailRow({ email }: ContactEmailRowProps) {
   }
 
   return (
-    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-10">
-      <a
-        ref={addressRef}
-        href={`mailto:${email}`}
-        className="inline-flex min-h-12 items-center break-all font-[family-name:var(--font-mono)] text-base text-[color:var(--cs-text-primary)] underline decoration-[color:var(--cs-structural-line-strong)] underline-offset-4 transition-colors hover:decoration-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] md:text-lg"
-      >
-        {email}
-      </a>
+    <>
       <button
         type="button"
         onClick={handleCopy}
@@ -85,6 +80,27 @@ export default function ContactEmailRow({ email }: ContactEmailRowProps) {
       <span className="sr-only" aria-live="polite" role="status">
         {announcement}
       </span>
+    </>
+  );
+}
+
+interface ContactEmailRowProps {
+  email: string;
+}
+
+export default function ContactEmailRow({ email }: ContactEmailRowProps) {
+  const addressRef = useRef<HTMLAnchorElement>(null);
+
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-10">
+      <a
+        ref={addressRef}
+        href={`mailto:${email}`}
+        className="inline-flex min-h-12 items-center break-all font-[family-name:var(--font-mono)] text-base text-[color:var(--cs-text-primary)] underline decoration-[color:var(--cs-structural-line-strong)] underline-offset-4 transition-colors hover:decoration-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] md:text-lg"
+      >
+        {email}
+      </a>
+      <CopyEmailButton email={email} addressRef={addressRef} />
     </div>
   );
 }

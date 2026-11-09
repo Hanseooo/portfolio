@@ -94,6 +94,7 @@ Use the `--cs-*` variables. Never write hex values in components.
 | `--cs-signal` / `--cs-signal-text` | `#E10600` red | `#00E5FF` ice | Accent: fields (light), type, rules, index numerals |
 | `--cs-signal-inverse` | `#FFFFFF` | `#080909` | Text on a solid signal fill |
 | `--cs-focus-ring` | `#E10600` | `#00E5FF` | Focus outlines |
+| `--cs-field-error` | `#DC2626` | `#EF4444` | Invalid form field: its underline and error line. Always paired with an icon and text, since it sits close to the light signal red |
 | `--cs-status-online` etc. | green, amber, red, gray | brighter equivalents | Real live states only |
 
 ### Field recipes (what the code does today)

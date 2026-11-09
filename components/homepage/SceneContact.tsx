@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
+import { CropMarks } from "@/components/geometry";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import ContactEmailRow from "@/components/homepage/ContactEmailRow";
 import SplitText from "@/components/motion/SplitText";
@@ -53,7 +54,7 @@ export default function SceneContact({ data }: SceneContactProps) {
       <div className="hp-grid relative z-10">
         <StructuredReveal
           recipe="contact-close"
-          className="col-span-4 md:col-span-8 lg:col-span-12"
+          className="col-span-4 md:col-span-8 lg:col-span-5"
         >
           <div
             className="flex flex-col items-start"
@@ -61,7 +62,7 @@ export default function SceneContact({ data }: SceneContactProps) {
           >
             <h2
               id={`${SECTION_IDS.contact}-heading`}
-              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
+              className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,7vw,6rem)] font-black uppercase leading-[0.88] tracking-tight text-[color:var(--cs-text-primary)] perspective-1000"
             >
               <SplitText text={data.closeStatement as string} />
             </h2>
@@ -121,7 +122,13 @@ export default function SceneContact({ data }: SceneContactProps) {
             </motion.ul>
           </div>
         </StructuredReveal>
-        <div className="col-span-4 mt-12 md:col-span-8 lg:col-span-7">
+        {/* The transmittal sheet: an opaque plate the orbit outlines pass behind */}
+        <div className="relative col-span-4 mt-12 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] p-6 md:col-span-8 md:p-8 lg:col-span-7 lg:mt-0 lg:self-start lg:p-10">
+          <CropMarks className="hidden text-[color:var(--cs-structural-line-strong)] md:block" />
+          <h3 className="mb-8 flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+            <span aria-hidden="true" className="h-px w-8 shrink-0 bg-[color:var(--cs-signal)] md:w-12" />
+            Or write here
+          </h3>
           <ContactForm />
         </div>
       </div>
