@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { HomepageSceneFrame } from "@/components/frames";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import ContactEmailRow from "@/components/homepage/ContactEmailRow";
 import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
@@ -79,8 +80,10 @@ export default function SceneContact({ data }: SceneContactProps) {
               </span>
             </p>
 
+            <ContactEmailRow email={data.email} />
+
             <motion.ul 
-              className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
+              className="mt-6 flex flex-wrap items-center gap-4" 
               role="list"
               initial={reducedMotion ? false : "hidden"}
               animate={reducedMotion ? "visible" : undefined}
@@ -101,8 +104,8 @@ export default function SceneContact({ data }: SceneContactProps) {
                 >
                   <a
                     href={channel.href}
-                    target={channel.type !== "email" ? "_blank" : undefined}
-                    rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={channel.type === "resume" ? RESUME_LABEL : undefined}
                     className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[color:var(--cs-text-primary)] hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                   >
