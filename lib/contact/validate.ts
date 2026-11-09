@@ -54,6 +54,19 @@ export function validateContactSubmission(fields: ContactFields, now: number): C
     message: fields.message.trim(),
   };
 
+  const fieldErrors = findFieldErrors(data);
+  if (Object.keys(fieldErrors).length > 0) return { kind: "invalid", fieldErrors };
+  return { kind: "valid", data };
+}
+
+/** Field rules only, no bot checks. The form reuses this for instant client feedback. */
+export function findFieldErrors(values: ContactData): ContactFieldErrors {
+  const data: ContactData = {
+    reason: values.reason.trim(),
+    name: values.name.trim(),
+    email: values.email.trim(),
+    message: values.message.trim(),
+  };
   const fieldErrors: ContactFieldErrors = {};
   if (data.reason && !(CONTACT_REASONS as readonly string[]).includes(data.reason)) {
     fieldErrors.reason = CONTACT_ERRORS.reason;
@@ -63,7 +76,5 @@ export function validateContactSubmission(fields: ContactFields, now: number): C
     fieldErrors.email = CONTACT_ERRORS.email;
   }
   if (!lengthBetween(data.message, MESSAGE_MAX)) fieldErrors.message = CONTACT_ERRORS.message;
-
-  if (Object.keys(fieldErrors).length > 0) return { kind: "invalid", fieldErrors };
-  return { kind: "valid", data };
+  return fieldErrors;
 }

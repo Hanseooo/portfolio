@@ -10,6 +10,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { RESUME_LABEL } from "@/components/utils/externalLinks";
+import ContactForm from "./ContactForm";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
@@ -117,6 +118,9 @@ export default function SceneContact({ data }: SceneContactProps) {
             </motion.ul>
           </div>
         </StructuredReveal>
+        <div className="col-span-4 mt-12 md:col-span-8 lg:col-span-7">
+          <ContactForm />
+        </div>
       </div>
     </HomepageSceneFrame>
   );
