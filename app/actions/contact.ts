@@ -1,6 +1,6 @@
 "use server";
 
-import { getResendEnv } from "../../lib/contact/env";
+import { getResendEnv, getTurnstileSecret } from "../../lib/contact/env";
 import {
   validateContactSubmission,
   type ContactData,
@@ -14,9 +14,21 @@ export type ContactState =
   | { status: "idle" }
   | { status: "sent" }
   | { status: "invalid"; fieldErrors: ContactFieldErrors; values: ContactValues }
-  | { status: "error"; reason: "send"; values: ContactValues };
+  | { status: "error"; reason: "send" | "challenge"; values: ContactValues };
 
 const RESEND_URL = "https://api.resend.com/emails";
+const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+async function passesChallenge(token: string, secret: string) {
+  const response = await fetch(SITEVERIFY_URL, {
+    method: "POST",
+    body: new URLSearchParams({ secret, response: token }),
+    cache: "no-store",
+  });
+  if (!response.ok) return false;
+  const outcome = (await response.json()) as { success?: boolean };
+  return outcome.success === true;
+}
 
 function readFields(formData: FormData): ContactFields {
   const read = (key: keyof ContactFields) => {
@@ -64,6 +76,13 @@ export async function sendContactMessage(_prev: ContactState, formData: FormData
   if (result.kind === "invalid") return { status: "invalid", fieldErrors: result.fieldErrors, values };
 
   try {
+    const token = formData.get("cf-turnstile-response");
+    const human = await passesChallenge(typeof token === "string" ? token : "", getTurnstileSecret());
+    if (!human) {
+      console.error("[contact] Turnstile check failed");
+      return { status: "error", reason: "challenge", values };
+    }
+
     const env = getResendEnv();
     const response = await fetch(RESEND_URL, {
       method: "POST",

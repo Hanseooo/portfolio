@@ -10,6 +10,7 @@ import {
   type ContactFieldErrors,
 } from "@/lib/contact/validate";
 import { EMAIL_ADDRESS } from "@/components/utils/externalLinks";
+import TurnstileWidget from "@/components/homepage/TurnstileWidget";
 import { CopyEmailButton } from "./ContactEmailRow";
 
 const EMPTY_VALUES: ContactValues = { reason: "", name: "", email: "", message: "" };
@@ -56,6 +57,7 @@ export default function ContactForm() {
 
   const [values, setValues] = useState<ContactValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ContactFieldErrors>({});
+  const [turnstileFailed, setTurnstileFailed] = useState(false);
   const startedAt = useRef(0);
   const sentRef = useRef<HTMLParagraphElement>(null);
   const failedAddressRef = useRef<HTMLSpanElement>(null);
@@ -246,20 +248,28 @@ export default function ContactForm() {
         <input id={`${uid}-company-site`} name="company_site" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
 
-      {state.status === "error" && (
-        <div>
+      {(state.status === "error" || turnstileFailed) &&
+        (state.status === "error" && state.reason === "challenge" ? (
           <p role="alert" className="flex items-start gap-2 text-sm text-[color:var(--cs-text-primary)]">
             <CircleAlert size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
-            <span>Couldn&apos;t send. Your message is still here. Try again, or email me directly.</span>
+            <span>Couldn&apos;t confirm you&apos;re human. Try again.</span>
           </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-            <span ref={failedAddressRef} className="break-all font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-primary)]">
-              {EMAIL_ADDRESS}
-            </span>
-            <CopyEmailButton email={EMAIL_ADDRESS} addressRef={failedAddressRef} />
+        ) : (
+          <div>
+            <p role="alert" className="flex items-start gap-2 text-sm text-[color:var(--cs-text-primary)]">
+              <CircleAlert size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span>Couldn&apos;t send. Your message is still here. Try again, or email me directly.</span>
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span ref={failedAddressRef} className="break-all font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-primary)]">
+                {EMAIL_ADDRESS}
+              </span>
+              <CopyEmailButton email={EMAIL_ADDRESS} addressRef={failedAddressRef} />
+            </div>
           </div>
-        </div>
-      )}
+        ))}
+
+      <TurnstileWidget resetKey={state} onLoadError={() => setTurnstileFailed(true)} />
 
       <button
         type="submit"

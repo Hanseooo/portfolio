@@ -20,3 +20,7 @@ export function getResendEnv() {
     from: readRequiredEnv("CONTACT_FROM_EMAIL"),
   };
 }
+
+export function getTurnstileSecret() {
+  return readRequiredEnv("TURNSTILE_SECRET_KEY");
+}
