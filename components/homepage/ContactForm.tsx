@@ -10,6 +10,7 @@ import {
   type ContactFieldErrors,
 } from "@/lib/contact/validate";
 import { EMAIL_ADDRESS } from "@/components/utils/externalLinks";
+import TurnstileWidget from "@/components/homepage/TurnstileWidget";
 
 const EMPTY_VALUES: ContactValues = { reason: "", name: "", email: "", message: "" };
 const FIELD_ORDER = ["name", "email", "message"] as const;
@@ -40,6 +41,7 @@ export default function ContactForm() {
 
   const [values, setValues] = useState<ContactValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ContactFieldErrors>({});
+  const [turnstileFailed, setTurnstileFailed] = useState(false);
   const startedAt = useRef(0);
   const sentRef = useRef<HTMLParagraphElement>(null);
 
@@ -192,15 +194,21 @@ export default function ContactForm() {
         <input id={`${uid}-company-site`} name="company_site" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
 
-      {state.status === "error" && (
+      {(state.status === "error" || turnstileFailed) && (
         <p role="alert" className="flex items-start gap-2 text-sm text-[color:var(--cs-text-primary)]">
           <CircleAlert size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+          {state.status === "error" && state.reason === "challenge" ? (
+            <span>Couldn&apos;t confirm you&apos;re human. Try again.</span>
+          ) : (
           <span>
             Couldn&apos;t send. Your message is still here. Try again, or{" "}
             <a href={`mailto:${EMAIL_ADDRESS}`} className="underline">email me directly</a>.
           </span>
+          )}
         </p>
       )}
+
+      <TurnstileWidget resetKey={state} onLoadError={() => setTurnstileFailed(true)} />
 
       <button
         type="submit"
