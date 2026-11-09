@@ -80,7 +80,6 @@
   --cs-raised-neutral: #EDE9E3;
   --cs-focus-ring: #E10600;
   --cs-error: #DC2626;
-  --cs-field-error: #DC2626;
   --cs-status-online: #15803D;
   --cs-status-idle: #B45309;
   --cs-status-dnd: #DC2626;
@@ -123,7 +122,6 @@
   --cs-raised-neutral: #18181B;
   --cs-focus-ring: #00E5FF;
   --cs-error: #EF4444;
-  --cs-field-error: #EF4444;
   --cs-status-online: #22C55E;
   --cs-status-idle: #FBBF24;
   --cs-status-dnd: #EF4444;

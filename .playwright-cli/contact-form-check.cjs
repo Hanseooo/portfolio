@@ -118,6 +118,53 @@ async page => {
     assert(await page.evaluate(() => document.activeElement?.value) === "Hiring", "ArrowLeft must move back to Hiring");
   });
 
+  await run("4 submit before token, then retry", async () => {
+    // Hold the Turnstile script back so Send is pressed before any token exists.
+    const TURNSTILE_SCRIPT = "**/turnstile/v0/api.js*";
+    await page.route(TURNSTILE_SCRIPT, async route => {
+      await page.waitForTimeout(5000);
+      await route.continue();
+    });
+    try {
+      const form = await openScene("reduce");
+      await form.getByRole("textbox", { name: "Name", exact: true }).fill("Contact Check");
+      await form.getByRole("textbox", { name: "Email", exact: true }).fill(VISITOR);
+      await form.getByRole("textbox", { name: "Message", exact: true }).fill("Playwright contact form check. Safe to ignore.");
+      await page.waitForTimeout(3200);
+      const tokenEmpty = await page.evaluate(() => !document.querySelector('form[aria-label="Contact form"] input[name="cf-turnstile-response"]')?.value);
+      assert(tokenEmpty, "Precondition: no token yet when Send is pressed");
+      await form.getByRole("button", { name: "Send", exact: true }).click();
+      const verifyingShown = await form.getByRole("button", { name: "Verifying", exact: true }).isVisible();
+      const verifyingAnnounced = await form.getByRole("status").filter({ hasText: "Verifying you're human" }).count() === 1;
+
+      const settle = async () => {
+        const status = form.locator('p[tabindex="-1"]').filter({ hasText: "Sent ·" });
+        const alert = form.getByRole("alert");
+        await Promise.race([status.waitFor({ timeout: 20000 }), alert.waitFor({ timeout: 20000 })]);
+        if (await alert.isVisible()) {
+          const text = await alert.innerText();
+          assert(!text.includes("Couldn't confirm you're human"), `Posted without a token: ${text}`);
+          return text;
+        }
+        return "sent";
+      };
+      const first = await settle();
+      assert(verifyingShown, "Send must show Verifying while it waits for the token");
+      assert(verifyingAnnounced, "Waiting must be announced in a status region");
+      if (first === "sent") return "PASS (sent, retry not exercised)";
+      // Retry at once: the widget has just reset, so there is no token yet.
+      const send = form.getByRole("button", { name: "Send", exact: true });
+      await send.click();
+      // The old alert stays up while the retry runs: wait for Send to come back before reading it.
+      await send.waitFor({ state: "detached", timeout: 2000 }).catch(() => {});
+      await send.waitFor({ timeout: 20000 });
+      await page.waitForTimeout(1000);
+      await settle();
+    } finally {
+      await page.unroute(TURNSTILE_SCRIPT);
+    }
+  });
+
   if (results.some(line => line.includes(": FAIL"))) throw new Error(results.join("\n"));
   return results.join("\n");
 }

@@ -12,6 +12,7 @@ type TurnstileApi = {
       appearance: "interaction-only";
       theme: "light" | "dark" | "auto";
       "refresh-expired": "auto";
+      callback: () => void;
     },
   ) => string;
   reset: (widgetId: string) => void;
@@ -29,15 +30,29 @@ const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render
 /**
  * Turnstile widget for the enclosing form. The script loads only once that form comes within
  * 200px of the viewport. The widget adds a `cf-turnstile-response` field to the form.
- * `resetKey` changing resets the widget, since each token is single-use.
+ * `resetKey` changing resets the widget, since each token is single-use. `onToken` runs each time
+ * a token lands in that field.
  */
-export default function TurnstileWidget({ resetKey, onLoadError }: { resetKey: unknown; onLoadError: () => void }) {
+export default function TurnstileWidget({
+  resetKey,
+  onLoadError,
+  onToken,
+}: {
+  resetKey: unknown;
+  onLoadError: () => void;
+  onToken: () => void;
+}) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const [near, setNear] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  // The widget keeps the callback it was rendered with: read the latest through a ref.
+  const onTokenRef = useRef(onToken);
+  useEffect(() => {
+    onTokenRef.current = onToken;
+  }, [onToken]);
 
   useEffect(() => {
     if (!siteKey) onLoadError();
@@ -69,6 +84,7 @@ export default function TurnstileWidget({ resetKey, onLoadError }: { resetKey: u
       appearance: "interaction-only",
       theme: resolvedTheme === "dark" ? "dark" : resolvedTheme === "light" ? "light" : "auto",
       "refresh-expired": "auto",
+      callback: () => onTokenRef.current(),
     });
     widgetId.current = id;
     return () => {

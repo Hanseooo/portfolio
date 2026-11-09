@@ -2,11 +2,14 @@
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { ArrowUpRight, CircleAlert } from "lucide-react";
-import { sendContactMessage, type ContactState, type ContactValues } from "@/app/actions/contact";
+import { sendContactMessage, type ContactState } from "@/app/actions/contact";
 import {
   CONTACT_REASONS,
+  EMAIL_MAX,
   MESSAGE_MAX,
+  NAME_MAX,
   findFieldErrors,
+  type ContactData,
   type ContactFieldErrors,
 } from "@/lib/contact/validate";
 import { EMAIL_ADDRESS } from "@/components/utils/externalLinks";
@@ -14,7 +17,7 @@ import TurnstileWidget from "@/components/homepage/TurnstileWidget";
 import { RegistrationMark } from "@/components/geometry";
 import { CopyEmailButton } from "./ContactEmailRow";
 
-const EMPTY_VALUES: ContactValues = { reason: "", name: "", email: "", message: "" };
+const EMPTY_VALUES: ContactData = { reason: "", name: "", email: "", message: "" };
 const FIELD_ORDER = ["name", "email", "message"] as const;
 /** From this many characters the message count turns signal. */
 const MESSAGE_WARN = 1800;
@@ -22,16 +25,16 @@ const MESSAGE_WARN = 1800;
 const labelClass =
   "block font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]";
 const fieldLabelClass = `${labelClass} transition-colors group-focus-within:text-[color:var(--cs-signal-text)]`;
-// Fields are drawn lines: no box, a 1px underline that turns field-error when invalid.
+// Fields are drawn lines: no box, a 1px underline that turns error red when invalid.
 const inputClass =
-  "peer mt-2 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-transparent px-0 py-2 font-sans text-base text-[color:var(--cs-text-primary)] aria-invalid:border-[color:var(--cs-field-error)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
+  "peer mt-2 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-transparent px-0 py-2 font-sans text-base text-[color:var(--cs-text-primary)] aria-invalid:border-[color:var(--cs-error)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
 
 /** Focus draws the line: a 2px signal underline scales in from the left. */
 function DrawnUnderline() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-[color:var(--cs-signal)] transition-transform duration-[180ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] peer-focus:scale-x-100 peer-aria-invalid:bg-[color:var(--cs-field-error)] motion-reduce:transition-none"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-[color:var(--cs-signal)] transition-transform duration-[180ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] peer-focus:scale-x-100 peer-aria-invalid:bg-[color:var(--cs-error)] motion-reduce:transition-none"
     />
   );
 }
@@ -39,7 +42,7 @@ function DrawnUnderline() {
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
-    <p id={id} className="mt-2 flex items-center gap-2 text-sm text-[color:var(--cs-field-error)]">
+    <p id={id} className="mt-2 flex items-center gap-2 text-sm text-[color:var(--cs-error)]">
       <CircleAlert size={14} aria-hidden="true" className="shrink-0" />
       {message}
     </p>
@@ -65,9 +68,12 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
   const countId = `${uid}-message-count`;
   const errorId = (field: keyof typeof ids) => `${ids[field]}-error`;
 
-  const [values, setValues] = useState<ContactValues>(EMPTY_VALUES);
+  const [values, setValues] = useState<ContactData>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ContactFieldErrors>({});
   const [turnstileFailed, setTurnstileFailed] = useState(false);
+  // A valid submit pressed before Turnstile has a token waits here and sends once it arrives.
+  const [awaitingToken, setAwaitingToken] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const startedAt = useRef(0);
   const sentRef = useRef<HTMLParagraphElement>(null);
   const failedAddressRef = useRef<HTMLSpanElement>(null);
@@ -104,7 +110,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
     if (state.status === "sent") sentRef.current?.focus();
   }, [state.status]);
 
-  const update = (field: keyof ContactValues, value: string) => {
+  const update = (field: keyof ContactData, value: string) => {
     const next = { ...values, [field]: value };
     setValues(next);
     if (errors[field]) setErrors({ ...errors, [field]: findFieldErrors(next)[field] });
@@ -117,18 +123,29 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
     const fieldErrors = findFieldErrors(values);
     setErrors(fieldErrors);
     if (Object.keys(fieldErrors).length > 0) {
+      setAwaitingToken(false);
       focusFirstInvalid(fieldErrors);
       return;
     }
     const formData = new FormData(event.currentTarget);
+    // Each token is single-use and the widget resets after every send, so a quick retry can
+    // land before the next token. Without Turnstile at all, send anyway and let the server answer.
+    if (!formData.get("cf-turnstile-response") && !turnstileFailed) {
+      setAwaitingToken(true);
+      return;
+    }
+    setAwaitingToken(false);
     startTransition(() => formAction(formData));
   };
+
+  const waiting = awaitingToken && !turnstileFailed;
 
   const sent = state.status === "sent";
   const describedBy = (field: keyof typeof ids) => (errors[field] ? errorId(field) : undefined);
 
   return (
     <form
+      ref={formRef}
       method="post"
       onSubmit={handleSubmit}
       noValidate
@@ -174,7 +191,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
                   type="text"
                   autoComplete="name"
                   required
-                  maxLength={100}
+                  maxLength={NAME_MAX}
                   value={values.name}
                   onChange={(e) => update("name", e.target.value)}
                   aria-invalid={errors.name ? true : undefined}
@@ -195,7 +212,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
                   type="email"
                   autoComplete="email"
                   required
-                  maxLength={254}
+                  maxLength={EMAIL_MAX}
                   value={values.email}
                   onChange={(e) => update("email", e.target.value)}
                   aria-invalid={errors.email ? true : undefined}
@@ -307,20 +324,29 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
           </div>
         ))}
 
-      <TurnstileWidget resetKey={state} onLoadError={() => setTurnstileFailed(true)} />
+      <TurnstileWidget
+        resetKey={state}
+        onLoadError={() => setTurnstileFailed(true)}
+        onToken={() => {
+          if (awaitingToken) formRef.current?.requestSubmit();
+        }}
+      />
 
       <div className="flex items-center">
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || waiting}
           inert={sent}
           className="group inline-flex h-12 shrink-0 items-center gap-2 self-start border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform enabled:hover:-translate-x-px enabled:hover:-translate-y-px disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
         >
-          {pending ? "Sending" : "Send"}
+          {pending ? "Sending" : waiting ? "Verifying" : "Send"}
           <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-px group-enabled:group-hover:-translate-y-px" />
         </button>
         {/* Routing line: from Send's right edge across the sheet's right edge (sheet padding + 2rem).
             Mounted only once sent, so DrawController draws it as a new mark. */}
+        <span role="status" className="sr-only">
+          {waiting ? "Verifying you're human. Your message sends when that's done." : ""}
+        </span>
         {sent && (
           <span
             aria-hidden="true"

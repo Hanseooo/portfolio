@@ -1,20 +1,19 @@
 "use server";
 
-import { getResendEnv, getTurnstileSecret } from "../../lib/contact/env";
+import { getResendEnv, getTurnstileSecret } from "@/lib/contact/env";
 import {
+  trimContactData,
   validateContactSubmission,
   type ContactData,
   type ContactFieldErrors,
   type ContactFields,
-} from "../../lib/contact/validate";
-
-export type ContactValues = ContactData;
+} from "@/lib/contact/validate";
 
 export type ContactState =
   | { status: "idle" }
   | { status: "sent" }
-  | { status: "invalid"; fieldErrors: ContactFieldErrors; values: ContactValues }
-  | { status: "error"; reason: "send" | "challenge"; values: ContactValues };
+  | { status: "invalid"; fieldErrors: ContactFieldErrors; values: ContactData }
+  | { status: "error"; reason: "send" | "challenge"; values: ContactData };
 
 const RESEND_URL = "https://api.resend.com/emails";
 const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -64,12 +63,7 @@ function buildEmail(data: ContactData, from: string, to: string) {
 
 export async function sendContactMessage(_prev: ContactState, formData: FormData): Promise<ContactState> {
   const fields = readFields(formData);
-  const values: ContactValues = {
-    reason: fields.reason,
-    name: fields.name,
-    email: fields.email,
-    message: fields.message,
-  };
+  const values = trimContactData(fields);
 
   const result = validateContactSubmission(fields, Date.now());
   if (result.kind === "bot") return { status: "sent" };

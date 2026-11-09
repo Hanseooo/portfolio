@@ -12,7 +12,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
 import { RESUME_LABEL } from "@/components/utils/externalLinks";
-import ContactForm from "./ContactForm";
+import ContactForm from "@/components/homepage/ContactForm";
 
 interface SceneContactProps {
   data: HomepageContactProjection;

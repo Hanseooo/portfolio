@@ -94,7 +94,7 @@ Use the `--cs-*` variables. Never write hex values in components.
 | `--cs-signal` / `--cs-signal-text` | `#E10600` red | `#00E5FF` ice | Accent: fields (light), type, rules, index numerals |
 | `--cs-signal-inverse` | `#FFFFFF` | `#080909` | Text on a solid signal fill |
 | `--cs-focus-ring` | `#E10600` | `#00E5FF` | Focus outlines |
-| `--cs-field-error` | `#DC2626` | `#EF4444` | Invalid form field: its underline and error line. Always paired with an icon and text, since it sits close to the light signal red |
+| `--cs-error` | `#DC2626` | `#EF4444` | Errors: an invalid form field's underline and error line, the error-page rule. Always paired with an icon and text, since it sits close to the light signal red |
 | `--cs-status-online` etc. | green, amber, red, gray | brighter equivalents | Real live states only |
 
 ### Field recipes (what the code does today)
@@ -274,7 +274,7 @@ Budgets are in `lib/motion-budget.ts` and recipes in `lib/motion.ts`.
 
 - **Easing:** `decisiveEditorial` `[0.16, 1, 0.3, 1]` for entrances, `fastGraphic` for hover and focus. No bounce, no elastic.
 - **Timing:** interactions take 120 to 240ms. Editorial entrances take 350 to 700ms.
-- **Recipes:** `fadeUpReveal(reducedMotion, delay)` for rows, `clipReveal` and `peelReveal` for plates, `SplitText` for the contact title, `StructuredReveal` for scene blocks. Stagger by 0.08s, with at most 8 staggered items.
+- **Recipes:** `fadeUpReveal(reducedMotion, delay)` for rows, `clipReveal` and `peelReveal` for plates, `SplitText` for the contact and Capabilities titles (each word stays on one line), `StructuredReveal` for scene blocks. Stagger by 0.08s, with at most 8 staggered items.
 - **Parallax:** only through `data-parallax-speed` inside the hero (`HeroDepthEffect`). Never put a mask on the moving element.
 - Animate only `transform` and `opacity`. Never animate layout properties. One exception: the drawn-mark sweep (§7) animates a conic `mask-image` angle once per mark, 700ms, and drops the mask when done. Stroke-dash drawing is not used because dashes ignore `pathLength` under `non-scaling-stroke`.
 - **Reduced motion is a full design state.** Every element ends visible at opacity 1, marquees stand still, and parallax is off. Pass `usePrefersReducedMotion()` into every recipe. No part of the hierarchy should depend on an animation finishing.

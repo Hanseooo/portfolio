@@ -94,6 +94,7 @@ The server re-runs every rule. Client checks are for speed only.
 |---|---|
 | Idle | Sheet with fields. Send is enabled |
 | Field error | On submit, each invalid field gets `aria-invalid`, an error line under it (linked by `aria-describedby`, with an icon so the error doesn't rely on color), and focus moves to the first invalid field. Errors clear as the field becomes valid |
+| Verifying | A valid submit made before Turnstile has a token (first load, or a retry right after the widget resets) waits for it. Send is disabled with the label "Verifying", a status region announces "Verifying you're human. Your message sends when that's done.", and the message sends once the token arrives |
 | Sending | Send is disabled with the label "Sending", `aria-busy` is set on the form, and fields stay editable but submit is locked |
 | Sent | See the success moment below |
 | Failed | The sheet stays with everything still typed. An alert line above Send reads "Couldn't send. Your message is still here. Try again, or email me directly." with a Copy email button inline. Send is re-enabled |
@@ -182,10 +183,10 @@ work (crop marks around the sheet), and the existing bleed of the orbit geometry
   `--cs-signal-text`. Transform only (§10). Keyboard focus also gets the standard
   `focus-visible` outline in `--cs-focus-ring` (§12). The drawn line is a flourish, not the
   only focus signal.
-- **Error** turns the underline and the error line `--cs-field-error`, paired with an icon and
-  text (§12: color is never the only signal). No error token exists today. Add
-  `--cs-field-error` to `app/globals.css` with the `--cs-status-dnd` values (`#DC2626` light,
-  `#EF4444` dark), and document it in DESIGN.md §4. Don't reuse `--cs-status-dnd` directly:
+- **Error** turns the underline and the error line `--cs-error`, paired with an icon and
+  text (§12: color is never the only signal). Use the existing `--cs-error` in
+  `app/globals.css` (`#DC2626` light, `#EF4444` dark), and document it in DESIGN.md §4. Don't
+  reuse `--cs-status-dnd` directly:
   §4 reserves status tokens for real live states. In light theme the error red sits close to
   the signal red of a focused field, which is why the icon and text are required, not optional.
 - **Reduced motion:** the signal underline appears at full width with no transition.
@@ -282,7 +283,7 @@ to it to confirm `Reply-To`.
   "Unit tests: none configured". (`AGENTS.md` was last reviewed 2026-08-05, more than 90 days
   ago.)
 - `DESIGN.md` §2 Contact row and §9 Status line: add the sheet and the direct email row. §4: add
-  `--cs-field-error`.
+  `--cs-error`.
 
 ## Delivery
 

@@ -37,6 +37,16 @@ export type ContactValidation =
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** The four message fields, trimmed. Takes a full submission too and drops the bot fields. */
+export function trimContactData(values: ContactData): ContactData {
+  return {
+    reason: values.reason.trim(),
+    name: values.name.trim(),
+    email: values.email.trim(),
+    message: values.message.trim(),
+  };
+}
+
 function lengthBetween(value: string, max: number) {
   return value.length >= 1 && value.length <= max;
 }
@@ -47,12 +57,7 @@ export function validateContactSubmission(fields: ContactFields, now: number): C
   const filledFastEnough = fields.started_at !== "" && now - startedAt >= MIN_FILL_MS;
   if (fields.company_site !== "" || !filledFastEnough) return { kind: "bot" };
 
-  const data: ContactData = {
-    reason: fields.reason.trim(),
-    name: fields.name.trim(),
-    email: fields.email.trim(),
-    message: fields.message.trim(),
-  };
+  const data = trimContactData(fields);
 
   const fieldErrors = findFieldErrors(data);
   if (Object.keys(fieldErrors).length > 0) return { kind: "invalid", fieldErrors };
@@ -61,12 +66,7 @@ export function validateContactSubmission(fields: ContactFields, now: number): C
 
 /** Field rules only, no bot checks. The form reuses this for instant client feedback. */
 export function findFieldErrors(values: ContactData): ContactFieldErrors {
-  const data: ContactData = {
-    reason: values.reason.trim(),
-    name: values.name.trim(),
-    email: values.email.trim(),
-    message: values.message.trim(),
-  };
+  const data = trimContactData(values);
   const fieldErrors: ContactFieldErrors = {};
   if (data.reason && !(CONTACT_REASONS as readonly string[]).includes(data.reason)) {
     fieldErrors.reason = CONTACT_ERRORS.reason;
