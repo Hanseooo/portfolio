@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { fontVariableClasses } from "./fonts";
 import PortfolioProviders from "@/components/providers/PortfolioProviders";
 import { PortfolioFrame } from "@/components/shell";
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {children}
           </PortfolioFrame>
         </PortfolioProviders>
+        <Analytics />
       </body>
     </html>
   );
