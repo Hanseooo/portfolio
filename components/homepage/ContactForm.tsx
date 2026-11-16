@@ -294,7 +294,11 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
           <div>
             <p role="alert" className="flex items-start gap-2 text-sm text-[color:var(--cs-text-primary)]">
               <CircleAlert size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
-              <span>Couldn&apos;t send. Your message is still here. Try again, or email me directly.</span>
+              <span>
+                {state.status === "error"
+                  ? "Couldn't send. Your message is still here. Try again, or email me directly."
+                  : "The form isn't available right now. Email me directly."}
+              </span>
             </p>
             <a
               href={`mailto:${EMAIL_ADDRESS}`}
@@ -317,28 +321,18 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
           }}
         />
 
-        <div className={`flex items-center ${challengeShown ? "mt-8" : ""}`}>
+        <div className={sent ? "hidden" : `flex items-center ${challengeShown ? "mt-8" : ""}`}>
           <button
             type="submit"
             disabled={pending || waiting}
-            inert={sent}
             className="group inline-flex h-12 shrink-0 items-center gap-2 self-start border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform enabled:hover:-translate-x-px enabled:hover:-translate-y-px disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
             {pending ? "Sending" : waiting ? "Verifying" : "Send"}
             <ArrowRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-0.5" />
           </button>
-          {/* Routing line: from Send's right edge to the sheet's right edge (the dialog body's padding).
-              Mounted only once sent, so DrawController draws it as a new mark. */}
           <span role="status" className="sr-only">
             {waiting ? "Verifying you're human. Your message sends when that's done." : ""}
           </span>
-          {sent && (
-            <span
-              aria-hidden="true"
-              data-draw="extend-x"
-              className="-mr-6 h-px flex-1 origin-left bg-[color:var(--cs-signal)] md:-mr-8 lg:-mr-10"
-            />
-          )}
         </div>
       </div>
 
