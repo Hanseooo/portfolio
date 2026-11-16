@@ -12,7 +12,7 @@ import hansPortraitDark from "@/app/assets/myImages/hans2.webp";
 import { projects } from "@/lib/projects";
 import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
-import { EMAIL_ADDRESS, LINKEDIN_URL, GITHUB_URL, RESUME_URL } from "@/components/utils/externalLinks";
+import { EMAIL_ADDRESS, LINKEDIN_URL, GITHUB_URL } from "@/components/utils/externalLinks";
 import type {
   ProofFigure,
   ProjectCardProjection,
@@ -281,7 +281,6 @@ export function getHomepageContact(): HomepageContactProjection {
       { type: "email", label: "Email", href: `mailto:${EMAIL_ADDRESS}` },
       { type: "linkedin", label: "LinkedIn", href: LINKEDIN_URL },
       { type: "github", label: "GitHub", href: GITHUB_URL },
-      { type: "resume", label: "Resume", href: RESUME_URL },
     ],
   };
 }

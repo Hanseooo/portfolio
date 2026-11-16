@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { CropMarks } from "@/components/geometry";
 import ContactForm from "@/components/homepage/ContactForm";
 import { useScrollEnhancement } from "@/components/motion/ScrollEnhancementController";
@@ -32,10 +32,10 @@ export default function ContactDialog() {
         type="button"
         aria-haspopup="dialog"
         onClick={open}
-        className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+        className="group inline-flex h-12 w-full items-center justify-between gap-6 border border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 sm:w-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
       >
         <span>Write a message</span>
-        <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-px group-hover:-translate-y-px" />
+        <ArrowRight size={14} aria-hidden="true" className="transition-transform group-hover:translate-x-0.5" />
       </button>
 
       <dialog
@@ -50,18 +50,20 @@ export default function ContactDialog() {
         onClick={(e) => {
           if (pressedBackdrop.current && e.target === e.currentTarget) close();
         }}
-        className="m-auto max-h-none w-[min(42rem,calc(100vw-2*var(--cs-gutter-portfolio)))] max-w-none overflow-visible border-0 bg-transparent p-0 text-[color:var(--cs-text-primary)] backdrop:bg-[color-mix(in_srgb,var(--cs-text-primary)_55%,transparent)] dark:backdrop:bg-[color-mix(in_srgb,var(--cs-foundation)_85%,transparent)]"
+        className="m-0 h-dvh max-h-none w-screen max-w-none overflow-visible border-0 bg-transparent p-0 text-[color:var(--cs-text-primary)] backdrop:bg-[color-mix(in_srgb,var(--cs-text-primary)_70%,transparent)] md:m-auto md:h-fit md:w-[min(40rem,calc(100vw-2*var(--cs-gutter-portfolio)))] dark:backdrop:bg-[color-mix(in_srgb,var(--cs-foundation)_85%,transparent)]"
       >
         {/* The transmittal sheet. Not a scroll container itself, so the crop marks and the sent
             registration mark can sit outside its edge while the body scrolls. */}
-        <div className="relative flex max-h-[calc(100dvh-2*var(--cs-gutter-portfolio))] flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] transition-[opacity,translate] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] starting:translate-y-3 starting:opacity-0 motion-reduce:transition-none">
+        <div className="relative flex h-full flex-col bg-[color:var(--cs-foundation)] md:h-auto md:max-h-[calc(100dvh-2*var(--cs-gutter-portfolio))] md:border md:border-[color:var(--cs-structural-line-strong)] transition-[opacity,translate] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] starting:translate-y-3 starting:opacity-0 motion-reduce:transition-none">
           <CropMarks className="hidden text-[color:var(--cs-structural-line-strong)] md:block" />
-          <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[color:var(--cs-structural-line)] py-4 pr-3 pl-6 md:py-5 md:pl-8 lg:pl-10">
+          <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[color:var(--cs-structural-line)] py-2 pr-3 pl-6 md:pl-8 lg:pl-10">
+            {/* Status-line grammar: signal leader, then the title in mono caps */}
             <h2
               id={titleId}
-              className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,2.5vw,2.25rem)] font-black uppercase leading-[0.95] tracking-tight"
+              className="flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-primary)]"
             >
-              Write a message
+              <span aria-hidden="true" className="h-px w-8 bg-[color:var(--cs-signal)]" />
+              New message
             </h2>
             <button
               type="button"

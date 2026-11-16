@@ -23,7 +23,7 @@ async page => {
     await page.goto(`${BASE}/#contact`);
     const opener = page.getByRole("button", { name: "Write a message", exact: true });
     await opener.click();
-    const form = page.getByRole("dialog", { name: "Write a message" }).getByRole("form", { name: "Contact form", exact: true });
+    const form = page.getByRole("dialog", { name: "New message" }).getByRole("form", { name: "Contact form", exact: true });
     await form.waitFor();
     return form;
   };
@@ -114,10 +114,11 @@ async page => {
       return visited;
     };
     const sceneStops = await tabThrough("#contact");
-    for (const expected of ["Write a message", "mailto", "LinkedIn", "GitHub", "Resume"]) {
+    for (const expected of ["Write a message", "mailto", "LinkedIn", "GitHub"]) {
       assert(sceneStops.some(label => label.includes(expected)), `Tab never reached ${expected}. Visited: ${sceneStops.join(", ")}`);
     }
     assert(!sceneStops.some(label => label.includes("Copy")), "No copy-email control in the scene");
+    assert(!sceneStops.some(label => /resume/i.test(label)), "Resume lives in the nav and hero, not in Contact");
     const opener = page.getByRole("button", { name: "Write a message", exact: true });
     await opener.focus();
     await page.keyboard.press("Enter");
@@ -186,7 +187,7 @@ async page => {
 
   await run("5 Escape closes, focus returns, draft survives", async () => {
     const form = await openScene("reduce");
-    const dialog = page.getByRole("dialog", { name: "Write a message" });
+    const dialog = page.getByRole("dialog", { name: "New message" });
     await form.getByRole("textbox", { name: "Name", exact: true }).fill("Draft Check");
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden", timeout: 2000 }).catch(() => {});

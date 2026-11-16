@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, CircleAlert } from "lucide-react";
+import { ArrowRight, CircleAlert } from "lucide-react";
 import { sendContactMessage, type ContactState } from "@/app/actions/contact";
 import {
   CONTACT_REASONS,
@@ -18,15 +18,15 @@ import { RegistrationMark } from "@/components/geometry";
 
 const EMPTY_VALUES: ContactData = { reason: "", name: "", email: "", message: "" };
 const FIELD_ORDER = ["name", "email", "message"] as const;
-/** From this many characters the message count turns signal. */
+/** From this many characters the message count shows. */
 const MESSAGE_WARN = 1800;
 
 const labelClass =
   "block font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]";
 const fieldLabelClass = `${labelClass} transition-colors group-focus-within:text-[color:var(--cs-signal-text)]`;
-// Fields are drawn lines: no box, a 1px underline that turns error red when invalid.
+// Fields are a light well closed by a drawn 1px line that turns error red when invalid.
 const inputClass =
-  "peer mt-2 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-transparent px-0 py-2 font-sans text-base text-[color:var(--cs-text-primary)] aria-invalid:border-[color:var(--cs-error)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
+  "peer mt-1.5 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] px-3 py-2.5 font-sans text-base text-[color:var(--cs-text-primary)] aria-invalid:border-[color:var(--cs-error)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
 
 /** Focus draws the line: a 2px signal underline scales in from the left. */
 function DrawnUnderline() {
@@ -154,29 +154,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
     >
       {/* Once sent, the success line replaces the fields, so the dialog shrinks to fit it */}
       <div className="relative">
-        <div className={sent ? "hidden" : "flex flex-col gap-8"}>
-          <fieldset>
-            <legend className={labelClass}>Reason (optional)</legend>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {CONTACT_REASONS.map((reason) => (
-                <label
-                  key={reason}
-                  className="inline-flex min-h-11 cursor-pointer items-center border border-[color:var(--cs-structural-line-strong)] px-4 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-colors hover:border-[color:var(--cs-text-primary)] has-checked:border-[color:var(--cs-text-primary)] has-checked:bg-[color:var(--cs-text-primary)] has-checked:text-[color:var(--cs-foundation)] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-[color:var(--cs-focus-ring)]"
-                >
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    name="reason"
-                    value={reason}
-                    checked={values.reason === reason}
-                    onChange={() => update("reason", reason)}
-                  />
-                  {reason}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
+        <div className={sent ? "hidden" : "flex flex-col gap-7"}>
           <div className="grid gap-8 md:grid-cols-2 md:gap-6">
             <div className="group">
               <label htmlFor={ids.name} className={fieldLabelClass}>Name</label>
@@ -227,7 +205,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
               <textarea
                 id={ids.message}
                 name="message"
-                rows={5}
+                rows={6}
                 required
                 maxLength={MESSAGE_MAX}
                 value={values.message}
@@ -239,29 +217,36 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
               <DrawnUnderline />
             </div>
             <FieldError id={errorId("message")} message={errors.message} />
-            {/* Dimension line with the live count: read on focus via aria-describedby, not announced */}
-            <div className="relative mt-3 flex h-4 items-center justify-center text-[color:var(--cs-structural-line-strong)]">
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 100 12"
-                preserveAspectRatio="none"
-                className="absolute inset-x-0 top-1/2 h-3 w-full -translate-y-1/2"
-              >
-                <path d="M0 0 V12 M100 0 V12 M0 6 H100" fill="none" stroke="currentColor" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-              </svg>
-              <span
-                id={countId}
-                className={`relative bg-[color:var(--cs-foundation)] px-2 font-[family-name:var(--font-mono)] text-xs tabular-nums ${
-                  values.message.length >= MESSAGE_WARN
-                    ? "text-[color:var(--cs-signal-text)]"
-                    : "text-[color:var(--cs-text-secondary)]"
-                }`}
-              >
-                <span aria-hidden="true">{values.message.length} / {MESSAGE_MAX}</span>
-                <span className="sr-only">{values.message.length} of {MESSAGE_MAX} characters</span>
-              </span>
-            </div>
+            {/* The count appears near the limit; screen readers get it on focus via aria-describedby */}
+            <p id={countId} className="mt-2 text-right font-[family-name:var(--font-mono)] text-xs tabular-nums text-[color:var(--cs-signal-text)]">
+              {values.message.length >= MESSAGE_WARN && <span aria-hidden="true">{values.message.length} / {MESSAGE_MAX}</span>}
+              <span className="sr-only">{values.message.length} of {MESSAGE_MAX} characters</span>
+            </p>
           </div>
+
+          {/* Optional, so it sits after the message and stays quiet: text options, the chosen one marked */}
+          <fieldset>
+            <legend className={labelClass}>Reason (optional)</legend>
+            <div className="mt-1 flex flex-wrap gap-x-6">
+              {CONTACT_REASONS.map((reason) => (
+                <label
+                  key={reason}
+                  className="group/reason inline-flex min-h-11 cursor-pointer items-center gap-2 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-text-primary)] has-checked:text-[color:var(--cs-text-primary)] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-[color:var(--cs-focus-ring)]"
+                >
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="reason"
+                    value={reason}
+                    checked={values.reason === reason}
+                    onChange={() => update("reason", reason)}
+                  />
+                  <span aria-hidden="true" className="size-2 shrink-0 border border-current group-has-checked/reason:bg-current" />
+                  {reason}
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           {/* Honeypot: hidden from people and assistive tech, bots fill it */}
           <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
@@ -340,7 +325,7 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
             className="group inline-flex h-12 shrink-0 items-center gap-2 self-start border-2 border-[color:var(--cs-text-primary)] bg-[color:var(--cs-text-primary)] px-5 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-foundation)] transition-transform enabled:hover:-translate-x-px enabled:hover:-translate-y-px disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           >
             {pending ? "Sending" : waiting ? "Verifying" : "Send"}
-            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-px group-enabled:group-hover:-translate-y-px" />
+            <ArrowRight size={14} aria-hidden="true" className="transition-transform group-enabled:group-hover:translate-x-0.5" />
           </button>
           {/* Routing line: from Send's right edge to the sheet's right edge (the dialog body's padding).
               Mounted only once sent, so DrawController draws it as a new mark. */}
