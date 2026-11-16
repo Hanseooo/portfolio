@@ -88,7 +88,12 @@ export async function sendContactMessage(_prev: ContactState, formData: FormData
       cache: "no-store",
     });
     if (!response.ok) {
-      console.error(`[contact] Resend responded ${response.status}`);
+      // Resend's error body names the bad field ("Invalid `from` field"). It never echoes the key or the message.
+      const detail = await response.json().then(
+        (body: { message?: unknown }) => (typeof body.message === "string" ? body.message : ""),
+        () => "",
+      );
+      console.error(`[contact] Resend responded ${response.status} ${detail}`.trim());
       return { status: "error", reason: "send", values };
     }
   } catch (error) {
