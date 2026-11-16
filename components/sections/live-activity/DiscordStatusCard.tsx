@@ -102,6 +102,34 @@ function DiscordStatusCard({
         </div>
 
         <div className="grid grid-cols-1 gap-6">
+          {/* Gaming activity */}
+          {data.live.gaming && (
+            <div className="flex items-center gap-4">
+              {data.live.gaming.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={data.live.gaming.imageUrl}
+                  alt={`${data.live.gaming.name} cover`}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-14 w-14 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
+                />
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
+                  <ActivityIcon kind="activity" type={0} />
+                </div>
+              )}
+              <div className="min-w-0 flex flex-col">
+                <p className={`mb-1 ${LIVE_LABEL}`}>
+                  Playing
+                </p>
+                <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
+                  {data.live.gaming.name}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Spotify on Discord */}
           {data.live.spotify && (
             <div className="flex items-center gap-4">
@@ -139,34 +167,6 @@ function DiscordStatusCard({
                 )}
                 <p className="line-clamp-1 text-xs text-[color:var(--cs-text-secondary)] font-medium">
                   {data.live.spotify.artist}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Gaming activity */}
-          {data.live.gaming && (
-            <div className="flex items-center gap-4">
-              {data.live.gaming.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={data.live.gaming.imageUrl}
-                  alt={`${data.live.gaming.name} cover`}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-14 w-14 shrink-0 object-cover border border-[color:var(--cs-structural-line)]"
-                />
-              ) : (
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[color:var(--cs-structural-line)] bg-black/10">
-                  <ActivityIcon kind="activity" type={0} />
-                </div>
-              )}
-              <div className="min-w-0 flex flex-col">
-                <p className={`mb-1 ${LIVE_LABEL}`}>
-                  Playing
-                </p>
-                <p className="line-clamp-1 text-base font-bold text-[color:var(--cs-text-primary)]">
-                  {data.live.gaming.name}
                 </p>
               </div>
             </div>

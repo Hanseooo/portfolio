@@ -9,11 +9,16 @@ import SplitText from "@/components/motion/SplitText";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageContactProjection } from "@/lib/content/homepage-projections";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
-import { RESUME_LABEL } from "@/components/utils/externalLinks";
+import ContactDialog from "@/components/homepage/ContactDialog";
 
 interface SceneContactProps {
   data: HomepageContactProjection;
 }
+
+const ITEM = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+};
 
 export default function SceneContact({ data }: SceneContactProps) {
   const reducedMotion = usePrefersReducedMotion();
@@ -78,9 +83,9 @@ export default function SceneContact({ data }: SceneContactProps) {
               </span>
             </p>
 
-            <motion.ul 
-              className="mt-8 flex flex-wrap items-center gap-4 md:mt-10" 
-              role="list"
+            {/* One action, then the direct channels as quiet links */}
+            <motion.div
+              className="mt-10 flex w-full flex-col gap-6 sm:w-auto sm:flex-row sm:items-center sm:gap-10 md:mt-12"
               initial={reducedMotion ? false : "hidden"}
               animate={reducedMotion ? "visible" : undefined}
               whileInView="visible"
@@ -90,31 +95,27 @@ export default function SceneContact({ data }: SceneContactProps) {
                 hidden: {}
               }}
             >
-              {data.channels.map((channel) => (
-                <motion.li 
-                  key={channel.type}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0, transition: reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
-                  }}
-                >
-                  <a
-                    href={channel.href}
-                    target={channel.type !== "email" ? "_blank" : undefined}
-                    rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
-                    aria-label={channel.type === "resume" ? RESUME_LABEL : undefined}
-                    className="group inline-flex h-12 items-center gap-2 border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-foundation)] px-6 font-[family-name:var(--font-mono)] text-sm font-medium uppercase tracking-widest text-[color:var(--cs-text-primary)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[color:var(--cs-text-primary)] hover:bg-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-foundation)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
-                  >
-                    <span>{channel.label}</span>
-                    <ArrowUpRight
-                      size={14}
-                      className="opacity-70 transition-opacity group-hover:opacity-100"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </motion.li>
-              ))}
-            </motion.ul>
+              <motion.div variants={ITEM}>
+                <ContactDialog />
+              </motion.div>
+              <motion.ul variants={ITEM} role="list" className="flex flex-wrap items-center gap-x-6 gap-y-1">
+                {data.channels.map((channel) => (
+                  <li key={channel.type}>
+                    <a
+                      href={channel.href}
+                      target={channel.type !== "email" ? "_blank" : undefined}
+                      rel={channel.type !== "email" ? "noopener noreferrer" : undefined}
+                      className="group inline-flex min-h-11 items-center gap-1.5 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)] underline decoration-transparent underline-offset-[6px] transition-colors hover:text-[color:var(--cs-text-primary)] hover:decoration-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+                    >
+                      {channel.label}
+                      {channel.type !== "email" && (
+                        <ArrowUpRight size={12} aria-hidden="true" className="opacity-60 transition-opacity group-hover:opacity-100" />
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </motion.ul>
+            </motion.div>
           </div>
         </StructuredReveal>
       </div>
