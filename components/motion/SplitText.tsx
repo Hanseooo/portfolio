@@ -18,8 +18,12 @@ export default function SplitText({ text, className = "", delay = 0 }: SplitText
 
   const chars = text.split("");
 
+  // Screen readers get the whole text once, not one letter per span.
   return (
+    <>
+    <span className="sr-only">{text}</span>
     <motion.span
+      aria-hidden="true"
       className={`inline-block ${className}`}
       initial="hidden"
       whileInView="visible"
@@ -48,5 +52,6 @@ export default function SplitText({ text, className = "", delay = 0 }: SplitText
         </motion.span>
       ))}
     </motion.span>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useCallback, useState } from "react";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, X } from "lucide-react";
 import {
@@ -27,11 +27,45 @@ interface MobileMenuProps {
   currentPathname: string;
 }
 
+const CUT_EASE = [0.65, 0, 0.35, 1] as const;
+
+/** The sheet is cut open from the menu button and cut closed back into it (.menu-cut). */
+const SHEET: Variants = {
+  closed: { "--cut": "0%" },
+  open: {
+    "--cut": "100%",
+    // Rows start while the cut is still opening so the whole menu is in by ~0.85s.
+    transition: { duration: 0.36, ease: CUT_EASE, delayChildren: 0.15, staggerChildren: 0.05 },
+  },
+  // A route change holds the menu until the handoff cover has closed over it (300ms), then drops it.
+  exit: (toRoute: boolean) =>
+    toRoute
+      ? { "--cut": "0%", transition: { duration: 0, delay: 0.32 } }
+      : { "--cut": "0%", transition: { duration: 0.22, ease: CUT_EASE } },
+};
+
+const ROW: Variants = {
+  closed: { opacity: 0, y: 16 },
+  open: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
+};
+
+/** Sections enter with the last route row, so the menu never staggers more than 8 rows. */
+const SECTIONS_ENTER = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: 0.15 + 7 * 0.05, ease: [0.16, 1, 0.3, 1] } },
+} as const;
+
+const LEADER: Variants = {
+  closed: { scaleX: 0 },
+  open: { scaleX: 1, transition: { duration: 0.45, delay: 0.15, ease: [0.16, 1, 0.3, 1] } },
+};
+
 /**
  * Full-screen mobile menu — S5 §8, S6 §6.1.
  *
  * Behavior:
- * - Framer presence for enter/exit (immediate in reduced-motion)
+ * - Cut open from the menu button, rows staggered in, current route's leader drawn;
+ *   cut closed on dismiss (immediate in reduced-motion)
  * - Focus trapped while open
  * - Escape closes and restores focus
  * - Activating current route closes without handoff
@@ -46,6 +80,20 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
   const { tier } = useCapability();
   const { navigate: handoffNavigate } = useRouteHandoff();
   const reducedMotion = tier === "reduced-motion";
+  // True once a route link closed the menu; read by the exit variant. Cleared on reopen.
+  const [toRoute, setToRoute] = useState(false);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setToRoute(false);
+  }
+
+  // Cut from the center of the button that opened the menu, set before the first frame.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const rect = document.querySelector(`[aria-controls="${id}"]`)?.getBoundingClientRect();
+    if (rect) dialogRef.current?.style.setProperty("--menu-origin", `${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px`);
+  }, [open, id]);
 
   // Focus first link when opened; restore the invoker on close
   useEffect(() => {
@@ -107,7 +155,7 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
   }, [open]);
 
   const handleNavigation = useCallback(
-    (destId: DestinationId) => {
+    (destId: DestinationId, from: Element) => {
       const dest = DESTINATIONS[destId];
       const href = getDestinationHref(dest);
 
@@ -126,8 +174,9 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
       }
 
       // Different route — use handoff for eligible navigation
+      setToRoute(true);
       close();
-      handoffNavigate(href);
+      handoffNavigate(href, from);
     },
     [currentPathname, close, handoffNavigate]
   );
@@ -135,7 +184,7 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
   const showChapters = currentPathname === "/";
 
   return (
-    <AnimatePresence>
+    <AnimatePresence custom={toRoute}>
       {open && (
         <motion.div
           ref={dialogRef}
@@ -143,14 +192,17 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
-          initial={reducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={reducedMotion ? undefined : { opacity: 0 }}
-          transition={{ duration: reducedMotion ? 0 : 0.2 }}
-          className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-[color:var(--cs-foundation)] pt-4"
+          variants={reducedMotion ? undefined : SHEET}
+          custom={toRoute}
+          initial={reducedMotion ? false : "closed"}
+          animate="open"
+          exit={reducedMotion ? undefined : "exit"}
+          className={`fixed inset-0 z-50 bg-[color:var(--cs-foundation)] ${reducedMotion ? "" : "menu-cut"}`}
         >
-          {/* Overlay Top Bar with explicit X Close Button */}
-          <div className="flex items-center justify-between px-[var(--cs-gutter-portfolio)] py-3 border-b border-[color:var(--cs-structural-line)]">
+          {!reducedMotion && <div aria-hidden="true" className="menu-edge pointer-events-none absolute inset-0 z-10" />}
+          <div className="flex h-full flex-col overflow-y-auto">
+          {/* Same height and gutter as the site header, so Close lands exactly on the menu button. */}
+          <div className="flex h-16 shrink-0 items-center justify-between px-[var(--cs-gutter-portfolio)] border-b border-[color:var(--cs-structural-line)]">
             <span className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[color:var(--cs-text-primary)]">
               Menu
             </span>
@@ -165,7 +217,7 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
           </div>
 
           {/* Route links */}
-          <nav aria-label="Menu navigation" className="flex-1 px-[var(--cs-gutter-portfolio)] py-8">
+          <nav aria-label="Menu navigation" className="flex-1 px-[var(--cs-gutter-portfolio)] py-6">
             <ul className="flex flex-col gap-2" role="list">
               {MOBILE_NAV_SEQUENCE.map((destId, index) => {
                 const dest = DESTINATIONS[destId];
@@ -174,56 +226,63 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
                   dest.pathname === currentPathname && !dest.fragment;
 
                 return (
-                  <li key={destId}>
+                  <motion.li key={destId} variants={reducedMotion ? undefined : ROW}>
                     <Link
                       ref={index === 0 ? firstFocusRef : undefined}
                       href={href}
                       onClick={(e) => {
                         e.preventDefault();
-                        handleNavigation(destId);
+                        handleNavigation(destId, e.currentTarget);
                       }}
-                      className={`flex h-14 items-center font-[family-name:var(--font-display)] text-2xl uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] ${
+                      className={`flex h-12 items-center font-[family-name:var(--font-display)] text-2xl uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] ${
                         isCurrent
                           ? "text-[color:var(--cs-signal)]"
                           : "text-[color:var(--cs-text-primary)] hover:text-[color:var(--cs-signal)]"
                       }`}
                       aria-current={isCurrent ? "page" : undefined}
                     >
+                      {isCurrent && (
+                        <motion.span
+                          aria-hidden="true"
+                          variants={reducedMotion ? undefined : LEADER}
+                          className="mr-4 h-px w-8 origin-left bg-[color:var(--cs-signal)]"
+                        />
+                      )}
                       {dest.label}
                     </Link>
-                  </li>
+                  </motion.li>
                 );
               })}
-              <li>
+              <motion.li variants={reducedMotion ? undefined : ROW}>
                 <a
                   href={RESUME_URL}
                   target="_blank"
                   rel="noopener"
                   aria-label={RESUME_LABEL}
                   onClick={close}
-                  className="flex h-14 items-center gap-2 font-[family-name:var(--font-display)] text-2xl uppercase tracking-wider text-[color:var(--cs-text-primary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+                  className="flex h-12 items-center gap-2 font-[family-name:var(--font-display)] text-2xl uppercase tracking-wider text-[color:var(--cs-text-primary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                 >
                   Resume
                   <ArrowUpRight size={20} aria-hidden="true" />
                 </a>
-              </li>
+              </motion.li>
             </ul>
 
             {/* Homepage chapter anchors (only when on homepage) */}
             {showChapters && (
-              <div className="mt-8 border-t border-[color:var(--cs-structural-line)] pt-6">
+              <motion.div {...(reducedMotion ? {} : SECTIONS_ENTER)} className="mt-8 border-t border-[color:var(--cs-structural-line)] pt-6">
                 <p className="mb-3 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
                   Sections
                 </p>
-                <ul className="flex flex-col gap-1" role="list">
+                <ul className="grid grid-cols-2 gap-x-4" role="list">
                   {HOMEPAGE_CHAPTER_SEQUENCE.map((destId) => {
                     const dest = DESTINATIONS[destId];
                     return (
                       <li key={destId}>
                         <button
                           type="button"
-                          onClick={() => handleNavigation(destId)}
-                          className="flex h-11 items-center gap-3 font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
+                          onClick={(e) => handleNavigation(destId, e.currentTarget)}
+                          className="flex h-11 w-full items-center text-left font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
                           aria-label={dest.accessibleName}
                         >
                           {dest.label}
@@ -232,9 +291,10 @@ export default function MobileMenu({ open, close, id, currentPathname }: MobileM
                     );
                   })}
                 </ul>
-              </div>
+              </motion.div>
             )}
           </nav>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

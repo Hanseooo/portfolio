@@ -727,9 +727,315 @@
   }
 }
 
+/* Project section nav: a 1px-wide signal bar scaled to the current link's
+   width and slid under it (transform only). It sits on the nav's bottom rule. */
+.local-nav-marker {
+  position: absolute; left: 0; bottom: 0;
+  width: 1px; height: 2px;
+  background: var(--cs-signal);
+  transform-origin: 0 0;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .local-nav-marker[data-ready] { transition: transform 450ms cubic-bezier(0.65, 0, 0.35, 1); }
+}
+/* Anchor jumps clear the global header plus the sticky section nav. */
+article:has(.local-nav-bar) .scroll-target {
+  scroll-margin-top: calc(var(--nav-height, 80px) + 3.25rem);
+}
+
+/* Contact sent: the transmittal sheet's crop marks close in and stay closed,
+   as a frame does on hover; the stamp in the sent line draws as a ring. */
+.contact-sheet:has([data-contact-sent]) [data-draw="settle"] > * {
+  translate: calc(var(--crop-x) * 4px) calc(var(--crop-y) * 4px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-draw-armed] .sent-stamp { --draw-from: 0deg; --draw-delay: 150ms; }
+}
+
+/* Contact dialog. Every open: the backdrop fades and the sheet rises 12px
+   (240ms), then its crop marks settle in from 6px out (450ms). DrawController's
+   one-time settle is switched off inside the sheet so reopening plays it too.
+   Close: sheet drops 8px and fades with the backdrop (160ms). The close keeps
+   the dialog in the top layer through `overlay`; without it (Firefox, older
+   Safari) the dialog closes instantly, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  .contact-dialog::backdrop {
+    transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .contact-sheet {
+    transition:
+      opacity 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      translate 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  html[data-draw-armed] dialog .contact-sheet [data-draw="settle"] > *,
+  dialog .contact-sheet [data-draw="settle"] > * {
+    animation: none;
+    opacity: 1;
+    transition:
+      opacity 450ms cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+      translate 450ms cubic-bezier(0.16, 1, 0.3, 1) 120ms;
+  }
+  @starting-style {
+    .contact-dialog[open]::backdrop { opacity: 0; }
+    .contact-dialog[open] .contact-sheet { opacity: 0; translate: 0 12px; }
+    .contact-dialog[open] .contact-sheet [data-draw="settle"] > * {
+      opacity: 0;
+      translate: calc(var(--crop-x) * -6px) calc(var(--crop-y) * -6px);
+    }
+  }
+  @supports (overlay: auto) {
+    .contact-dialog {
+      transition:
+        display 160ms allow-discrete,
+        overlay 160ms allow-discrete;
+    }
+    .contact-dialog:not([open])::backdrop {
+      opacity: 0;
+      transition: opacity 160ms cubic-bezier(0.55, 0.08, 0.68, 0.53);
+    }
+    .contact-dialog:not([open]) .contact-sheet {
+      opacity: 0;
+      translate: 0 8px;
+      transition:
+        opacity 160ms cubic-bezier(0.55, 0.08, 0.68, 0.53),
+        translate 160ms cubic-bezier(0.55, 0.08, 0.68, 0.53);
+    }
+  }
+}
+
+/* Footer construction site (ConstructionSite). Height is fixed here so the
+   scene reserves its space before it is built; the component reads it back. */
+.site-scene {
+  --scene-hatch: rgba(21, 21, 21, 0.22);
+  --scene-cross: rgba(21, 21, 21, 0.6);
+  display: block; width: 100%; height: 214px; overflow: hidden;
+}
+@media (min-width: 37.5rem) { .site-scene { height: 248px; } }
+.dark .site-scene {
+  --scene-hatch: rgba(255, 255, 255, 0.16);
+  --scene-cross: rgba(255, 255, 255, 0.7);
+}
+.site-scene .ln { fill: none; stroke: var(--cs-structural-line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.site-scene .soft { stroke: var(--cs-structural-line); }
+.site-scene .dash { stroke-dasharray: 3 4; }
+.site-scene .hatch-ln { stroke: var(--scene-hatch); stroke-width: 1; }
+.site-scene .wall { stroke: var(--cs-structural-line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.site-scene .win { fill: var(--cs-foundation); stroke: var(--cs-structural-line-strong); stroke-width: 1; vector-effect: non-scaling-stroke; transition: fill 900ms ease; }
+.dark .site-scene .win.lit { fill: var(--cs-signal); fill-opacity: 0.55; }
+.site-scene .solid { fill: var(--cs-foundation); }
+.site-scene .label { fill: var(--cs-text-secondary); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; }
+.site-scene .x { stroke: var(--scene-cross); stroke-width: 1; opacity: 0.4; }
+@keyframes site-twinkle { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.85; } }
+@media (prefers-reduced-motion: no-preference) {
+  .site-scene:not(.still) .x { animation: site-twinkle var(--dur, 5s) ease-in-out var(--delay, 0s) infinite; }
+  .site-scene.paused .x { animation-play-state: paused; }
+}
+
+/* Compass cut: a red field enters by being cut open from the corner its own
+   CompassArc swings from (--cut-origin). The mask stop is a % of the distance
+   to the farthest corner, so 100% is exactly the diagonal. A 1px edge rides
+   the cut (.cut-edge); both are dropped when done, and the field's arc then
+   sweeps from the same corner. */
+@property --cut {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 100%;
+}
+
+@keyframes draw-cut {
+  from { --cut: 0%; }
+  to { --cut: 100%; }
+}
+
+.cut-edge { display: none; }
+/* A screenshot cut on the ivory sheet: from the top-right, red edge. */
+.cut-frame { --cut-origin: 100% 0%; --cut-edge: var(--cs-signal); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-draw-armed] [data-draw="cut"]:not([data-drawn="done"]) {
+    mask-image: radial-gradient(circle farthest-corner at var(--cut-origin, 0% 100%), #000 var(--cut), #0000 var(--cut));
+  }
+  html[data-draw-armed] [data-draw="cut"]:not([data-drawn]) { --cut: 0%; }
+  html[data-draw-armed] [data-draw="cut"][data-drawn="run"] {
+    animation: draw-cut 1200ms cubic-bezier(0.65, 0, 0.35, 1) var(--draw-delay, 0ms) both;
+  }
+  html[data-draw-armed] [data-draw="cut"][data-drawn="run"] > .cut-edge {
+    display: block;
+    background: radial-gradient(circle farthest-corner at var(--cut-origin, 0% 100%),
+      #0000 calc(var(--cut) - 1px), var(--cut-edge, rgb(255 255 255 / 0.6)) calc(var(--cut) - 1px),
+      var(--cut-edge, rgb(255 255 255 / 0.6)) var(--cut), #0000 var(--cut));
+  }
+  /* The field's own arc sweeps in as the cut finishes. */
+  html[data-draw-armed] [data-draw="cut"] [data-draw="compass"] { --draw-delay: 900ms; }
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: 47.99rem) {
+  html[data-draw-armed] [data-draw="cut"][data-drawn="run"] { animation-duration: 450ms; }
+  html[data-draw-armed] [data-draw="cut"] [data-draw="compass"] { --draw-delay: 350ms; }
+}
+
+/* Construct: rules through a frame's top-left corner plus a dimension line
+   under it (ConstructMarks). Hidden at rest; drawn then erased on scroll-in;
+   redrawn while the frame's .group is hovered or keyboard-focused. */
+.construct { --ext: 12px; }
+@media (min-width: 48rem) { .construct { --ext: 24px; } }
+.construct > * { position: absolute; opacity: 0; }
+.construct-x {
+  top: 0; left: calc(var(--ext) * -1); width: calc(100% + var(--ext) * 2); height: 1px;
+  background: currentColor; transform-origin: var(--ext) 50%; scale: 0 1;
+}
+.construct-y {
+  left: 0; top: calc(var(--ext) * -1); height: calc(100% + var(--ext) * 2); width: 1px;
+  background: currentColor; transform-origin: 50% var(--ext); scale: 1 0;
+}
+.construct-dim {
+  top: calc(100% + 10px); left: 0; right: 0; height: 9px;
+  display: flex; align-items: center; scale: 0 1;
+}
+.construct-tick { width: 1px; height: 100%; background: currentColor; }
+.construct-line { flex: 1; height: 1px; background: currentColor; }
+.construct-above > .construct-dim { top: auto; bottom: calc(100% + 10px); }
+.construct-label {
+  padding-inline: 8px; font-family: var(--font-mono); font-size: 10px; line-height: 1;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--cs-text-secondary);
+}
+
+@keyframes draw-construct-x {
+  0% { opacity: 1; scale: 0 1; }
+  35%, 75% { opacity: 1; scale: 1 1; }
+  100% { opacity: 0; scale: 1 1; }
+}
+@keyframes draw-construct-y {
+  0% { opacity: 1; scale: 1 0; }
+  35%, 75% { opacity: 1; scale: 1 1; }
+  100% { opacity: 0; scale: 1 1; }
+}
+@keyframes draw-construct-dim {
+  0%, 25% { opacity: 1; scale: 0 1; }
+  55%, 75% { opacity: 1; scale: 1 1; }
+  100% { opacity: 0; scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-draw-armed] [data-draw="construct"][data-drawn="run"] > .construct-x {
+    animation: draw-construct-x 1600ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) both;
+  }
+  html[data-draw-armed] [data-draw="construct"][data-drawn="run"] > .construct-y {
+    animation: draw-construct-y 1600ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) both;
+  }
+  html[data-draw-armed] [data-draw="construct"][data-drawn="run"] > .construct-dim {
+    animation: draw-construct-dim 1600ms cubic-bezier(0.16, 1, 0.3, 1) var(--draw-delay, 0ms) both;
+  }
+  .construct > * {
+    transition: scale 240ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 160ms linear;
+  }
+}
+
+@media (hover: hover) {
+  .group:hover .construct > *,
+  .group:focus-visible .construct > * {
+    opacity: 1;
+    scale: 1 1;
+  }
+}
+
+/* Section hatching: 45° lines at a fixed 7px pitch, cut to the band between a
+   CompassArc's outer arc (r96) and dashed inner arc (r60) in its 100×100 box. */
+.compass-hatch {
+  opacity: 0.5;
+  background: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 7px);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 40 L0 4 A96 96 0 0 1 96 100 L60 100 A60 60 0 0 0 0 40 Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+
+/* Masthead sheet: the 128px grid with a line through the compass origin,
+   fading out from that corner (top-right on phones, bottom-right from md). */
+.masthead-sheet {
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 128px 128px;
+  background-position: right 1px top 0;
+  mask-image: radial-gradient(ellipse 90% 120% at 100% 0%, #000 15%, transparent 80%);
+}
+
+@media (min-width: 48rem) {
+  .masthead-sheet {
+    background-position: right 1px bottom 1px;
+    mask-image: radial-gradient(ellipse 75% 140% at 100% 100%, #000 15%, transparent 80%);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) and (hover: hover) {
   .group:hover [data-draw="settle"] > *,
   .group:focus-visible [data-draw="settle"] > * {
     translate: calc(var(--crop-x) * 3px) calc(var(--crop-y) * 3px);
   }
+}
+
+/* Route handoff (RouteHandoffOverlay): the cover is cut closed from the control that asked for
+   the route (--handoff-origin), then cut open on the new page from the top-right, where the
+   masthead's compass sits. Two keyframe names so the second cut restarts. */
+@keyframes handoff-close {
+  from { --cut: 0%; }
+  to { --cut: 100%; }
+}
+@keyframes handoff-open {
+  from { --cut: 0%; }
+  to { --cut: 100%; }
+}
+.handoff-cover[data-phase="close"] {
+  mask-image: radial-gradient(circle farthest-corner at var(--handoff-origin), #000 var(--cut), #0000 var(--cut));
+  animation: handoff-close 300ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.handoff-cover[data-phase="open"] {
+  mask-image: radial-gradient(circle farthest-corner at 100% 0%, #0000 var(--cut), #000 var(--cut));
+  animation: handoff-open 400ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.handoff-cover[data-phase="close"] > .handoff-edge {
+  background: radial-gradient(circle farthest-corner at var(--handoff-origin),
+    #0000 calc(var(--cut) - 1px), var(--cs-signal) calc(var(--cut) - 1px), var(--cs-signal) var(--cut), #0000 var(--cut));
+}
+.handoff-cover[data-phase="open"] > .handoff-edge {
+  background: radial-gradient(circle farthest-corner at 100% 0%,
+    #0000 var(--cut), var(--cs-signal) var(--cut), var(--cs-signal) calc(var(--cut) + 1px), #0000 calc(var(--cut) + 1px));
+}
+
+/* Mobile menu (MobileMenu): the sheet is cut open from the menu button (--menu-origin) and cut
+   closed back into it, with the same 1px signal edge as the route handoff. Framer drives --cut. */
+.menu-cut {
+  mask-image: radial-gradient(circle farthest-corner at var(--menu-origin, 100% 0%), #000 var(--cut), #0000 var(--cut));
+}
+.menu-edge {
+  background: radial-gradient(circle farthest-corner at var(--menu-origin, 100% 0%),
+    #0000 calc(var(--cut) - 1px), var(--cs-signal) calc(var(--cut) - 1px), var(--cs-signal) var(--cut), #0000 var(--cut));
+}
+
+/* Screenshot viewer (ScreenshotGallery). The shot's grow/shrink is WAAPI in the component; here
+   each shot's crop marks settle in once it lands (every open and every Prev/Next), and a shot
+   reached by Prev/Next fades in. DrawController's one-time settle is switched off inside. */
+@media (prefers-reduced-motion: no-preference) {
+  html .shot-viewer [data-draw="settle"][data-draw] > * {
+    animation: none;
+    opacity: 1;
+    transition:
+      opacity 450ms cubic-bezier(0.16, 1, 0.3, 1) 300ms,
+      translate 450ms cubic-bezier(0.16, 1, 0.3, 1) 300ms;
+  }
+  .shot-viewer [data-viewer-shot] > img {
+    transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @starting-style {
+    html .shot-viewer[open] [data-draw="settle"][data-draw] > * {
+      opacity: 0;
+      translate: calc(var(--crop-x) * -6px) calc(var(--crop-y) * -6px);
+    }
+    .shot-viewer[open] [data-viewer-shot] > img { opacity: 0.4; }
+  }
+}
+
+/* Contact field error: the underline redraws from the left in error red (ContactForm). */
+@keyframes field-invalid {
+  from { scale: 0 1; }
 }

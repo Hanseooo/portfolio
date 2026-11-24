@@ -3,6 +3,8 @@ import {
   DESTINATIONS,
   getDestinationHref,
 } from "@/lib/destinations";
+import { projects } from "@/lib/projects";
+import ConstructionSite from "./ConstructionSite";
 
 /**
  * Shared portfolio footer — S6 §6.1 universal footer.
@@ -26,8 +28,9 @@ export default function FooterFrame() {
       className="border-t border-[color:var(--cs-structural-line)] bg-[color:var(--cs-foundation)] px-[var(--cs-gutter-portfolio)]"
       role="contentinfo"
     >
-      <div className="mx-auto max-w-[1400px] py-12 md:py-16">
-        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
+      <div className="mx-auto max-w-[1400px] pb-12 pt-8 md:pb-16">
+        <ConstructionSite floors={projects.length} />
+        <div className="mt-6 flex flex-col justify-between gap-8 md:flex-row md:items-center">
           <nav aria-label="Footer navigation">
             <ul className="flex flex-wrap gap-6" role="list">
               {footerRoutes.map((dest) => (

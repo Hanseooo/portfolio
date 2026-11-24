@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import HandoffLink from "@/components/shell/HandoffLink";
 import { ArrowUpRight } from "lucide-react";
@@ -205,8 +206,9 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
 
       {/* Explosive CTA Block */}
       <div className="hp-grid mt-12 md:mt-20">
-        <div className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
-          
+        <div data-draw="cut" style={{ "--cut-origin": "100% 0%" } as CSSProperties} className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
+          <span aria-hidden="true" className="cut-edge pointer-events-none absolute inset-0 z-20" />
+
           {/* Geometric lines inside the block */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[70%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
           <CompassArc className="absolute right-0 top-0 z-0 w-[24%] rotate-180 text-white/20" />

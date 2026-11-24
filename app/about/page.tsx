@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { PageFamilyFrame, CompactMasthead } from "@/components/frames";
 import { CropMarks } from "@/components/geometry";
+import { ConstructMarks } from "@/components/geometry/ConstructMarks";
 import { ThemePortrait } from "@/components/evidence";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
@@ -29,7 +30,7 @@ export default function AboutPage() {
 
   return (
     <PageFamilyFrame
-      masthead={<CompactMasthead parentLabel="Home" parentHref="/" title="About" />}
+      masthead={<CompactMasthead section="about" parentLabel="Home" parentHref="/" title="About" />}
       continuation={
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <h2 className="font-[family-name:var(--font-display)] text-3xl font-black uppercase tracking-tight text-[color:var(--cs-text-primary)] md:text-4xl">Let&apos;s connect.</h2>
@@ -46,8 +47,10 @@ export default function AboutPage() {
         <figure className="m-0 md:col-span-5 lg:top-28 [@media(min-width:1024px)_and_(min-height:640px)]:sticky">
           <StructuredReveal recipe="credential-artifact" className="relative max-w-sm">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 bg-zinc-900 dark:bg-zinc-800 md:translate-x-4 md:translate-y-4" />
-            <div className="relative">
+            <div className="group relative">
             <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
+            {/* Dimension line above: the ink block fills the space below. */}
+            <ConstructMarks className="construct-above z-10 text-[color:var(--cs-structural-line-strong)]" />
             <ThemePortrait light={personal.portrait} dark={personal.portraitDark} alt="Hans Amoguis" priority sizes="(max-width: 767px) 90vw, 40vw" imageClassName="aspect-[4/5] w-full object-cover lg:aspect-auto lg:h-[min(45vh,26rem)]" />
             <figcaption className="flex flex-wrap justify-between gap-2 bg-[color:var(--cs-signal)] px-5 py-4 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-white dark:bg-zinc-800">
               <span>{personal.personalHandle}</span>

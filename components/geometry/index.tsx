@@ -76,18 +76,51 @@ export function RegistrationMark({ className = "" }: { className?: string }) {
   );
 }
 
+/** Tip of a CompassArc leg swung `deg` clockwise from straight up, in its 100×100 frame (origin 0,100; r96). */
+export function compassTip(deg: number) {
+  const t = (deg * Math.PI) / 180;
+  return { x: +(96 * Math.sin(t)).toFixed(2), y: +(100 - 96 * Math.cos(t)).toFixed(2) };
+}
+
 /**
  * Compass construction swung from the bottom-left corner of its box:
- * a full arc, a dashed inner arc, and one radius line.
+ * a full arc, a dashed inner arc, and one radius line. The line sits at 45°
+ * unless `bearing` swings it (degrees clockwise from straight up), which also
+ * marks its tip with a small cross.
  */
-export function CompassArc({ className = "" }: { className?: string }) {
-  return (
-    <svg aria-hidden="true" data-draw="compass" viewBox="0 0 100 100" className={`pointer-events-none overflow-visible ${className}`}>
+/**
+ * `hatch` fills the band between the two arcs with 45° section hatching
+ * (`.compass-hatch` in globals.css). The hatch is an HTML layer so its pitch
+ * stays 7px at any arc size, which puts the mark in a wrapper: pass a
+ * positioning class (`absolute`) as callers already do.
+ */
+export function CompassArc({ className = "", hatch = false, bearing }: { className?: string; hatch?: boolean; bearing?: number }) {
+  const tip = compassTip(bearing ?? 45);
+  const lines = (
+    <>
       <path d="M0 4 A96 96 0 0 1 96 100" {...STROKE} />
       <path d="M0 40 A60 60 0 0 1 60 100" {...STROKE} strokeDasharray="2 4" />
-      <path d="M0 100 L68 32" {...STROKE} />
+      <path d={`M0 100 L${tip.x} ${tip.y}`} {...STROKE} />
       <path d="M-4 100 H4 M0 96 V104" {...STROKE} />
-    </svg>
+      {bearing !== undefined && (
+        <path d={`M${tip.x - 3} ${tip.y} H${tip.x + 3} M${tip.x} ${tip.y - 3} V${tip.y + 3}`} {...STROKE} />
+      )}
+    </>
+  );
+  if (!hatch) {
+    return (
+      <svg aria-hidden="true" data-draw="compass" viewBox="0 0 100 100" className={`pointer-events-none overflow-visible ${className}`}>
+        {lines}
+      </svg>
+    );
+  }
+  return (
+    <span aria-hidden="true" data-draw="compass" className={`pointer-events-none block aspect-square ${className}`}>
+      <span className="compass-hatch absolute inset-0" />
+      <svg viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
+        {lines}
+      </svg>
+    </span>
   );
 }
 

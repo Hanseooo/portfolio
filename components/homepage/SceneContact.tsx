@@ -28,8 +28,9 @@ export default function SceneContact({ data }: SceneContactProps) {
       id={SECTION_IDS.contact}
       sceneNumber="06"
       heading="Contact"
-      surface="reading"
-      className="relative py-16 md:py-24 lg:py-32 border-t border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)] text-[color:var(--cs-text-primary)] overflow-hidden"
+      ownsHeading
+      surface="foundation"
+      className="relative py-16 md:py-24 lg:py-32 border-t border-[color:var(--cs-structural-line)] text-[color:var(--cs-text-primary)] overflow-hidden"
     >
       {/* Shadcn-style Grid Background (Subtle, masked) */}
       <div 

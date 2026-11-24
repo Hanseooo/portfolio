@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import { CropMarks, IndexMark } from "@/components/geometry";
+import { ConstructMarks } from "@/components/geometry/ConstructMarks";
 import type { CertificateCollectionRecord } from "@/lib/content/collection-projections";
 
 interface CertificateRegisterRecordProps {
@@ -37,6 +38,7 @@ export default function CertificateRegisterRecord({
             aria-label={`View ${record.title} certificate detail`}
           >
             <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
+            <ConstructMarks className="z-10 text-[color:var(--cs-structural-line-strong)]" />
             <div className="relative aspect-[4/3] w-full overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-reading-surface)]">
               <Image
                 src={record.image}

@@ -27,8 +27,8 @@ export default function ExperienceCareerRecord({
       data-motion-target="career-record"
     >
       <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-6">
-        {/* Metadata rail — 4 columns on desktop */}
-        <div className="md:col-span-4">
+        {/* Metadata rail — 4 columns on desktop; stays in view while its evidence scrolls */}
+        <div className="md:col-span-4 md:sticky md:top-28 md:self-start">
           {/* Record index */}
           <IndexMark position={record.position} className="mb-4" />
 

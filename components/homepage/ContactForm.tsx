@@ -14,7 +14,6 @@ import {
 } from "@/lib/contact/validate";
 import { EMAIL_ADDRESS } from "@/components/utils/externalLinks";
 import TurnstileWidget from "@/components/homepage/TurnstileWidget";
-import { RegistrationMark } from "@/components/geometry";
 
 const EMPTY_VALUES: ContactData = { reason: "", name: "", email: "", message: "" };
 const FIELD_ORDER = ["name", "email", "message"] as const;
@@ -24,16 +23,17 @@ const MESSAGE_WARN = 1800;
 const labelClass =
   "block font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]";
 const fieldLabelClass = `${labelClass} transition-colors group-focus-within:text-[color:var(--cs-signal-text)]`;
-// Fields are a light well closed by a drawn 1px line that turns error red when invalid.
+// Fields are a light well closed by a 1px line; the drawn underline carries focus and error.
 const inputClass =
-  "peer mt-1.5 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] px-3 py-2.5 font-sans text-base text-[color:var(--cs-text-primary)] aria-invalid:border-[color:var(--cs-error)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
+  "peer mt-1.5 block w-full rounded-none border-0 border-b border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] px-3 py-2.5 font-sans text-base text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]";
 
-/** Focus draws the line: a 2px signal underline scales in from the left. */
+/** Focus draws the line: a 2px signal underline scales in from the left. An invalid field
+ *  keeps it drawn in error red, redrawn from the left as the error appears (field-invalid). */
 function DrawnUnderline() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-[color:var(--cs-signal)] transition-transform duration-[180ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] peer-focus:scale-x-100 peer-aria-invalid:bg-[color:var(--cs-error)] motion-reduce:transition-none"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-[color:var(--cs-signal)] transition-transform duration-[180ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] peer-focus:scale-x-100 peer-aria-invalid:scale-x-100 peer-aria-invalid:bg-[color:var(--cs-error)] motion-safe:peer-aria-invalid:animate-[field-invalid_320ms_cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
     />
   );
 }
@@ -265,7 +265,11 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
               className="flex items-start gap-3 font-[family-name:var(--font-mono)] text-xs uppercase leading-relaxed tracking-widest text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--cs-focus-ring)]"
             >
               <span aria-hidden="true" className="mt-[0.6rem] h-px w-8 shrink-0 bg-[color:var(--cs-signal)] md:w-12" />
-              <span aria-hidden="true" className="mt-[0.4rem] size-1.5 shrink-0 rounded-full bg-[color:var(--cs-status-online)]" />
+              {/* Sent stamp: a ring drawn closed around a tick */}
+              <svg aria-hidden="true" data-draw="ring" data-contact-sent viewBox="0 0 20 20" className="sent-stamp -mt-0.5 size-5 shrink-0 text-[color:var(--cs-signal-text)]">
+                <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+                <path d="M6 10.5 L9 13.2 L14.2 7.2" fill="none" stroke="currentColor" strokeWidth="1.25" vectorEffect="non-scaling-stroke" />
+              </svg>
               <span className="min-w-0">
                 <span className="whitespace-nowrap">Sent ·</span>{" "}
                 <span className="whitespace-nowrap">I&apos;ll reply to </span>
@@ -335,10 +339,6 @@ function ContactSheetForm({ focusName, onWriteAnother }: { focusName: boolean; o
           </span>
         </div>
       </div>
-
-      {sent && (
-        <RegistrationMark className="absolute -top-8 -right-8 hidden size-16 text-[color:var(--cs-structural-line-strong)] md:block" />
-      )}
     </form>
   );
 }

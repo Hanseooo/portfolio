@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StepLink } from "@/components/motion/RecordStep";
 
 interface ContinuationTarget {
   label: string;
@@ -39,22 +40,24 @@ export default function RecordContinuation({
       {/* Prev / Next */}
       <div className="flex items-center gap-4">
         {prev && (
-          <Link
+          <StepLink
+            direction="prev"
             href={prev.href}
             className="inline-flex h-11 items-center gap-1 font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
             aria-label={`Previous: ${prev.label}`}
           >
             ← <span className="hidden sm:inline">{prev.label}</span><span className="sm:hidden">Prev</span>
-          </Link>
+          </StepLink>
         )}
         {next && (
-          <Link
+          <StepLink
+            direction="next"
             href={next.href}
             className="inline-flex h-11 items-center gap-1 font-[family-name:var(--font-mono)] text-sm text-[color:var(--cs-text-secondary)] transition-colors hover:text-[color:var(--cs-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
             aria-label={`Next: ${next.label}`}
           >
             <span className="hidden sm:inline">{next.label}</span><span className="sm:hidden">Next</span> →
-          </Link>
+          </StepLink>
         )}
       </div>
     </nav>

@@ -88,6 +88,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="projects"
           parentLabel="All Projects"
           parentHref="/projects"
           index={`${String(project.position).padStart(2, "0")} of ${String(project.totalInCollection).padStart(2, "0")}`}

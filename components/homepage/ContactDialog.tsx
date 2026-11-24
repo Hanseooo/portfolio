@@ -50,11 +50,11 @@ export default function ContactDialog() {
         onClick={(e) => {
           if (pressedBackdrop.current && e.target === e.currentTarget) close();
         }}
-        className="m-0 h-dvh max-h-none w-screen max-w-none overflow-visible border-0 bg-transparent p-0 text-[color:var(--cs-text-primary)] backdrop:bg-[color-mix(in_srgb,var(--cs-text-primary)_70%,transparent)] md:m-auto md:h-fit md:w-[min(40rem,calc(100vw-2*var(--cs-gutter-portfolio)))] dark:backdrop:bg-[color-mix(in_srgb,var(--cs-foundation)_85%,transparent)]"
+        className="contact-dialog m-0 h-dvh max-h-none w-screen max-w-none overflow-visible border-0 bg-transparent p-0 text-[color:var(--cs-text-primary)] backdrop:bg-[color-mix(in_srgb,var(--cs-text-primary)_70%,transparent)] md:m-auto md:h-fit md:w-[min(40rem,calc(100vw-2*var(--cs-gutter-portfolio)))] dark:backdrop:bg-[color-mix(in_srgb,var(--cs-foundation)_85%,transparent)]"
       >
         {/* The transmittal sheet. Not a scroll container itself, so the crop marks and the sent
             registration mark can sit outside its edge while the body scrolls. */}
-        <div className="relative flex h-full flex-col bg-[color:var(--cs-foundation)] md:h-auto md:max-h-[calc(100dvh-2*var(--cs-gutter-portfolio))] md:border md:border-[color:var(--cs-structural-line-strong)] transition-[opacity,translate] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] starting:translate-y-3 starting:opacity-0 motion-reduce:transition-none">
+        <div className="contact-sheet relative flex h-full flex-col bg-[color:var(--cs-foundation)] md:h-auto md:max-h-[calc(100dvh-2*var(--cs-gutter-portfolio))] md:border md:border-[color:var(--cs-structural-line-strong)]">
           <CropMarks className="hidden text-[color:var(--cs-structural-line-strong)] md:block" />
           <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[color:var(--cs-structural-line)] py-2 pr-3 pl-6 md:pl-8 lg:pl-10">
             {/* Status-line grammar: signal leader, then the title in mono caps */}

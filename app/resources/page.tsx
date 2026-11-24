@@ -19,6 +19,7 @@ export default function ResourcesPage() {
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="resources"
           parentLabel="Home"
           parentHref="/"
           title="Resources"

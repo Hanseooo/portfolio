@@ -4,6 +4,7 @@ import Image from "next/image";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import { CropMarks, IndexMark } from "@/components/geometry";
+import { ConstructMarks } from "@/components/geometry/ConstructMarks";
 import type { ProjectCollectionRecord } from "@/lib/content/collection-projections";
 
 interface ProjectCatalogueRecordProps {
@@ -44,6 +45,7 @@ export default function ProjectCatalogueRecord({
           <div className="md:col-span-7 md:[direction:ltr]">
             <div className="relative">
             <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
+            <ConstructMarks className="z-10 text-[color:var(--cs-structural-line-strong)]" />
             <div className="relative aspect-[16/10] w-full overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-raised-neutral)]">
               <Image
                 src={record.heroImage}

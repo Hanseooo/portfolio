@@ -1,5 +1,6 @@
 // components/routes/ProjectEvidenceBody.tsx
 import { ScreenshotFrame } from "@/components/evidence";
+import ScreenshotGallery from "@/components/evidence/ScreenshotGallery";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import type { ProjectDetailProjection } from "@/lib/content/detail-projections";
 
@@ -25,25 +26,28 @@ export default function ProjectEvidenceBody({ project }: ProjectEvidenceBodyProp
 
   return (
     <div className="space-y-0">
-      {/* ── Section: Hero Screenshot ── */}
-      <StructuredReveal recipe="evidence-section">
-        <section
-          id="project-hero-image"
-          className="scroll-target evidence-section"
-          aria-labelledby="project-hero-image-heading"
-          data-motion-target="evidence-hero"
-        >
-          <h2 id="project-hero-image-heading" className="sr-only">
-            Primary visual evidence
-          </h2>
+      {/* ── Section: Hero Screenshot ──
+          Enters by the compass cut (no fade), from the top-right corner under
+          the masthead's compass origin. */}
+      <section
+        id="project-hero-image"
+        className="scroll-target evidence-section"
+        aria-labelledby="project-hero-image-heading"
+        data-motion-target="evidence-hero"
+      >
+        <h2 id="project-hero-image-heading" className="sr-only">
+          Primary visual evidence
+        </h2>
+        <div data-draw="cut" className="cut-frame relative isolate">
           <ScreenshotFrame
             src={project.heroImage}
             alt={`${project.title} — primary interface screenshot`}
             priority
             wide
           />
-        </section>
-      </StructuredReveal>
+          <span aria-hidden="true" className="cut-edge pointer-events-none absolute inset-0 z-20" />
+        </div>
+      </section>
 
       {/* ── Section: Brief ── */}
       <StructuredReveal recipe="evidence-section">
@@ -232,26 +236,7 @@ export default function ProjectEvidenceBody({ project }: ProjectEvidenceBodyProp
               - Following: paired on desktop, single on mobile
               - Hero already excluded by Plan 1 getProjectDetail
             */}
-            <div className="space-y-6">
-              {/* First gallery image — wide */}
-              <ScreenshotFrame
-                src={project.gallery[0]}
-                alt={`${project.title} — screenshot 1`}
-                wide
-              />
-              {/* Remaining images — paired on desktop, single on mobile */}
-              {project.gallery.length > 1 && (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {project.gallery.slice(1).map((img, i) => (
-                    <ScreenshotFrame
-                      key={i}
-                      src={img}
-                      alt={`${project.title} — screenshot ${i + 2}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <ScreenshotGallery images={project.gallery} title={project.title} />
           </section>
         </StructuredReveal>
       )}

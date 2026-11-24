@@ -42,7 +42,7 @@ export default function HandoffLink({
       if (nativeNavigation) return;
 
       e.preventDefault();
-      handoffNavigate(href);
+      handoffNavigate(href, anchor);
     },
     [href, handoffNavigate]
   );

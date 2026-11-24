@@ -5,6 +5,7 @@ import FooterFrame from "./FooterFrame";
 import BrandedArrival from "@/components/motion/BrandedArrival";
 import DrawController from "@/components/motion/DrawController";
 import RouteHandoffOverlay from "./RouteHandoffOverlay";
+import BackToTop from "./BackToTop";
 
 /**
  * Universal portfolio frame — S6 §6.1.
@@ -17,6 +18,7 @@ import RouteHandoffOverlay from "./RouteHandoffOverlay";
  * - Mounting point for branded arrival (Plan 5)
  * - Mounting point for route-handoff overlay (Plan 5)
  * - Mounting point for drawn geometry marks (DrawController)
+ * - Back-to-top control
  *
  * Does NOT own:
  * - Homepage chapter navigation
@@ -40,6 +42,7 @@ export default function PortfolioFrame({ children }: { children: ReactNode }) {
         {children}
       </main>
       <FooterFrame />
+      <BackToTop />
     </>
   );
 }

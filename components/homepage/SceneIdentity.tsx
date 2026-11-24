@@ -8,6 +8,7 @@ import { SECTION_IDS } from "@/lib/anchor-navigation";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 import type { HomepageIdentityProjection } from "@/lib/content/homepage-projections";
 import HeroProofCards from "@/components/homepage/HeroProofCards";
+import HeroCompass from "@/components/homepage/HeroCompass";
 import HandoffLink from "@/components/shell/HandoffLink";
 import { RESUME_LABEL, RESUME_URL } from "@/components/utils/externalLinks";
 
@@ -62,6 +63,7 @@ export default function SceneIdentity({ data }: SceneIdentityProps) {
         <div data-draw="extend-x" className="absolute top-[15%] right-[-10%] w-[150%] h-[1px] origin-[83.33%_50%] bg-white/20 hidden md:block" style={drawDelay(150)} />
         <div data-draw="extend-y" className="absolute top-[-10%] right-[15%] w-[1px] h-[150%] origin-[50%_16.67%] bg-white/20 hidden md:block" style={drawDelay(250)} />
         <div data-draw="ring" className="absolute top-[15%] right-[15%] w-12 h-12 border border-white/30 rounded-full -translate-y-1/2 translate-x-1/2 hidden md:block" style={drawDelay(500)} />
+        <HeroCompass containerId={SECTION_IDS.identity} />
       </div>
 
       {/* ARTS & CHAOS 12-COLUMN LAYOUT */}

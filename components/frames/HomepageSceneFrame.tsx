@@ -16,6 +16,8 @@ interface HomepageSceneFrameProps {
   surface?: SceneSurface;
   /** Whether this is the hero (first scene, may receive special spacing) */
   isHero?: boolean;
+  /** The scene renders its own visible heading with id `${id}-heading` */
+  ownsHeading?: boolean;
   /** Optional className for scene-specific overrides */
   className?: string;
   children: ReactNode;
@@ -48,6 +50,7 @@ export default function HomepageSceneFrame({
   heading,
   surface = "foundation",
   isHero = false,
+  ownsHeading = false,
   className = "",
   children,
 }: HomepageSceneFrameProps) {
@@ -57,8 +60,8 @@ export default function HomepageSceneFrame({
       aria-labelledby={`${id}-heading`}
       className={`relative ${SURFACE_MAP[surface]} ${isHero ? "" : "py-16 md:py-24 lg:py-32"} ${className}`}
     >
-      {/* Hero scenes provide their own visible h1 with this ID; suppress the redundant h2. */}
-      {!isHero && (
+      {/* The hero's h1, or a scene's own visible heading, carries this ID; suppress the redundant h2. */}
+      {!isHero && !ownsHeading && (
         <h2
           id={`${id}-heading`}
           className="sr-only"

@@ -19,6 +19,7 @@ export default function CertificatesPage() {
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="certificates"
           parentLabel="Home"
           parentHref="/"
           title="Certificates"
