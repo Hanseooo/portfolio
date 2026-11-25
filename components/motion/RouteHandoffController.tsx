@@ -17,18 +17,22 @@ import { useScrollEnhancement } from "@/components/motion/ScrollEnhancementContr
 type HandoffPhase = "idle" | "covering" | "navigating" | "revealing";
 
 interface RouteHandoffAPI {
-  /** Trigger an eligible internal route handoff */
-  navigate: (href: string) => void;
+  /** Trigger an eligible internal route handoff. `from` is the control that asked for it; the
+   *  cover is cut from its center. */
+  navigate: (href: string, from?: Element | null) => void;
   /** Current handoff phase */
   phase: HandoffPhase;
   /** Whether handoff is active (cover visible) */
   isActive: boolean;
+  /** Where the cover cuts in from, as a CSS position ("x% y%") */
+  origin: string;
 }
 
 const DEFAULT_API: RouteHandoffAPI = {
   navigate: () => {},
   phase: "idle",
   isActive: false,
+  origin: "50% 50%",
 };
 
 const RouteHandoffContext = createContext<RouteHandoffAPI>(DEFAULT_API);
@@ -46,6 +50,7 @@ export function RouteHandoffProvider({ children }: { children: ReactNode }) {
   const { routeHandoff, tier } = useCapability();
   const { stop: suspendScroll, resume: resumeScroll } = useScrollEnhancement();
   const [phase, setPhase] = useState<HandoffPhase>("idle");
+  const [origin, setOrigin] = useState(DEFAULT_API.origin);
   const phaseRef = useRef<HandoffPhase>("idle");
   const targetRef = useRef<string | null>(null);
   const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
@@ -100,7 +105,7 @@ export function RouteHandoffProvider({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   const navigate = useCallback(
-    (href: string) => {
+    (href: string, from?: Element | null) => {
       const destination = new URL(href, window.location.href);
       if (destination.origin !== window.location.origin) {
         window.location.assign(destination.href);
@@ -127,6 +132,12 @@ export function RouteHandoffProvider({ children }: { children: ReactNode }) {
       }
 
       targetRef.current = href;
+      const rect = from?.getBoundingClientRect();
+      setOrigin(
+        rect
+          ? `${((rect.left + rect.width / 2) / window.innerWidth) * 100}% ${((rect.top + rect.height / 2) / window.innerHeight) * 100}%`
+          : DEFAULT_API.origin
+      );
       suspendScroll();
       setHandoffPhase("covering");
 
@@ -153,8 +164,8 @@ export function RouteHandoffProvider({ children }: { children: ReactNode }) {
   );
 
   const api = useMemo<RouteHandoffAPI>(
-    () => ({ navigate, phase, isActive: phase !== "idle" }),
-    [navigate, phase]
+    () => ({ navigate, phase, isActive: phase !== "idle", origin }),
+    [navigate, phase, origin]
   );
 
   return (

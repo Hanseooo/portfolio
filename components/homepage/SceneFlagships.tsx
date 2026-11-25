@@ -8,6 +8,7 @@ import StructuredReveal from "@/components/motion/StructuredReveal";
 import EvidenceDepthEffect from "@/components/motion/EvidenceDepthEffect";
 import { CompassArc, CropMarks, RegistrationMark } from "@/components/geometry";
 import FlagshipIndex from "./FlagshipIndex";
+import GitHubPanel from "@/components/sections/GitHubPanel";
 import { SECTION_IDS } from "@/lib/anchor-navigation";
 import type { HomepageFlagshipProjection } from "@/lib/content/homepage-projections";
 import type { ProjectCardProjection } from "@/lib/content/types";
@@ -95,6 +96,13 @@ function FlagshipRecord({
           <div className="absolute top-[50%] left-[-10%] w-[40%] h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
 
           <div className="@container relative z-10 flex flex-col h-full">
+            {/* How the work came about: a hairline stamp in the compass corner, above the title so it never collides with it */}
+            <span
+              data-project-kind
+              className="mb-4 self-end border border-white/70 px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] uppercase leading-none tracking-widest text-white"
+            >
+              {project.kind}
+            </span>
             {/* Sized to the plate so single-word titles never break mid-word */}
             <h3 className="font-[family-name:var(--font-display)] text-[clamp(2rem,15cqi,5rem)] font-black uppercase leading-[0.85] tracking-tight text-white mb-8 lg:mb-12">
               {project.title}
@@ -203,30 +211,37 @@ export default function SceneFlagships({ data }: SceneFlagshipsProps) {
         </div>
       </div>
 
-      {/* Explosive CTA Block */}
+      {/* Explosive CTA Block: the red catalogue link, with the GitHub panel beside it from lg
+          (under it below lg). Both cut open from the red block's top-right corner, where its
+          compass swings from. */}
       <div className="hp-grid mt-12 md:mt-20">
-        <div className="col-span-4 md:col-span-8 lg:col-span-12 relative overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 isolate shadow-2xl">
-          
-          {/* Geometric lines inside the block */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[70%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
-          <CompassArc className="absolute right-0 top-0 z-0 w-[24%] rotate-180 text-white/20" />
-          <div className="absolute top-[50%] left-0 w-full h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
+        <div data-draw="cut" className="col-span-4 md:col-span-8 lg:col-span-12 relative isolate grid overflow-hidden shadow-2xl [--cut-origin:100%_0%] lg:grid-cols-3 lg:[--cut-origin:66.667%_0%]">
+          <span aria-hidden="true" className="cut-edge pointer-events-none absolute inset-0 z-20" />
 
-          <Link
-            href={data.catalogueRoute}
-            className="group relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-4 text-center focus-visible:outline-2 focus-visible:-outline-offset-8 focus-visible:outline-white"
-          >
-            <h3 className="font-[family-name:var(--font-display)] text-[clamp(3rem,6.5vw,6.5rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
-              View All<br />Projects
-            </h3>
-            <div className="mt-8 md:mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">
-              <ArrowUpRight
-                size={24}
-                className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-                aria-hidden="true"
-              />
-            </div>
-          </Link>
+          <div className="relative isolate overflow-hidden bg-[color:var(--cs-signal)] dark:bg-zinc-800 lg:col-span-2">
+            {/* Geometric lines inside the block */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] md:w-[70%] aspect-square border border-white/20 rounded-full pointer-events-none z-0" aria-hidden="true" />
+            <CompassArc className="absolute right-0 top-0 z-0 w-[24%] rotate-180 text-white/20" />
+            <div className="absolute top-[50%] left-0 w-full h-[1px] bg-white/20 pointer-events-none z-0" aria-hidden="true" />
+
+            <Link
+              href={data.catalogueRoute}
+              className="group relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-4 text-center focus-visible:outline-2 focus-visible:-outline-offset-8 focus-visible:outline-white"
+            >
+              <h3 className="font-[family-name:var(--font-display)] text-[clamp(3rem,6.5vw,6.5rem)] font-black uppercase leading-[0.85] tracking-tight text-white transition-transform duration-500 group-hover:scale-[1.02]">
+                View All<br />Projects
+              </h3>
+              <div className="mt-8 md:mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-[color:var(--cs-signal)] dark:group-hover:text-zinc-900">
+                <ArrowUpRight
+                  size={24}
+                  className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                  aria-hidden="true"
+                />
+              </div>
+            </Link>
+          </div>
+
+          <GitHubPanel beside />
         </div>
       </div>
 

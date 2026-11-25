@@ -155,7 +155,8 @@ export default function SceneExperience({ data }: SceneExperienceProps) {
         </div>
 
         {/* Route cues sidebar (Cols 10–12) - Option 2: Architectural Pillar */}
-        <div className="col-span-4 mt-12 md:mt-16 lg:mt-0 flex flex-col lg:col-span-3 lg:col-start-10 bg-[color:var(--cs-signal)] dark:bg-zinc-800 text-white relative overflow-clip shadow-2xl isolate">
+        <div data-draw="cut" className="col-span-4 mt-12 md:mt-16 lg:mt-0 flex flex-col lg:col-span-3 lg:col-start-10 bg-[color:var(--cs-signal)] dark:bg-zinc-800 text-white relative overflow-clip shadow-2xl isolate">
+          <span aria-hidden="true" className="cut-edge pointer-events-none absolute inset-0 z-20" />
           {/* Geometric accents inside the pillar */}
           <RegistrationMark className="absolute -top-20 -right-20 z-0 w-64 text-white/20" />
           <CompassArc className="absolute bottom-0 left-0 z-0 w-full text-white/15" />

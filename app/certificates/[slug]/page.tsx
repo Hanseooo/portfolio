@@ -9,6 +9,7 @@ import {
   EmptySafeActions,
 } from "@/components/evidence";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import { RecordStep } from "@/components/motion/RecordStep";
 
 interface CertificatePageProps {
   params: Promise<{ slug: string }>;
@@ -51,6 +52,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="certificates"
           parentLabel="All Certificates"
           parentHref="/certificates"
           index={`${String(cert.position).padStart(2, "0")} of ${String(cert.totalInCollection).padStart(2, "0")}`}
@@ -72,6 +74,8 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
         />
       }
     >
+      {/* Slides in from the side Previous/Next came from */}
+      <RecordStep>
       <div data-motion-target="certificate-detail">
         {/* Large, undistorted certificate artifact */}
         <StructuredReveal recipe="credential-artifact">
@@ -98,6 +102,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
           </StructuredReveal>
         )}
       </div>
+      </RecordStep>
     </PageFamilyFrame>
   );
 }

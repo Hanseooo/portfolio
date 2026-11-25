@@ -10,7 +10,7 @@
  */
 
 import type { StaticImageData } from "next/image";
-import { projects } from "@/lib/projects";
+import { projects, type ProjectKind } from "@/lib/projects";
 import { experience, type ExperienceRecord } from "@/lib/experience";
 import { certificates } from "@/lib/certificates";
 import { resourceGroups } from "@/lib/resources";
@@ -24,6 +24,7 @@ export interface ProjectCollectionRecord {
   subtitle: string;
   year: string;
   role: string;
+  kind: ProjectKind;
   heroImage: StaticImageData;
   /** Position in authoritative source order (1-based) */
   position: number;
@@ -47,6 +48,7 @@ export function getProjectCollection(): ProjectCollectionProjection {
       subtitle: p.subtitle,
       year: p.year,
       role: p.role,
+      kind: p.kind,
       heroImage: p.heroImage,
       position: i + 1,
       detailRoute: `/projects/${p.slug}`,

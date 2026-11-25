@@ -23,7 +23,7 @@ async (page) => {
     assert(JSON.stringify(supportingSlugs) === '["simply-note","the-podium","hcdc-lfms"]', "Supporting projects must keep their curated order");
     const proof = page.getByRole("region", { name: "Hans Amoguis", exact: true });
     const proofText = await proof.textContent();
-    for (const value of ["75%", "5", "11", "Client-reported, Le Doux"]) {
+    for (const value of ["75%", "5", "live products", "Client-reported, Le Doux"]) {
       assert(proofText.includes(value), `Hero proof missing ${value}`);
     }
     const supportingText = await page.locator('[data-motion-target^="supporting-record-"]').allTextContents();
@@ -43,7 +43,7 @@ async (page) => {
     assert(!(await page.locator("main").innerText()).match(/80%|inneficient/), "Experience must omit unsupported copy and the typo");
     await page.goto("http://localhost:3000/projects/story-buddy");
     assert(await page.getByRole("heading", { name: "StoryBuddy", exact: true }).count() === 1, "StoryBuddy detail must render");
-    assert((await page.locator("main").innerText()).includes("11-node deterministic LangGraph"), "StoryBuddy must explain the verified pipeline");
+    assert((await page.locator("main").innerText()).includes("14-node deterministic LangGraph"), "StoryBuddy must explain the verified pipeline");
     assert(await page.locator("#project-screenshots img").count() === 1, "StoryBuddy must show the public research screenshot without duplicating its hero");
     const sitemap = await page.request.get("http://localhost:3000/sitemap.xml");
     assert(sitemap.ok() && (await sitemap.text()).includes("/projects/story-buddy"), "StoryBuddy must appear in the sitemap");

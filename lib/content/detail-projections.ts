@@ -10,7 +10,7 @@
  */
 
 import type { StaticImageData } from "next/image";
-import { projects } from "@/lib/projects";
+import { projects, type ProjectKind, type ProjectPipeline } from "@/lib/projects";
 import { certificates } from "@/lib/certificates";
 import type { SourceIdentity } from "./types";
 
@@ -22,6 +22,7 @@ export interface ProjectDetailProjection {
   subtitle: string;
   year: string;
   role: string;
+  kind: ProjectKind;
   heroImage: StaticImageData;
   ogImageSrc: string;
   problem: string;
@@ -30,6 +31,7 @@ export interface ProjectDetailProjection {
   features: string[];
   stack: string[];
   integrations: string[];
+  pipeline?: ProjectPipeline;
   /** Gallery with hero EXCLUDED — deduplication */
   gallery: StaticImageData[];
   githubUrl?: string;
@@ -57,6 +59,7 @@ export function getProjectDetail(slug: string): ProjectDetailProjection | null {
     subtitle: p.subtitle,
     year: p.year,
     role: p.role,
+    kind: p.kind,
     heroImage: p.heroImage,
     ogImageSrc: p.ogImageSrc,
     problem: p.problem,
@@ -65,6 +68,7 @@ export function getProjectDetail(slug: string): ProjectDetailProjection | null {
     features: p.features,
     stack: p.stack,
     integrations: p.integrations ?? [],
+    pipeline: p.pipeline,
     gallery: p.gallery.filter((img) => img !== p.heroImage),
     githubUrl: p.github,
     liveUrl: p.live,

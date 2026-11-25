@@ -4,6 +4,7 @@ import Image from "next/image";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import { CropMarks, IndexMark } from "@/components/geometry";
+import { ConstructMarks } from "@/components/geometry/ConstructMarks";
 import type { ProjectCollectionRecord } from "@/lib/content/collection-projections";
 
 interface ProjectCatalogueRecordProps {
@@ -44,6 +45,7 @@ export default function ProjectCatalogueRecord({
           <div className="md:col-span-7 md:[direction:ltr]">
             <div className="relative">
             <CropMarks className="text-[color:var(--cs-structural-line-strong)]" />
+            <ConstructMarks className="z-10 text-[color:var(--cs-structural-line-strong)]" />
             <div className="relative aspect-[16/10] w-full overflow-hidden border border-[color:var(--cs-structural-line)] bg-[color:var(--cs-raised-neutral)]">
               <Image
                 src={record.heroImage}
@@ -73,15 +75,14 @@ export default function ProjectCatalogueRecord({
 
             {/* Metadata row */}
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+              <span>
+                {record.kind}
+                {record.client && ` · ${record.client}`}
+              </span>
+              <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
               <span>{record.year}</span>
               <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
               <span>{record.role}</span>
-              {record.client && (
-                <>
-                  <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
-                  <span>{record.client}</span>
-                </>
-              )}
             </div>
 
             {/* Case study destination indicator */}

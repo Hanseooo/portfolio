@@ -7,6 +7,9 @@ import { clampText, formatClockTime, formatRelativeTime } from "@/lib/activity/f
 import GitHubHeatmap, { HeatmapPlaceholder, getHeatmapSummary } from "./WeeklyActivityBars";
 import LiveCardHeader from "./LiveCardHeader";
 import { LIVE_LABEL, SKELETON_BAR } from "./labels";
+import { GITHUB_HANDLE, GITHUB_URL } from "@/components/utils/externalLinks";
+
+const PROFILE_LINK = { label: GITHUB_HANDLE, href: GITHUB_URL };
 
 type GitHubActivityProps = {
   payload: ActivityResponse<GitHubActivity> | null;
@@ -117,7 +120,7 @@ const SKELETON_COUNTS = ["PRs opened", "PRs merged", "Issues"];
 function GitHubActivitySkeleton() {
   return (
     <article aria-busy="true" className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl motion-safe:animate-pulse">
-      <LiveCardHeader label="Recent work" />
+      <LiveCardHeader label="Recent work" link={PROFILE_LINK} />
       <span className="sr-only">Loading GitHub activity</span>
       <div aria-hidden="true" className="p-4 md:p-6 flex flex-col gap-8">
         <div className="grid grid-cols-3 divide-x divide-[color:var(--cs-structural-line)]">
@@ -166,7 +169,7 @@ function GitHubActivityCard({ payload, loading = false }: GitHubActivityProps) {
 
   return (
     <article className="flex flex-col border border-[color:var(--cs-structural-line-strong)] bg-[color:var(--cs-reading-surface)] shadow-xl">
-      <LiveCardHeader label="Recent work" />
+      <LiveCardHeader label="Recent work" link={PROFILE_LINK} />
 
       <div className="p-4 md:p-6 flex flex-col gap-8">
         <div className="grid grid-cols-3 divide-x divide-[color:var(--cs-structural-line)]">

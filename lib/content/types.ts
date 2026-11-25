@@ -1,6 +1,7 @@
 // lib/content/types.ts
 
 import type { StaticImageData } from "next/image";
+import type { ProjectKind } from "@/lib/projects";
 
 /** Source-identity tracing — every projected value carries provenance. */
 export interface SourceIdentity {
@@ -12,7 +13,7 @@ export interface SourceIdentity {
 
 /** A qualified proof figure for the homepage. */
 export interface ProofFigure {
-  /** The numeric value, e.g. "75%" or "11" */
+  /** The numeric value, e.g. "75%" or "5" */
   value: string;
   /** What it measures */
   label: string;
@@ -28,6 +29,7 @@ export interface ProjectCardProjection {
   title: string;
   year: string;
   role: string;
+  kind: ProjectKind;
   /** S1-approved concise editorial summary */
   editorialSummary: string;
   /** Hero screenshot only — gallery NOT projected here */

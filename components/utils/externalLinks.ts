@@ -4,6 +4,8 @@ export const LINKEDIN_URL = "https://www.linkedin.com/in/hanseooo"
 
 export const GITHUB_URL = "https://github.com/Hanseooo"
 
+export const GITHUB_HANDLE = "@Hanseooo"
+
 export const RESUME_URL = "/AMOGUIS_RESUME.pdf"
 
 export const RESUME_LABEL = "Resume (PDF, opens in new tab)"

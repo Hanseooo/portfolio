@@ -74,7 +74,7 @@ export default function TechStackSection({ id, capabilities }: { id: string; cap
 
         {/* Asymmetric Bento Grid */}
         <div 
-          className="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-border bg-background relative z-10"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-border bg-[color:var(--cs-foundation)] relative z-10"
         >
           {/* What I build: lead plate (5 cols) + numbered records (7 cols), aligned to the Build/Tools split below */}
           <motion.div
@@ -134,7 +134,7 @@ export default function TechStackSection({ id, capabilities }: { id: string; cap
             className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-border p-8 lg:p-12 xl:p-16 flex flex-col relative overflow-hidden isolate"
           >
             {/* Architectural Grid and Asymmetrical Routing Lines */}
-            <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] dark:opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)', backgroundSize: '24px 24px' }} aria-hidden="true" />
+            <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.08] dark:opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)', backgroundSize: '24px 24px' }} aria-hidden="true" />
             
             <div className="absolute top-[25%] right-[15%] w-[45%] h-[60%] border-t border-r border-border/80 z-0 hidden sm:block" aria-hidden="true" />
             <div className="absolute bottom-0 left-[20%] w-[1px] h-[40%] bg-primary/40 z-0 hidden sm:block" aria-hidden="true" />
@@ -212,7 +212,7 @@ export default function TechStackSection({ id, capabilities }: { id: string; cap
               {/* Target bracket (Asymmetrical bottom right corner) */}
               <div className="absolute bottom-6 right-6 w-16 h-16 border-b border-r border-foreground/30 pointer-events-none hidden sm:block" aria-hidden="true" />
 
-              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary mb-8 relative z-10 bg-background/80 px-2 -ml-2 inline-block w-fit backdrop-blur-sm">
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary mb-8 relative z-10 bg-[color:var(--cs-foundation)]/80 px-2 -ml-2 inline-block w-fit backdrop-blur-sm">
                 Deploy
               </p>
               <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-4 mt-auto relative z-10">

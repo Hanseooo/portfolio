@@ -19,6 +19,7 @@ export default function ExperiencePage() {
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="experience"
           parentLabel="Home"
           parentHref="/"
           title="Experience"

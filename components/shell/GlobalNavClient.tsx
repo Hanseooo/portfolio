@@ -63,7 +63,7 @@ export default function GlobalNavClient() {
             if (nativeNavigation) return;
             if (pathname === "/") return; // already home — no handoff
             e.preventDefault();
-            handoffNavigate("/");
+            handoffNavigate("/", e.currentTarget);
           }}
           className="flex h-11 items-center font-[family-name:var(--font-display)] text-base uppercase tracking-[0.15em] text-[color:var(--cs-text-primary)] transition-colors hover:text-[color:var(--cs-signal)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)]"
           aria-label="Hans Amoguis — Home"
@@ -90,7 +90,7 @@ export default function GlobalNavClient() {
                       anchor.hasAttribute("download");
                     if (nativeNavigation) return;
                     e.preventDefault();
-                    handoffNavigate(getDestinationHref(dest));
+                    handoffNavigate(getDestinationHref(dest), anchor);
                   }}
                   className={`flex h-11 items-center px-4 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--cs-focus-ring)] ${
                     current

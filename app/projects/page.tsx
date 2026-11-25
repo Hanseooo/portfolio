@@ -4,6 +4,7 @@ import { getProjectCollection } from "@/lib/content/collection-projections";
 import { PageFamilyFrame, CompactMasthead } from "@/components/frames";
 import { RecordContinuation } from "@/components/evidence";
 import ProjectCatalogueRecord from "@/components/routes/ProjectCatalogueRecord";
+import GitHubPanel from "@/components/sections/GitHubPanel";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -19,6 +20,7 @@ export default function ProjectsPage() {
     <PageFamilyFrame
       masthead={
         <CompactMasthead
+          section="projects"
           parentLabel="Home"
           parentHref="/"
           title="Projects"
@@ -43,6 +45,11 @@ export default function ProjectsPage() {
             isAlternate={idx % 2 !== 0}
           />
         ))}
+      </div>
+
+      {/* The catalogue is a selection; everything else is on GitHub. */}
+      <div className="mt-16 md:mt-24">
+        <GitHubPanel />
       </div>
     </PageFamilyFrame>
   );

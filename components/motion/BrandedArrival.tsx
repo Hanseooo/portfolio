@@ -18,7 +18,7 @@ const ARRIVAL_HOLD_MS = 900;
  */
 export const ARRIVAL_DONE_EVENT = "portfolio:arrival-done";
 
-/** Blueprint corner bracket — identical to RouteHandoffOverlay variant */
+/** Blueprint corner bracket */
 function CornerBracket({
   position,
   delay,

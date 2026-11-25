@@ -88,7 +88,7 @@ Test: every changed line traces to the request.
 ## Project Invariants
 - Color palette: deep black base + Ice Blue accents (dark theme); light ivory + red signal (light theme). Do not introduce other accent colors without explicit approval.
 - Chapter-based layout: sections are numbered/themed (01 Identity, 02 Approach, etc.) — maintain this structure.
-- Animation rule: Framer Motion for React component animations; GSAP for scroll-trigger sequences. Never mix both on the same element.
+- Animation rule: Framer Motion for React component animations; GSAP for scroll-trigger sequences. Never mix both on the same element. Exceptions: CSS for entrances, masks and dialogs that need no JS state; WAAPI `el.animate()` for one-shot FLIP and step animations; a rAF loop writing SVG attributes for the live drawings (`HeroCompass`, `ConstructionSite`). DESIGN.md §10 names each use.
 - `prefers-reduced-motion` must be respected in all animation code.
 - Tailwind v4: no `tailwind.config.js`; config lives in CSS / `postcss.config.mjs`. Use v4 utility classes only.
 - shadcn/ui components live in `components/ui/` — extend these before writing from scratch.
@@ -103,5 +103,5 @@ Test: every changed line traces to the request.
 - Never mark complete without proof (passing lint/build output shown, visual browser verification done).
 
 ## Validation Notes
-- Vitest covers contact validation and the contact action (`pnpm test`). Everything else is verified by `pnpm lint && pnpm build`, browser checks, and a visual pass.
+- Vitest covers contact validation, the contact action, the activity client cache, and the homepage projections (`pnpm test`). Everything else is verified by `pnpm lint && pnpm build`, browser checks, and a visual pass.
 - No README.md at repo root — `docs/01-project-brief.md` serves as the project intent document.

@@ -1,6 +1,9 @@
 // components/routes/ProjectEvidenceBody.tsx
 import { ScreenshotFrame } from "@/components/evidence";
+import ScreenshotGallery from "@/components/evidence/ScreenshotGallery";
+import { ScreenshotViewer, ShotThumb } from "@/components/evidence/ScreenshotViewer";
 import StructuredReveal from "@/components/motion/StructuredReveal";
+import ProjectPipeline from "@/components/routes/ProjectPipeline";
 import type { ProjectDetailProjection } from "@/lib/content/detail-projections";
 
 interface ProjectEvidenceBodyProps {
@@ -10,7 +13,7 @@ interface ProjectEvidenceBodyProps {
 /**
  * Project evidence body — S4 §9.2 claim-to-proof sequence.
  *
- * Order: Brief → Decisions → System → Capabilities → Screenshots.
+ * Order: Brief → Decisions → Pipeline (optional) → System → Capabilities → Screenshots.
  * Each section has a stable ID for local navigation anchoring.
  * Gallery deduplication handled upstream (hero excluded from gallery).
  * No accordions, tabs, or show-all controls.
@@ -22,28 +25,34 @@ export default function ProjectEvidenceBody({ project }: ProjectEvidenceBodyProp
   const hasIntegrations = project.integrations.length > 0;
   const hasFeatures = project.features.length > 0;
   const hasGallery = project.gallery.length > 0;
+  // One viewer for the page: the hero is shot 01, the gallery follows.
+  const shots = [
+    { src: project.heroImage, alt: `${project.title} — primary interface screenshot` },
+    ...project.gallery.map((src, i) => ({ src, alt: `${project.title} — screenshot ${i + 2}` })),
+  ];
 
   return (
+    <ScreenshotViewer shots={shots} label={`${project.title} screenshots`}>
     <div className="space-y-0">
-      {/* ── Section: Hero Screenshot ── */}
-      <StructuredReveal recipe="evidence-section">
-        <section
-          id="project-hero-image"
-          className="scroll-target evidence-section"
-          aria-labelledby="project-hero-image-heading"
-          data-motion-target="evidence-hero"
-        >
-          <h2 id="project-hero-image-heading" className="sr-only">
-            Primary visual evidence
-          </h2>
-          <ScreenshotFrame
-            src={project.heroImage}
-            alt={`${project.title} — primary interface screenshot`}
-            priority
-            wide
-          />
-        </section>
-      </StructuredReveal>
+      {/* ── Section: Hero Screenshot ──
+          Enters by the compass cut (no fade), from the top-right corner under
+          the masthead's compass origin. */}
+      <section
+        id="project-hero-image"
+        className="scroll-target evidence-section"
+        aria-labelledby="project-hero-image-heading"
+        data-motion-target="evidence-hero"
+      >
+        <h2 id="project-hero-image-heading" className="sr-only">
+          Primary visual evidence
+        </h2>
+        <div data-draw="cut" className="cut-frame relative isolate">
+          <ShotThumb index={0}>
+            <ScreenshotFrame src={shots[0].src} alt={shots[0].alt} priority wide />
+          </ShotThumb>
+          <span aria-hidden="true" className="cut-edge pointer-events-none absolute inset-0 z-20" />
+        </div>
+      </section>
 
       {/* ── Section: Brief ── */}
       <StructuredReveal recipe="evidence-section">
@@ -112,6 +121,26 @@ export default function ProjectEvidenceBody({ project }: ProjectEvidenceBodyProp
                 </li>
               ))}
             </ol>
+          </section>
+        </StructuredReveal>
+      )}
+
+      {/* ── Section: Pipeline ── */}
+      {project.pipeline && (
+        <StructuredReveal recipe="evidence-section">
+          <section
+            id="project-pipeline"
+            className="scroll-target evidence-section border-t border-[color:var(--cs-structural-line)]"
+            aria-labelledby="project-pipeline-heading"
+            data-motion-target="evidence-pipeline"
+          >
+            <h2
+              id="project-pipeline-heading"
+              className="mb-8 font-[family-name:var(--font-display)] text-2xl uppercase tracking-tight text-[color:var(--cs-text-primary)] md:text-3xl"
+            >
+              Pipeline
+            </h2>
+            <ProjectPipeline pipeline={project.pipeline} />
           </section>
         </StructuredReveal>
       )}
@@ -232,29 +261,11 @@ export default function ProjectEvidenceBody({ project }: ProjectEvidenceBodyProp
               - Following: paired on desktop, single on mobile
               - Hero already excluded by Plan 1 getProjectDetail
             */}
-            <div className="space-y-6">
-              {/* First gallery image — wide */}
-              <ScreenshotFrame
-                src={project.gallery[0]}
-                alt={`${project.title} — screenshot 1`}
-                wide
-              />
-              {/* Remaining images — paired on desktop, single on mobile */}
-              {project.gallery.length > 1 && (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {project.gallery.slice(1).map((img, i) => (
-                    <ScreenshotFrame
-                      key={i}
-                      src={img}
-                      alt={`${project.title} — screenshot ${i + 2}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <ScreenshotGallery shots={shots.slice(1)} offset={1} />
           </section>
         </StructuredReveal>
       )}
     </div>
+    </ScreenshotViewer>
   );
 }

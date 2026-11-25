@@ -29,11 +29,12 @@ export const experience: ExperienceRecord[] = [
     links: [
       
     ],
+    // The first shot stays open on /experience; the rest sit behind "more screenshots".
     gallery: [
+      { image: slideOutput, alt: "Generated Google Slide with an image placeholder and speaker notes", caption: "Generated slide output with a placeholder for human review and speaker notes." },
       { image: slideGenerate, alt: "Slide Deck Generator upload and generation form", caption: "Upload a PRD and generate a lecture deck." },
       { image: slideHistory, alt: "Generation history showing status, slide counts, and cost", caption: "Supabase-backed generation history added in v1.1." },
       { image: slidePreview, alt: "Generated lecture deck preview, slide 1 of 31", caption: "Review the generated deck before opening Google Slides." },
-      { image: slideOutput, alt: "Generated Google Slide with an image placeholder and speaker notes", caption: "Generated slide output with a placeholder for human review and speaker notes." },
     ],
   },
   {

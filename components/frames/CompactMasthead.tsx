@@ -1,8 +1,13 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { CompassArc } from "@/components/geometry";
+import type { CSSProperties, ReactNode } from "react";
+import { CompassArc, compassTip } from "@/components/geometry";
+
+/** Each section's compass bearing, turning further in nav order. Records share their collection's. */
+const BEARING = { about: 18, projects: 32, experience: 47, certificates: 61, resources: 76 } as const;
 
 interface CompactMastheadProps {
+  /** Site section: sets the compass bearing */
+  section: keyof typeof BEARING;
   /** Parent destination label, e.g. "Projects", "Certificates", "Home" */
   parentLabel: string;
   /** Parent destination href */
@@ -28,6 +33,7 @@ interface CompactMastheadProps {
  * Does NOT invent introductory prose.
  */
 export default function CompactMasthead({
+  section,
   parentLabel,
   parentHref,
   index,
@@ -36,6 +42,18 @@ export default function CompactMasthead({
   metadata,
   actions,
 }: CompactMastheadProps) {
+  const bearing = BEARING[section];
+  // From md the arc is turned -90° (origin bottom-right), so its tip lands here in the box.
+  const tip = compassTip(bearing);
+  const labelStyle = {
+    right: `${100 - tip.y}%`,
+    bottom: `${tip.x}%`,
+    "--crop-x": 1,
+    "--crop-y": 1,
+  } as CSSProperties;
+  // The label settles as the compass sweep (700ms) passes the leg.
+  const labelDraw = { "--draw-delay": `${Math.round(100 + (700 * bearing) / 90)}ms` } as CSSProperties;
+
   return (
     <div className="relative isolate pb-12 pt-8 md:pb-16 md:pt-12">
       {/* Signal rule — controlled structural break */}
@@ -44,8 +62,32 @@ export default function CompactMasthead({
         aria-hidden="true"
       />
 
-      {/* Compass construction swung from the bottom-right corner */}
-      <CompassArc className="absolute bottom-0 right-0 -z-10 hidden w-56 -rotate-90 text-[color:var(--cs-structural-line-strong)] md:block lg:w-72" />
+      {/* Drafting sheet spreading from the compass origin */}
+      <div
+        className="masthead-sheet pointer-events-none absolute inset-0 -z-10 opacity-[0.15] dark:opacity-[0.07]"
+        aria-hidden="true"
+      />
+
+      {/* Compass construction: top-right corner on phones, bottom-right from md, never taller
+          than the masthead. The leg's bearing is labelled from md. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 -z-10 aspect-square w-28 md:top-auto md:bottom-0 md:h-full md:max-h-56 md:w-auto lg:max-h-72"
+      >
+        <CompassArc
+          hatch
+          bearing={bearing}
+          className="absolute inset-0 rotate-180 text-[color:var(--cs-structural-line-strong)] md:-rotate-90"
+        />
+        <span data-draw="settle" style={labelDraw} className="hidden md:block">
+          <span
+            style={labelStyle}
+            className="absolute pr-2 pb-1.5 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.08em] text-[color:var(--cs-text-secondary)]"
+          >
+            {bearing}°
+          </span>
+        </span>
+      </div>
 
       {/* Parent navigation */}
       <nav aria-label="Parent route" className="mb-4">
@@ -64,8 +106,8 @@ export default function CompactMasthead({
         </p>
       )}
 
-      {/* Title (h1 for the page) */}
-      <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,4rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">
+      {/* Title (h1 for the page). From md it wraps before the compass (max 224px, 288px at lg). */}
+      <h1 className="text-balance md:max-w-[calc(100%-15rem)] lg:max-w-[calc(100%-19rem)] font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,4rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">
         {title}
       </h1>
 

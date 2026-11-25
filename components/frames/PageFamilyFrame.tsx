@@ -37,10 +37,10 @@ export default function PageFamilyFrame({
 
       {/* Optional local section navigation (project detail) */}
       {localNav && (
-        <StructuredReveal recipe="evidence-section">
+        <StructuredReveal recipe="evidence-section" className="local-nav-bar sticky top-[var(--nav-height)] z-40 mb-8 bg-[color:var(--cs-foundation)] md:mb-12">
           <nav
             aria-label="Page sections"
-            className="mb-8 border-b border-[color:var(--cs-structural-line)] pb-4 md:mb-12"
+            className="border-b border-[color:var(--cs-structural-line)] pt-2"
           >
             {localNav}
           </nav>
