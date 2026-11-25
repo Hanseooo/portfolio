@@ -121,6 +121,19 @@ const leDouxImages : StaticImageData[] = [
 ]
 
 
+/** A linear pipeline drawn on the project page. Steps run left to right; one step may loop back on itself. */
+export type ProjectPipeline = {
+  steps: { label: string; note?: string }[];
+  /** Index into `steps` of the step that retries itself, and what the retry does. */
+  loop?: { step: number; label: string };
+  /** One line under the steps, e.g. when they group a larger graph. */
+  caption?: string;
+  /** Full diagrams kept elsewhere, e.g. a research site. */
+  links?: { label: string; href: string }[];
+}
+
+export type ProjectKind = "Capstone" | "Client" | "Academic" | "Personal" | "Hackathon";
+
 export type Project = {
     slug: string;
     title: string;
@@ -133,8 +146,11 @@ export type Project = {
     overview: string;
     features: string[];
     role: string;
+    /** How the work came about. Shown as a tag on Selected Work and leading the metadata line. */
+    kind: ProjectKind;
     stack: string[];
     integrations?: string[];
+    pipeline?: ProjectPipeline;
     gallery: StaticImageData[];
     github?: string;
     live?: string;
@@ -153,35 +169,67 @@ export const projects: Project[] = [
     ogImageSrc: "app/assets/projects/story-buddy/hero.webp",
     year: "2026",
     problem:
-      "Turning Grade 5–6 learners' stories into illustrated picture books requires characters to stay recognizable across scenes while checking generated content for child safety and personal information.",
+      "A Grade 5–6 learner writes a story, the teacher marks it, and it goes in a folder. No teacher can illustrate a whole class's stories, and image models lose a character's face from one scene to the next, so a generated book stops being the child's story. Stories written by children also need safety checks and personal-information redaction before they reach image generation.",
     overview:
-      "StoryBuddy is a capstone project developed at Holy Cross of Davao College for Grade 5–6 learners, with stories collected at Matina Aplaya Elementary School. As the solo developer working with three researchers, I built an 11-node deterministic LangGraph pipeline that turns stories into picture books using open-weight models. The workflow connects story analysis, reference generation, VLM-based consistency checks, and targeted scene regeneration. I also built annotation and evaluation tooling for character-identity review with precision, recall, and F1 reporting. The project supports SDG 4: Quality Education.",
+      "StoryBuddy is my capstone at Holy Cross of Davao College, built for Grade 5–6 learners with stories collected at an elementary school in Davao. As the solo developer on a three-researcher team, I built the whole system: the student and teacher apps, the FastAPI job backend, and the LangGraph pipeline that turns a story into an illustrated book using open-weight models. A vision-language judge checks each scene against the characters' reference images and sends failures back for targeted regeneration. Research tooling records human labels to score that judge with precision, recall, and F1. The project supports SDG 4: Quality Education.",
     technicalDecisions: [
-      "An 11-node deterministic LangGraph pipeline connects story analysis, reference generation, consistency checks, and scene regeneration.",
-      "Open-weight models handle text and image generation: Mistral Small 3.2 and Gemma-3-27B, with Qwen-Image and Qwen-Image-Edit on fal.ai.",
-      "Llama Guard 4 12B and gpt-oss-safeguard check content safety, while Presidio handles personal-information redaction.",
-      "VLM-based character consistency checks and targeted scene regeneration address character drift; annotation tooling records human labels and reports precision, recall, and F1.",
+      "14-node deterministic LangGraph state machine over an autonomous agent: a fixed graph bounds the worst-case cost of a book and keeps runs reproducible for the research evaluation.",
+      "Style rides the reference, identity rides the editor: Qwen-Image draws each character's canonical reference in the chosen art style, and Qwen-Image-Edit draws every scene from those references, so style and consistency can each be swapped without touching the other.",
+      "Reason-then-score consistency judge: Gemma-3-27B lists what is wrong (a missing scarf, a wrong color) before its pass or fail verdict, and those reasons drive up to two targeted regenerations. The best of three attempts is kept.",
+      "Async jobs with checkpoints: a book takes one to three minutes, so FastAPI queues it to an RQ worker, the page follows progress over Supabase Realtime, and Postgres checkpoints after each scene let an interrupted job resume without paying for finished scenes again.",
+      "Open-weight models behind OpenRouter and fal.ai, so a model swap is a config change. Structured output depended on the provider, not only the model: Qwen3-32B passed testing and still broke its schema in production, so Mistral Small 3.2 replaced it on a pinned provider with one re-ask.",
+      "Two independent safety gates: Llama Guard 4 and gpt-oss-safeguard screen story text, Presidio with Filipino recognizers redacts personal information, and generated pictures are screened again before a child sees them.",
+      "Teacher-gated classroom: teachers issue student accounts with no self-signup or email, row-level security scopes every read to the classroom, and a book reaches the classroom gallery only after the teacher approves it.",
     ],
     features: [
-      "AI picture-book generation from Grade 5–6 learners' stories",
-      "Story analysis and character-reference generation",
-      "VLM-based character consistency checks across scenes",
-      "Targeted regeneration of scenes with character drift",
-      "Content safety checks and personal-information redaction",
-      "Character-identity annotation and evaluation with precision, recall, and F1 reporting",
+      "Students write a story, choose one of three art styles, and follow live progress while the book builds",
+      "Story analysis splits the text into scenes and builds a character cast with reference images",
+      "VLM consistency checks on every scene, with targeted regeneration when a character drifts",
+      "Content safety checks on story text and generated pictures, with personal-information redaction",
+      "Teacher-issued, classroom-scoped student accounts with a classroom dashboard and roster",
+      "Teacher review queue: approve or reject each book before classmates can see it",
+      "Classroom gallery of approved books",
+      "Research console for browsing generation runs, scene splits, and character references",
+      "Character-identity labelling with conflict adjudication, scored with precision, recall, and F1",
     ],
     role: "Solo developer, 3-person research team",
+    kind: "Capstone",
     stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "FastAPI",
+      "Python 3.12",
       "LangGraph",
+      "Pydantic",
+      "Redis + RQ",
+      "Presidio",
       "Qwen-Image",
       "Qwen-Image-Edit",
       "Mistral Small 3.2",
       "Gemma-3-27B",
       "Llama Guard 4 12B",
       "gpt-oss-safeguard",
-      "Presidio",
     ],
-    integrations: ["fal.ai"],
+    integrations: ["Supabase", "OpenRouter", "fal.ai", "Langfuse", "Vercel", "Northflank"],
+    pipeline: {
+      steps: [
+        { label: "Input gate", note: "Moderation and redaction" },
+        { label: "Analyze", note: "Characters and setting" },
+        { label: "Segment", note: "Story into pages" },
+        { label: "Character bible", note: "Reference images" },
+        { label: "Generate scene", note: "Edited from the references" },
+        { label: "Consistency check", note: "VLM judge" },
+        { label: "Compose", note: "The finished book" },
+      ],
+      loop: { step: 5, label: "Fail: regenerate, up to 2 retries" },
+      caption: "Stages grouped from the 14-node graph.",
+      links: [
+        { label: "Full pipeline", href: "https://storybuddy.hanseo.tech/research/pipeline" },
+        { label: "System architecture", href: "https://storybuddy.hanseo.tech/research/architecture" },
+      ],
+    },
     gallery: [
       storyBuddyStoryEditor,
       storyBuddyCharacterCast,
@@ -196,7 +244,7 @@ export const projects: Project[] = [
       storyBuddyConflictAdjudication,
       storyBuddyCharacterComparison,
     ],
-    updated: "2026-10-21",
+    updated: "2026-11-25",
     github: "https://github.com/Hanseooo/story-buddy",
     live: "https://storybuddy.hanseo.tech",
   },
@@ -243,6 +291,7 @@ export const projects: Project[] = [
       "Automated cleanup — weekly pg_cron job deletes orphaned storage files, purges stale logs",
     ],
     role: "Sole Full Stack Developer",
+    kind: "Client",
     stack: [
       "Next.js 16",
       "React 19",
@@ -292,6 +341,7 @@ export const projects: Project[] = [
       "Quota system — daily usage limits with free and Pro tiers",
     ],
     role: "Sole Full Stack Developer",
+    kind: "Personal",
     stack: [
       "Next.js 16",
       "React 19",
@@ -356,6 +406,7 @@ export const projects: Project[] = [
       "Feedback & bug reporting system",
     ],
     role: "Sole Full Stack Developer",
+    kind: "Personal",
     stack: [
       "React",
       "TypeScript",
@@ -401,6 +452,7 @@ export const projects: Project[] = [
       "Seminar management: create, edit, delete seminars, upload images, view attendance, export data",
     ],
     role: "Sole Full Stack Developer",
+    kind: "Academic",
     stack: [
       "React",
       "TypeScript",
@@ -445,6 +497,7 @@ export const projects: Project[] = [
       "Responsive UI with light, dark, and system theme support",
     ],
     role: "Sole Full Stack Developer",
+    kind: "Academic",
     stack: [
       "React",
       "TypeScript",

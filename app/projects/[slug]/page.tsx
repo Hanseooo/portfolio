@@ -26,6 +26,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (project.technicalDecisions.length > 0) {
     localSections.push({ id: "project-decisions", label: "Decisions" });
   }
+  if (project.pipeline) {
+    localSections.push({ id: "project-pipeline", label: "Pipeline" });
+  }
   if (project.stack.length > 0) {
     localSections.push({ id: "project-system", label: "System" });
   }
@@ -96,9 +99,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           subtitle={project.subtitle}
           metadata={
             <>
+              <span>
+                {project.kind}
+                {project.client && ` · ${project.client}`}
+              </span>
               <span>{project.year}</span>
               <span>{project.role}</span>
-              {project.client && <span>Client: {project.client}</span>}
             </>
           }
           actions={<EmptySafeActions actions={actions} />}

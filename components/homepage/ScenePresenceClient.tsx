@@ -8,6 +8,7 @@ import GitHubActivityCard, { GitHubContributionBand } from "@/components/section
 // import SpotifyActivityCard from "@/components/sections/live-activity/SpotifyActivityCard";
 import DiscordStatusCard from "@/components/sections/live-activity/DiscordStatusCard";
 import { usePrefersReducedMotion } from "@/components/utils/usePrefersReducedMotion";
+import { isFresh, recall, remember } from "@/lib/activity/client-cache";
 import type {
   ActivityResponse,
   GitHubActivity,
@@ -39,17 +40,21 @@ function buildClientErrorResponse<T>(
  * the bottom of a six-scene page; without the gate a visible tab parked on the
  * hero still fired two requests every 20s for the life of the session.
  *
- * One fetch always happens on mount so the first paint has data, and each
- * re-entry into view refreshes it.
+ * One fetch happens on mount so the first paint has data, and each re-entry
+ * into view refreshes it. Both are skipped while the tab's cached copy is fresh.
  */
 function usePolledActivity<T>(
   url: string,
   intervalMs: number,
   active: boolean
 ): ActivityState<T> {
-  const [state, setState] = useState<ActivityState<T>>({
-    payload: null,
-    loading: true,
+  // Data from before a client navigation paints at once; it refetches when older than this.
+  const maxAgeMs = Math.min(60 * 1000, intervalMs);
+  const [state, setState] = useState<ActivityState<T>>(() => {
+    const cached = recall(url);
+    return cached
+      ? { payload: cached.payload as ActivityResponse<T>, loading: false }
+      : { payload: null, loading: true };
   });
   const fetchedRef = useRef(false);
 
@@ -61,6 +66,7 @@ function usePolledActivity<T>(
         const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
         const payload = (await response.json()) as ActivityResponse<T>;
+        remember(url, payload);
         if (cancelled) return;
         setState({ payload, loading: false });
       } catch {
@@ -72,10 +78,10 @@ function usePolledActivity<T>(
       }
     };
 
-    if (!fetchedRef.current || active) {
-      fetchedRef.current = true;
+    if ((!fetchedRef.current || active) && !isFresh(recall(url), maxAgeMs)) {
       void update();
     }
+    fetchedRef.current = true;
 
     // ponytail: offscreen means no interval and no listener at all
     if (!active) {
@@ -100,7 +106,7 @@ function usePolledActivity<T>(
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [intervalMs, url, active]);
+  }, [intervalMs, maxAgeMs, url, active]);
 
   return state;
 }

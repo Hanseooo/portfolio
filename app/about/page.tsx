@@ -8,7 +8,7 @@ import { ThemePortrait } from "@/components/evidence";
 import HandoffLink from "@/components/shell/HandoffLink";
 import StructuredReveal from "@/components/motion/StructuredReveal";
 import ScenePresenceClient from "@/components/homepage/ScenePresenceClient";
-import { AVAILABILITY, getHomepagePersonal } from "@/lib/content/homepage-projections";
+import { AVAILABILITY, BUILDING_SINCE, getHomepagePersonal } from "@/lib/content/homepage-projections";
 import { DESTINATIONS, getDestinationHref } from "@/lib/destinations";
 
 export const metadata: Metadata = {
@@ -54,7 +54,7 @@ export default function AboutPage() {
             <ThemePortrait light={personal.portrait} dark={personal.portraitDark} alt="Hans Amoguis" priority sizes="(max-width: 767px) 90vw, 40vw" imageClassName="aspect-[4/5] w-full object-cover lg:aspect-auto lg:h-[min(45vh,26rem)]" />
             <figcaption className="flex flex-wrap justify-between gap-2 bg-[color:var(--cs-signal)] px-5 py-4 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-white dark:bg-zinc-800">
               <span>{personal.personalHandle}</span>
-              <span>Building since 2023</span>
+              <span>Building since {BUILDING_SINCE}</span>
             </figcaption>
             </div>
           </StructuredReveal>

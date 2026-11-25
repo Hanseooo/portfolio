@@ -103,5 +103,5 @@ Test: every changed line traces to the request.
 - Never mark complete without proof (passing lint/build output shown, visual browser verification done).
 
 ## Validation Notes
-- Vitest covers contact validation and the contact action (`pnpm test`). Everything else is verified by `pnpm lint && pnpm build`, browser checks, and a visual pass.
+- Vitest covers contact validation, the contact action, the activity client cache, and the homepage projections (`pnpm test`). Everything else is verified by `pnpm lint && pnpm build`, browser checks, and a visual pass.
 - No README.md at repo root — `docs/01-project-brief.md` serves as the project intent document.

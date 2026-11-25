@@ -32,9 +32,9 @@ const leDouxProof: ProofFigure = {
 
 const projectEditorial: Record<string, { summary: string; tagline?: string; technicalEvidence?: string[] }> = {
   "story-buddy": {
-    summary: "As the solo developer working with three researchers, I built StoryBuddy, a capstone that turns Grade 5–6 learners' stories into picture books. Its 11-node LangGraph pipeline connects story analysis, reference generation, consistency checks, and targeted scene regeneration using open-weight models.",
+    summary: "As the solo developer working with three researchers, I built StoryBuddy, a capstone that turns Grade 5–6 learners' stories into picture books. Its 14-node LangGraph pipeline connects story analysis, reference generation, consistency checks, and targeted scene regeneration using open-weight models.",
     tagline: "AI picture books for young storytellers",
-    technicalEvidence: ["11-node LangGraph pipeline", "VLM consistency checks", "F1-scored evaluation"],
+    technicalEvidence: ["14-node LangGraph pipeline", "VLM consistency checks", "F1-scored evaluation"],
   },
   "clarift": {
     summary: "I built Clarift as an AI-powered study engine for Filipino students. It turns uploaded material into grounded summaries, quizzes, and targeted practice using a Next.js and FastAPI architecture with background jobs, Redis, and pgvector.",
@@ -83,6 +83,7 @@ function projectCard(slug: string): ProjectCardProjection {
     title: project.title,
     year: project.year,
     role: project.role,
+    kind: project.kind,
     editorialSummary: editorial.summary,
     tagline: editorial.tagline,
     heroImage: project.heroImage,
@@ -99,10 +100,24 @@ function projectCard(slug: string): ProjectCardProjection {
 /** Matches the resume. Feeds the hero role line, site title, OG/Twitter titles, and JSON-LD jobTitle. */
 export const SITE_HEADLINE = "AI Engineer · Full-Stack Developer";
 
+/** Year Hans started building; shown in the hero proof strip and on the About portrait. */
+export const BUILDING_SINCE = 2023;
+
 export const AVAILABILITY = "Open to work · Full-time & freelance · Davao, PH · Remote-friendly";
 
 export const SITE_DESCRIPTION =
   "Hans Amoguis builds applied AI products end to end, from LangGraph pipelines and RAG to the Next.js and FastAPI apps around them.";
+
+/** Projects with a live link, counted from the records so the figure can't drift. More live on GitHub. */
+function liveProductsProof(): ProofFigure {
+  const live = projects.filter((project) => project.live);
+  return {
+    value: String(live.length),
+    label: "live products, more on GitHub",
+    attribution: "Projects",
+    source: { source: "lib/projects.ts", recordId: live.map((project) => project.slug).join(",") },
+  };
+}
 
 export interface HomepageIdentityProjection {
   name: "Hans Amoguis";
@@ -120,17 +135,12 @@ export function getHomepageIdentity(): HomepageIdentityProjection {
       "I build maintainable full-stack and AI products with clear architecture, clean implementation, and practical user experience.",
     immediateProof: [
       leDouxProof,
+      liveProductsProof(),
       {
-        value: "5",
-        label: "merged PRs across PyCon Davao 2026, TechTix, and the DurianPy badge service",
-        attribution: "DurianPy contributions",
-        source: { source: "lib/experience.ts", recordId: "durianpy" },
-      },
-      {
-        value: "11",
-        label: "node LangGraph pipeline behind StoryBuddy",
-        attribution: "StoryBuddy",
-        source: { source: "lib/projects.ts", recordId: "story-buddy" },
+        value: String(BUILDING_SINCE),
+        label: "from coursework to client work",
+        attribution: "Building since",
+        source: { source: "lib/content/homepage-projections.ts", recordId: "BUILDING_SINCE" },
       },
     ],
     portrait: hansPortrait,

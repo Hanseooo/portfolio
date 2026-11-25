@@ -75,15 +75,14 @@ export default function ProjectCatalogueRecord({
 
             {/* Metadata row */}
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest text-[color:var(--cs-text-secondary)]">
+              <span>
+                {record.kind}
+                {record.client && ` · ${record.client}`}
+              </span>
+              <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
               <span>{record.year}</span>
               <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
               <span>{record.role}</span>
-              {record.client && (
-                <>
-                  <span aria-hidden="true" className="h-px w-4 bg-[color:var(--cs-structural-line-strong)]" />
-                  <span>{record.client}</span>
-                </>
-              )}
             </div>
 
             {/* Case study destination indicator */}

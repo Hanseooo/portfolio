@@ -805,6 +805,23 @@ article:has(.local-nav-bar) .scroll-target {
   }
 }
 
+/* Screenshot disclosure (ExperienceCareerRecord). The panel opens and closes at
+   once, like any <details>; on open its shots rise 8px and fade in, 80ms apart
+   (transform and opacity only, §10). The summary's plus loses its stem to become
+   a minus (200ms). Reduced motion: no transitions. */
+.shot-disclosure[open] .shot-disclosure-stem { scale: 1 0; }
+@media (prefers-reduced-motion: no-preference) {
+  /* An animation, not a transition: closed content is never rendered, so a
+     transition has no start value. The animation replays on every open. */
+  .shot-disclosure[open] .shot-disclosure-item {
+    animation: shot-rise 450ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 80ms) backwards;
+  }
+  @keyframes shot-rise {
+    from { opacity: 0; translate: 0 8px; }
+  }
+  .shot-disclosure-stem { transition: scale 200ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+}
+
 /* Footer construction site (ConstructionSite). Height is fixed here so the
    scene reserves its space before it is built; the component reads it back. */
 .site-scene {

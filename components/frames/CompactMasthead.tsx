@@ -106,8 +106,8 @@ export default function CompactMasthead({
         </p>
       )}
 
-      {/* Title (h1 for the page) */}
-      <h1 className="font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,4rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">
+      {/* Title (h1 for the page). From md it wraps before the compass (max 224px, 288px at lg). */}
+      <h1 className="text-balance md:max-w-[calc(100%-15rem)] lg:max-w-[calc(100%-19rem)] font-[family-name:var(--font-display)] text-[clamp(2rem,5vw,4rem)] font-normal uppercase leading-[0.95] tracking-tight text-[color:var(--cs-text-primary)]">
         {title}
       </h1>
 
